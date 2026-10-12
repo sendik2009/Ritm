@@ -1,0 +1,7 @@
+{
+  "version": "Ritm v2",
+  "versionCode": 2,
+  "apkUrl": "https://web-ritm.vercel.app/ritm.apk",
+  "webUrl": "https://web-ritm.vercel.app/",
+  "changelog": "Ritm v2: проверка обновлений, темы Сакура и Туман, статистика друзей, бессрочные задачи, фикс системных полос на Samsung"
+}

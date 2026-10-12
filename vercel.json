@@ -1,0 +1,3 @@
+{
+  "rewrites": [{ "source": "/((?!version\\.json|ritm\\.apk|vendor/).*)", "destination": "/index.html" }]
+}
