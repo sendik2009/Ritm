@@ -259,17 +259,37 @@ async function checkForUpdates(opts) {
   }
 }
 function openUpdateUrl(url) {
-  if (!url) return;
-  try {
-    if (window.Android) {
-      // open system browser / download
-      window.open(url, "_blank");
-    } else {
-      window.open(url, "_blank");
+  if (!url) return Promise.resolve(false);
+  // Prefer direct navigation / anchor — window.open often blocked
+  function trigger(u) {
+    try {
+      var a = document.createElement("a");
+      a.href = u;
+      a.setAttribute("download", "ritm.apk");
+      a.rel = "noopener";
+      a.style.display = "none";
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function () { try { a.remove(); } catch (e) {} }, 500);
+      return true;
+    } catch (e1) {
+      try {
+        window.location.assign(u);
+        return true;
+      } catch (e2) {
+        try { window.open(u, "_blank"); return true; } catch (e3) { return false; }
+      }
     }
-  } catch (e) {
-    location.href = url;
   }
+  return fetch(url, { method: "HEAD", cache: "no-store" }).then(function (res) {
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    trigger(url);
+    return true;
+  }).catch(function () {
+    // HEAD may fail CORS — still try download
+    trigger(url);
+    return true;
+  });
 }
 
 const PP = {
@@ -1761,7 +1781,13 @@ function SettingsScreen({ user, onLogout, onUpdate, onBack, online }) {
   }
   function doDownloadApk() {
     var url = (updInfo && updInfo.apkUrl) || (typeof APK_DOWNLOAD_URL !== "undefined" ? APK_DOWNLOAD_URL : "https://web-ritm.vercel.app/ritm.apk");
-    openUpdateUrl(url);
+    setUpdMsg("Скачивание…");
+    openUpdateUrl(url).then(function () {
+      setUpdMsg("Если файл не скачался — APK ещё не загружен на сервер (404). Залейте ritm.apk в репозиторий.");
+      setTimeout(function () { setUpdMsg(""); }, 6000);
+    }).catch(function () {
+      setUpdMsg("Не удалось скачать. Проверьте, что ritm.apk лежит на сайте.");
+    });
   }
   return /* @__PURE__return /* @__PURE__ */ React.createElement("div", { className: "px-5 pt-5 pb-4 min-h-full fade-in safe-top" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-3 mb-5" }, /* @__PURE__ */ React.createElement("button", { onClick: onBack, className: "w-9 h-9 rounded-xl flex items-center justify-center", style: { background: "var(--chip)" } }, I.back()), /* @__PURE__ */ React.createElement("h1", { className: "text-[24px] font-semibold tracking-tight" }, "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438")), /* @__PURE__ */ React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, /* @__PURE__ */ React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "\u041F\u0440\u043E\u0444\u0438\u043B\u044C"), /* @__PURE__ */ React.createElement("p", { className: "text-sm mb-1", style: { color: "var(--muted)" } }, "\u041B\u043E\u0433\u0438\u043D"), /* @__PURE__ */ React.createElement("p", { className: "text-[15px] mb-3 font-medium" }, "@", user.username), /* @__PURE__ */ React.createElement("p", { className: "text-sm mb-1.5", style: { color: "var(--muted)" } }, "\u0418\u043C\u044F"), /* @__PURE__ */ React.createElement(
     "input",
@@ -1855,7 +1881,8 @@ function SettingsScreen({ user, onLogout, onUpdate, onBack, online }) {
           className: "w-full py-2.5 rounded-2xl text-white text-sm font-medium",
           style: { background: "var(--forest)" }
         }, "Скачать APK"),
-        React.createElement("p", { className: "text-xs text-center mt-2", style: { color: "var(--muted)" } }, "Актуальная версия: ", APP_VERSION)
+        React.createElement("p", { className: "text-xs text-center mt-2", style: { color: "var(--muted)" } }, "Актуальная версия: ", APP_VERSION),
+        updMsg ? React.createElement("p", { className: "text-xs text-center mt-2", style: { color: "var(--muted)" } }, updMsg) : null
       ) : React.createElement(React.Fragment, null,
         React.createElement("p", { className: "text-xs mb-3", style: { color: "var(--muted)" } }, "Текущая версия: ", APP_VERSION),
         React.createElement("button", {
