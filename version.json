@@ -1,7 +1,7 @@
 {
-  "version": "Ritm v6.3.1",
-  "versionCode": 64,
+  "version": "Ritm v6.4",
+  "versionCode": 65,
   "apkUrl": "https://web-ritm.vercel.app/ritm.apk",
   "webUrl": "https://web-ritm.vercel.app/",
-  "changelog": "v6.3.1: фикс белого экрана статистики"
+  "changelog": "v6.4: обновление через DownloadManager без браузера, затем окно установки"
 }
