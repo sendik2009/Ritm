@@ -135,6 +135,26 @@
     .nav-item{ flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 4px; border-radius:14px; min-width:0; }
     .theme-toggle{ display:flex; gap:0; padding:3px; border-radius:14px; background:var(--input); }
     .theme-toggle button{ flex:1; padding:10px 12px; border-radius:12px; font-size:13px; font-weight:500; text-align:center; }
+  
+    html, body, #root { background-color: var(--bg) !important; }
+    :root { --ease: cubic-bezier(.22,.61,.36,1); --dur: .28s; }
+    html[data-anim="off"] *, html[data-anim="off"] *::before, html[data-anim="off"] *::after {
+      animation: none !important; transition: none !important;
+    }
+    .ritm-btn { transition: transform .18s var(--ease), background .2s ease, opacity .2s ease; }
+    .ritm-btn:active { transform: scale(0.96); }
+    .ritm-check { transition: transform .2s var(--ease), background .2s ease, border-color .2s ease; }
+    .ritm-check.on { animation: checkPop .34s var(--ease); }
+    @keyframes checkPop { 0%{ transform: scale(.85); } 55%{ transform: scale(1.12); } 100%{ transform: scale(1); } }
+    .ritm-list-item { animation: listIn .32s var(--ease) both; }
+    @keyframes listIn { from{ opacity:0; transform: translateY(10px); } to{ opacity:1; transform: none; } }
+    .modal-up { animation: modalUp .34s var(--ease) both; }
+    @keyframes modalUp { from{ opacity:0; transform: translateY(24px) scale(.98); } to{ opacity:1; transform: none; } }
+    button, .nav-item { transition: transform .18s var(--ease), background .2s ease, color .2s ease; }
+    .week-day-num { transition: background .2s ease, color .2s ease, transform .18s var(--ease); }
+    .week-day:active .week-day-num { transform: scale(0.92); }
+    .rounded-3xl, .rounded-2xl { transition: background .25s ease, border-color .25s ease, box-shadow .25s ease; }
+
   </style>
 </head>
 <body>
@@ -157,35 +177,35 @@ function isOnline() {
 }
 const THEMES = {
   ritm: {
-    light: { bg: "#F3EEE6", card: "#FFFEFA", forest: "#2D4A3E", soft: "#E4EDE7", muted: "#8A8578", taupe: "#4A463C", line: "#E2DCD0", chip: "#EDE8DF", input: "#F7F4EF", mid: "#B7C9BC", text: "#1C1A16", nav: "var(--chip)" },
+    light: { bg: "#E4EFE8", card: "#F5FBF7", forest: "#1B3A2F", soft: "#C8DFD2", muted: "#5A6E63", taupe: "#243830", line: "#B8D0C2", chip: "#D2E6DA", input: "#EEF6F1", mid: "#5A9A78", text: "#122018", nav: "#D2E6DA" },
     dark: { bg: "#141A17", card: "#1E2622", forest: "#8FBC9A", soft: "#24302A", muted: "#8B948C", taupe: "#C5CBC6", line: "#2C3530", chip: "#252E29", input: "#1A221E", mid: "#3D5A4A", text: "#E8EDE9", nav: "#1A211D" }
   },
   blush: {
-    light: { bg: "#F7ECEC", card: "#FFFCFB", forest: "#B85A6A", soft: "#F0DDE1", muted: "#8E7A7E", taupe: "#4F3D42", line: "#E8D6D9", chip: "#F2E6E8", input: "#FBF4F5", mid: "#D4A0A8", text: "#3A2A2E", nav: "#EDE0E2" },
+    light: { bg: "#F8E8EE", card: "#FFF5F8", forest: "#8B3A55", soft: "#F0D0DC", muted: "#8A6070", taupe: "#5A3040", line: "#E8C8D4", chip: "#F2DCE4", input: "#FCF0F4", mid: "#D0809A", text: "#2A1520", nav: "#F2DCE4" },
     dark: { bg: "#1A1416", card: "#261C1F", forest: "#E08A9A", soft: "#322428", muted: "#9A8A8E", taupe: "#D4C4C8", line: "#3A2E32", chip: "#2C2226", input: "#1E181A", mid: "#6B4050", text: "#F0E6E8", nav: "#1E181A" }
   },
   fern: {
-    light: { bg: "#F2F4E8", card: "#FCFDF6", forest: "#4F5E32", soft: "#E4E9D2", muted: "#6B7360", taupe: "#2E3524", line: "#E0E4D0", chip: "#EBEFDD", input: "#F6F8EE", mid: "#A8B57A", text: "#1A2014", nav: "#E6EAD8" },
+    light: { bg: "#E8EED8", card: "#F6FAEC", forest: "#3D4F1C", soft: "#D4E0B8", muted: "#6A7350", taupe: "#2E3818", line: "#C8D4A8", chip: "#DCE6C4", input: "#F0F4E4", mid: "#7A9A40", text: "#1A2010", nav: "#DCE6C4" },
     dark: { bg: "#141610", card: "#1E2218", forest: "#A8C070", soft: "#2A3020", muted: "#8A9080", taupe: "#C8CEC0", line: "#303628", chip: "#24281C", input: "#1A1E14", mid: "#4A5830", text: "#E8ECDC", nav: "#1A1E14" }
   },
-  dusk: {
-    light: { bg: "#ECE8E4", card: "#F9F6F2", forest: "#3A4A60", soft: "#D9E0EA", muted: "#7A8490", taupe: "#3D4048", line: "#DDD6CE", chip: "#E8E2DC", input: "#F3EFEA", mid: "#8A9BB0", text: "#1E2228", nav: "#E4DFD8" },
-    dark: { bg: "#12151A", card: "#1A1E26", forest: "#8AA4C8", soft: "#242A36", muted: "#8A929E", taupe: "#C4CAD4", line: "#2A303C", chip: "#1E2430", input: "#161A22", mid: "#3A4A60", text: "#E4E8F0", nav: "#161A22" }
+  mono: {
+    light: { bg: "#F0F0F0", card: "#FFFFFF", forest: "#0A0A0A", soft: "#E4E4E4", muted: "#666666", taupe: "#1A1A1A", line: "#D4D4D4", chip: "#E8E8E8", input: "#F7F7F7", mid: "#888888", text: "#000000", nav: "#E8E8E8" },
+    dark: { bg: "#000000", card: "#121212", forest: "#F5F5F5", soft: "#1A1A1A", muted: "#8A8A8A", taupe: "#E0E0E0", line: "#2A2A2A", chip: "#1C1C1C", input: "#0D0D0D", mid: "#666666", text: "#FAFAFA", nav: "#0D0D0D" }
   },
   coffee: {
-    light: { bg: "#EFE6DC", card: "#FFF9F3", forest: "#6B4A32", soft: "#E8D9C8", muted: "#8F7D6B", taupe: "#3E2E22", line: "#E0D2C2", chip: "#E9DFD3", input: "#F6EFE6", mid: "#C4A484", text: "#241A12", nav: "#E6DCD0" },
+    light: { bg: "#F0E6DA", card: "#FBF6F0", forest: "#5C3A22", soft: "#E4D0B8", muted: "#8A6E58", taupe: "#3E2A18", line: "#D8C4B0", chip: "#E8D8C8", input: "#F6EFE6", mid: "#A07850", text: "#221810", nav: "#E8D8C8" },
     dark: { bg: "#16120E", card: "#221C16", forest: "#D4A574", soft: "#2E261E", muted: "#9A8A78", taupe: "#D4C8B8", line: "#3A3228", chip: "#2A241C", input: "#1A1612", mid: "#6B5038", text: "#F0E8DC", nav: "#1A1612" }
   },
   sakura: {
-    light: { bg: "#F0D9E4", card: "#FFF7FB", forest: "#4A3F4B", soft: "#E8C8D6", muted: "#806C79", taupe: "#16131F", line: "#E0C4D2", chip: "#F5E4EE", input: "#FBF0F6", mid: "#C1A0AC", text: "#16131F", nav: "#EAD4E0" },
+    light: { bg: "#F5E0EA", card: "#FDF2F7", forest: "#7A3D5C", soft: "#EBC8D8", muted: "#8A6078", taupe: "#4A2840", line: "#E0C0D0", chip: "#EED4E0", input: "#FAECF2", mid: "#C07098", text: "#281820", nav: "#EED4E0" },
     dark: { bg: "#16131F", card: "#2A2430", forest: "#F0D9E4", soft: "#3A3240", muted: "#A890A0", taupe: "#F0D9E4", line: "#4A3F4B", chip: "#322A38", input: "#1C1826", mid: "#806C79", text: "#F5E6EE", nav: "#1C1826" }
   },
   mist: {
-    light: { bg: "#E6F6F1", card: "#F7FFFC", forest: "#303633", soft: "#C8F0E4", muted: "#7EA2AA", taupe: "#303633", line: "#C8E4DC", chip: "#D8F2EA", input: "#F0FAF7", mid: "#888DA7", text: "#303633", nav: "#D4EDE6" },
+    light: { bg: "#D8F0EA", card: "#F0FAF7", forest: "#1A4A44", soft: "#B8E0D6", muted: "#4A7A72", taupe: "#1A3834", line: "#A8D4CA", chip: "#C8E8E0", input: "#E8F6F2", mid: "#3AA898", text: "#102820", nav: "#C8E8E0" },
     dark: { bg: "#303633", card: "#3A4240", forest: "#8BE8CB", soft: "#3E4A48", muted: "#A0A8B8", taupe: "#C8E8DC", line: "#4A5552", chip: "#3E4846", input: "#2A302E", mid: "#9C7A97", text: "#E8F2EE", nav: "#2A302E" }
   },
   autumn: {
-    light: { bg: "#F6EDE4", card: "#FFF9F3", forest: "#8C2E0F", soft: "#F0DCC8", muted: "#8A6A55", taupe: "#4E1C0D", line: "#E8D5C4", chip: "#F0E4D8", input: "#FBF5EE", mid: "#DD8838", text: "#1C2321", nav: "#EFE6DC" },
+    light: { bg: "#F5E6D4", card: "#FFF6EC", forest: "#8C2E0F", soft: "#EED4B8", muted: "#8A6548", taupe: "#4E1C0D", line: "#E0C8A8", chip: "#F0DCC8", input: "#FBF0E4", mid: "#C24F1D", text: "#1C1410", nav: "#F0DCC8" },
     dark: { bg: "#0F1111", card: "#1C2321", forest: "#DD8838", soft: "#2A1A12", muted: "#A08070", taupe: "#E8C4A8", line: "#2A302E", chip: "#221C18", input: "#161A18", mid: "#C24F1D", text: "#F0E6DC", nav: "#161A18" }
   }
 };
@@ -193,7 +213,7 @@ const THEME_META = [
   { id: "ritm", name: "\u041B\u0435\u0441", hint: "\u0437\u0435\u043B\u0451\u043D\u044B\u0439", sw: ["#F3EEE6", "#2D4A3E", "#B7C9BC"] },
   { id: "blush", name: "\u0420\u043E\u0437\u0430", hint: "\u0440\u043E\u0437\u043E\u0432\u044B\u0439", sw: ["#F7ECEC", "#B85A6A", "#D4A0A8"] },
   { id: "fern", name: "\u041F\u0430\u043F\u043E\u0440\u043E\u0442\u043D\u0438\u043A", hint: "\u043E\u043B\u0438\u0432\u043A\u043E\u0432\u044B\u0439", sw: ["#F2F4E8", "#4F5E32", "#A8B57A"] },
-  { id: "dusk", name: "\u0417\u0430\u043A\u0430\u0442", hint: "\u0441\u0438\u043D\u0438\u0439", sw: ["#ECE8E4", "#3A4A60", "#8A9BB0"] },
+  { id: "mono", name: "Моно", hint: "ч/б", sw: ["#F0F0F0", "#0A0A0A", "#888888"] },
   { id: "coffee", name: "\u041A\u043E\u0444\u0435", hint: "\u043A\u043E\u0440\u0438\u0447\u043D\u0435\u0432\u044B\u0439", sw: ["#EFE6DC", "#6B4A32", "#C4A484"] },
   { id: "sakura", name: "Сакура", hint: "вишня", sw: ["#F0D9E4", "#4A3F4B", "#C1A0AC"] },
   { id: "mist", name: "Туман", hint: "аква", sw: ["#E6F6F1", "#303633", "#8BE8CB"] },
@@ -205,6 +225,17 @@ function getThemeMode() {
   } catch (e) {
     return "light";
   }
+}
+function getAnimEnabled() {
+  try {
+    var v = localStorage.getItem("ritm_anim");
+    if (v === null || v === undefined) return true;
+    return v !== "0" && v !== "false";
+  } catch (e) { return true; }
+}
+function setAnimEnabled(on) {
+  try { localStorage.setItem("ritm_anim", on ? "1" : "0"); } catch (e) {}
+  document.documentElement.setAttribute("data-anim", on ? "on" : "off");
 }
 function applyTheme(id, mode) {
   const pack = THEMES[id] || THEMES.ritm;
@@ -224,16 +255,15 @@ function applyTheme(id, mode) {
   r.setProperty("--text", t.text);
   r.setProperty("--nav", t.nav || t.chip);
   document.documentElement.setAttribute("data-mode", m);
+  document.documentElement.setAttribute("data-theme", id in THEMES ? id : "ritm");
+  document.documentElement.style.backgroundColor = t.bg;
+  try {
+    document.body.style.backgroundColor = t.bg;
+    document.body.style.color = t.text;
+  } catch (e) {}
   try {
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute("content", t.bg);
-  } catch (e) {
-  }
-  try {
-    document.documentElement.style.backgroundColor = t.bg;
-    if (document.body) document.body.style.backgroundColor = t.bg;
-    var root = document.getElementById("root");
-    if (root) root.style.backgroundColor = t.bg;
   } catch (e) {}
   try {
     if (window.Android && Android.setBarColors) Android.setBarColors(t.bg, t.bg);
@@ -241,17 +271,18 @@ function applyTheme(id, mode) {
   try {
     localStorage.setItem("ritm_theme", id in THEMES ? id : "ritm");
     localStorage.setItem("ritm_mode", m);
-  } catch (e) {
-  }
+  } catch (e) {}
+  setAnimEnabled(getAnimEnabled());
 }
+
 try {
-  applyTheme(localStorage.getItem("ritm_theme") || "ritm", getThemeMode());
+  applyTheme((function(){ var t=localStorage.getItem("ritm_theme")||"ritm"; return t==="dusk"?"mono":t; })(), getThemeMode());
 } catch (e) {
   applyTheme("ritm", "light");
 }
 
-const APP_VERSION = "Ritm v4";
-const APP_VERSION_CODE = 4;
+const APP_VERSION = "Ritm v5";
+const APP_VERSION_CODE = 5;
 
 const UPDATE_CHECK_URL = "https://web-ritm.vercel.app/version.json";
 const APK_DOWNLOAD_URL = "https://web-ritm.vercel.app/ritm.apk";
@@ -305,10 +336,16 @@ async function checkForUpdates(opts) {
 }
 function openUpdateUrl(url) {
   if (!url) return Promise.resolve(false);
-  function triggerWeb(u) {
+  // Always use plain https — intent:// causes ERR_UNKNOWN_URL_SCHEME in WebView
+  var u = String(url);
+  if (u.indexOf("intent:") === 0) {
+    var m = u.match(/intent:\/\/([^#]+)/);
+    u = m ? "https://" + m[1] : u;
+  }
+  function triggerWeb(link) {
     try {
       var a = document.createElement("a");
-      a.href = u;
+      a.href = link;
       a.setAttribute("download", "ritm.apk");
       a.target = "_blank";
       a.rel = "noopener";
@@ -318,44 +355,73 @@ function openUpdateUrl(url) {
       setTimeout(function () { try { a.remove(); } catch (e) {} }, 800);
       return true;
     } catch (e1) {
-      try { window.open(u, "_blank"); return true; } catch (e2) {
-        try { window.location.href = u; return true; } catch (e3) { return false; }
+      try { window.open(link, "_blank"); return true; } catch (e2) {
+        try { window.location.href = link; return true; } catch (e3) { return false; }
       }
     }
   }
-  function triggerAndroid(u) {
-    // WebView: <a download> does not work for APK. Open system browser / installer via Intent.
+  function showApkHint(link) {
     try {
-      var noScheme = String(u).replace(/^https?:\/\//i, "");
-      var intent = "intent://" + noScheme +
-        "#Intent;scheme=https;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;end";
-      window.location.href = intent;
-      return true;
-    } catch (e1) {
-      try {
-        window.location.href = u;
-        return true;
-      } catch (e2) {
-        return triggerWeb(u);
-      }
-    }
+      if (document.getElementById("ritm-apk-hint")) return;
+      var ov = document.createElement("div");
+      ov.id = "ritm-apk-hint";
+      ov.style.cssText = "position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center;padding:16px;";
+      ov.onclick = function (e) { if (e.target === ov) ov.remove(); };
+      var box = document.createElement("div");
+      box.style.cssText = "width:100%;max-width:400px;background:var(--card,#1E2622);color:var(--text,#eee);border-radius:20px;padding:20px;border:1px solid var(--line,#333);";
+      box.onclick = function (e) { e.stopPropagation(); };
+      box.innerHTML = "<p style='font-weight:600;font-size:16px;margin:0 0 8px'>Скачать обновление</p>" +
+        "<p style='font-size:13px;opacity:.75;margin:0 0 12px;line-height:1.4'>В приложении автозагрузка может не сработать. Откройте ссылку в <b>Chrome</b> или другом браузере:</p>" +
+        "<a href='" + link.replace(/'/g, "") + "' style='display:block;word-break:break-all;color:var(--forest,#8FBC9A);font-size:13px;margin-bottom:14px'>" + link.replace(/</g, "") + "</a>";
+      var row = document.createElement("div");
+      row.style.cssText = "display:flex;gap:8px";
+      var copyBtn = document.createElement("button");
+      copyBtn.textContent = "Копировать";
+      copyBtn.style.cssText = "flex:1;padding:12px;border-radius:14px;border:none;background:var(--chip,#333);color:inherit;font-weight:500";
+      copyBtn.onclick = function () {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(link).then(function () { copyBtn.textContent = "Скопировано"; });
+        } else {
+          var ta = document.createElement("textarea");
+          ta.value = link;
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand("copy"); copyBtn.textContent = "Скопировано"; } catch (e) {}
+          ta.remove();
+        }
+      };
+      var openBtn = document.createElement("button");
+      openBtn.textContent = "Открыть";
+      openBtn.style.cssText = "flex:1;padding:12px;border-radius:14px;border:none;background:var(--forest,#2D4A3E);color:#fff;font-weight:500";
+      openBtn.onclick = function () {
+        // plain https only
+        try { window.open(link, "_blank"); } catch (e) {}
+        try { window.location.href = link; } catch (e2) {}
+      };
+      var closeBtn = document.createElement("button");
+      closeBtn.textContent = "Закрыть";
+      closeBtn.style.cssText = "flex:1;padding:12px;border-radius:14px;border:none;background:var(--chip,#333);color:inherit;font-weight:500";
+      closeBtn.onclick = function () { ov.remove(); };
+      row.appendChild(copyBtn);
+      row.appendChild(openBtn);
+      row.appendChild(closeBtn);
+      box.appendChild(row);
+      ov.appendChild(box);
+      document.body.appendChild(ov);
+    } catch (e) {}
   }
-  var isApp = !!(window.Android);
-  function go() {
-    if (isApp) return triggerAndroid(url);
-    return triggerWeb(url);
-  }
-  // Skip HEAD on Android (CORS/opaque) — go straight to download
-  if (isApp) {
-    go();
+  if (window.Android) {
+    // WebView cannot handle intent:// — show helper + try https open
+    showApkHint(u);
+    try { window.open(u, "_blank"); } catch (e) {}
     return Promise.resolve(true);
   }
-  return fetch(url, { method: "HEAD", cache: "no-store" }).then(function (res) {
+  return fetch(u, { method: "HEAD", cache: "no-store" }).then(function (res) {
     if (!res.ok) throw new Error("HTTP " + res.status);
-    go();
+    triggerWeb(u);
     return true;
   }).catch(function () {
-    go();
+    triggerWeb(u);
     return true;
   });
 }
@@ -1777,7 +1843,7 @@ function FriendsScreen({ user, online }) {
   ), React.createElement("button", { onClick: doSearch, className: "shrink-0 px-3 py-2.5 rounded-2xl text-white text-sm font-medium whitespace-nowrap", style: { background: "var(--forest)" } }, "\u041D\u0430\u0439\u0442\u0438")), msg && React.createElement("p", { className: "text-sm mt-2", style: { color: "var(--forest)" } }, msg), results.length > 0 && React.createElement("div", { className: "mt-3 space-y-2" }, results.map((u) => React.createElement("div", { key: u.id, className: "flex items-center justify-between p-3 rounded-2xl", style: { background: "var(--input)" } }, React.createElement("div", null, React.createElement("p", { className: "text-[14px] font-medium" }, u.display_name || u.username), React.createElement("p", { className: "text-xs", style: { color: "var(--muted)" } }, "@", u.username)), React.createElement("button", { onClick: () => sendRequest(u.id), className: "px-3 py-1.5 rounded-xl text-sm text-white", style: { background: "var(--forest)" } }, "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C"))))), pending.length > 0 && React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "\u0412\u0445\u043E\u0434\u044F\u0449\u0438\u0435 \u0437\u0430\u043F\u0440\u043E\u0441\u044B"), React.createElement("div", { className: "space-y-2" }, pending.map((p) => React.createElement("div", { key: p.id, className: "flex items-center justify-between p-3 rounded-2xl", style: { background: "var(--input)" } }, React.createElement("div", null, React.createElement("p", { className: "text-[14px] font-medium" }, p.friend.display_name || p.friend.username)), React.createElement("div", { className: "flex gap-1.5" }, React.createElement("button", { onClick: () => accept(p.id), className: "px-3 py-1.5 rounded-xl text-sm text-white", style: { background: "var(--forest)" } }, "\u041F\u0440\u0438\u043D\u044F\u0442\u044C"), React.createElement("button", { onClick: () => reject(p.id), className: "px-3 py-1.5 rounded-xl text-sm border", style: { borderColor: "var(--line)" } }, "\u041E\u0442\u043A\u043B\u043E\u043D\u0438\u0442\u044C")))))), React.createElement("div", { className: "rounded-3xl p-4 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "\u041C\u043E\u0438 \u0434\u0440\u0443\u0437\u044C\u044F"), loading && React.createElement("div", { className: "flex justify-center py-6" }, React.createElement("div", { className: "w-6 h-6 border-2 rounded-full animate-spin", style: { borderColor: "var(--forest)", borderTopColor: "transparent" } })), !loading && friends.length === 0 && React.createElement("p", { className: "text-sm text-center py-4", style: { color: "var(--muted)" } }, "\u041F\u043E\u043A\u0430 \u043D\u0435\u0442 \u0434\u0440\u0443\u0437\u0435\u0439"), React.createElement("div", { className: "space-y-2" }, friends.map((f) => React.createElement("div", { key: f.id, className: "flex items-center gap-2 p-3 rounded-2xl", style: { background: "var(--input)" } }, React.createElement("button", { onClick: () => setViewing({ friendId: f.friendId, name: f.friend.display_name || f.friend.username, username: f.friend.username }), className: "flex-1 min-w-0 text-left" }, React.createElement("p", { className: "text-[14px] font-medium truncate" }, f.friend.display_name || f.friend.username), React.createElement("p", { className: "text-xs", style: { color: "var(--muted)" } }, "@", f.friend.username, " \xB7 ", (f.friend.pp != null ? f.friend.pp : 0), " PP")), React.createElement("button", { onClick: () => removeFriend(f.id), className: "w-8 h-8 rounded-xl flex items-center justify-center", style: { background: "#fff" } }, I.trash()))))));
 }
 function SettingsScreen({ user, onLogout, onUpdate, onBack, online }) {
-  const [displayName, setDisplayName] = useState(user.display_name || ""), [tracker, setTracker] = useState("heatmap"), [theme, setTheme] = useState("ritm"), [mode, setMode] = useState("light"), [shareStats, setShareStats] = useState(true), [nEn, setNEn] = useState(true), [n1d, setN1d] = useState(true), [nHalf, setNHalf] = useState(false), [nToday, setNToday] = useState(true), [saving, setSaving] = useState(false), [msg, setMsg] = useState(""), [updMsg, setUpdMsg] = useState(""), [updBusy, setUpdBusy] = useState(false), [updInfo, setUpdInfo] = useState(null), [notifOk, setNotifOk] = useState(typeof Notification !== "undefined" && Notification.permission === "granted" || !!(window.Android && Android.scheduleNotification));
+  const [displayName, setDisplayName] = useState(user.display_name || ""), [tracker, setTracker] = useState("heatmap"), [theme, setTheme] = useState("ritm"), [mode, setMode] = useState("light"), [animOn, setAnimOn] = useState(getAnimEnabled()), [shareStats, setShareStats] = useState(true), [nEn, setNEn] = useState(true), [n1d, setN1d] = useState(true), [nHalf, setNHalf] = useState(false), [nToday, setNToday] = useState(true), [saving, setSaving] = useState(false), [msg, setMsg] = useState(""), [updMsg, setUpdMsg] = useState(""), [updBusy, setUpdBusy] = useState(false), [updInfo, setUpdInfo] = useState(null), [notifOk, setNotifOk] = useState(typeof Notification !== "undefined" && Notification.permission === "granted" || !!(window.Android && Android.scheduleNotification));
   useEffect(() => {
     const local = Store.getSettings(user.id);
     setTracker(local.tracker_type || "heatmap");
@@ -1904,7 +1970,27 @@ function SettingsScreen({ user, onLogout, onUpdate, onBack, online }) {
       React.createElement("p", { className: "text-sm font-semibold", style: { color: on ? t.sw[1] : "var(--text)" } }, t.name),
       React.createElement("p", { className: "text-[11px]", style: { color: "var(--muted)" } }, t.hint)
     );
-  }))), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "\u041F\u0440\u0438\u0432\u0430\u0442\u043D\u043E\u0441\u0442\u044C"), React.createElement(
+  }))), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm fade-in", style: { background: "var(--card)", border: "1px solid var(--line)" } },
+      React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "Анимации"),
+      React.createElement("p", { className: "text-[11px] mb-3", style: { color: "var(--muted)" } }, "Плавные переходы и появление элементов"),
+      React.createElement("button", {
+        type: "button",
+        onClick: function () {
+          var next = !animOn;
+          setAnimOn(next);
+          setAnimEnabled(next);
+        },
+        className: "w-full flex items-center justify-between px-3 py-3 rounded-2xl ritm-btn",
+        style: { background: "var(--input)" }
+      },
+        React.createElement("span", { className: "text-sm" }, animOn ? "Включены" : "Выключены"),
+        React.createElement("span", {
+          className: "px-3 py-1 rounded-full text-[12px] font-medium",
+          style: { background: animOn ? "var(--forest)" : "var(--chip)", color: animOn ? "#fff" : "var(--muted)" }
+        }, animOn ? "ON" : "OFF")
+      )
+    ),
+    React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "\u041F\u0440\u0438\u0432\u0430\u0442\u043D\u043E\u0441\u0442\u044C"), React.createElement(
     "button",
     {
       onClick: () => setShareStats(!shareStats),
@@ -2078,7 +2164,7 @@ function RitmDatePicker({ value, onChange, onClose, allowClear }) {
     style: { background: "rgba(0,0,0,0.45)" },
     onClick: function (e) { if (e.target === e.currentTarget) onClose && onClose(); }
   }, React.createElement("div", {
-    className: "w-full max-w-sm rounded-t-3xl sm:rounded-3xl p-4 shadow-sm fade-in",
+    className: "w-full max-w-sm rounded-t-3xl sm:rounded-3xl p-4 shadow-sm modal-up",
     style: { background: "var(--card)", border: "1px solid var(--line)", maxHeight: "90vh" },
     onClick: function (e) { e.stopPropagation(); }
   },
@@ -2154,7 +2240,7 @@ function RitmTimePicker({ value, onChange, onClose }) {
     style: { background: "rgba(0,0,0,0.45)" },
     onClick: function (e) { if (e.target === e.currentTarget) onClose && onClose(); }
   }, React.createElement("div", {
-    className: "w-full max-w-sm rounded-t-3xl sm:rounded-3xl p-4 shadow-sm fade-in",
+    className: "w-full max-w-sm rounded-t-3xl sm:rounded-3xl p-4 shadow-sm modal-up",
     style: { background: "var(--card)", border: "1px solid var(--line)" },
     onClick: function (e) { e.stopPropagation(); }
   },
@@ -2716,10 +2802,10 @@ function __ritmBoot() {
   var root = document.getElementById("root");
   function fail(msg) {
     try {
-      root.innerHTML = '<div style="padding:24px;font-family:system-ui;text-align:center;background:#F3EEE6;min-height:100%"><p style="font-size:16px;margin:0 0 8px">Не удалось загрузить</p><p style="color:#8A8578;font-size:13px;white-space:pre-wrap">' + String(msg || "") + '</p><p style="margin-top:16px;font-size:11px;color:#aaa">Ritm v4</p></div>';
+      root.innerHTML = '<div style="padding:24px;font-family:system-ui;text-align:center;background:#F3EEE6;min-height:100%"><p style="font-size:16px;margin:0 0 8px">Не удалось загрузить</p><p style="color:#8A8578;font-size:13px;white-space:pre-wrap">' + String(msg || "") + '</p><p style="margin-top:16px;font-size:11px;color:#aaa">Ritm v5</p></div>';
     } catch (e) {}
   }
-  root.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;background:#F3EEE6;color:#8A8578;font-family:system-ui;font-size:14px">Загрузка Ritm v4…</div>';
+  root.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;background:#F3EEE6;color:#8A8578;font-family:system-ui;font-size:14px">Загрузка Ritm v5…</div>';
   __ritmEnsureLibs().then(function () {
     if (!window.React || !window.ReactDOM) {
       fail("React не загрузился.\\nПроверьте интернет или папку vendor.");
