@@ -1,7 +1,7 @@
 {
-  "version": "Ritm v4",
-  "versionCode": 4,
+  "version": "Ritm v5",
+  "versionCode": 5,
   "apkUrl": "https://web-ritm.vercel.app/ritm.apk",
   "webUrl": "https://web-ritm.vercel.app/",
-  "changelog": "Ritm v4: свои пикеры даты и времени под тему, тема Осень"
+  "changelog": "Ritm v5: тема Моно, светлые темы, системные полосы, анимации, пикеры даты/времени, Осень"
 }
