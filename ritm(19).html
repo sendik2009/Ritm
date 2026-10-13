@@ -1,0 +1,2530 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#16131F" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="data:application/json,{"name":"Ритм","short_name":"Ритм","start_url":"./ritm.html","display":"standalone","background_color":"var(--bg)","theme_color":"var(--forest)","lang":"ru"}" />
+  <title>Ритм</title>
+
+  <style id="offline-utils">
+.flex{display:flex}.flex-col{flex-direction:column}.flex-1{flex:1 1 0%}.flex-wrap{flex-wrap:wrap}.flex-shrink-0{flex-shrink:0}
+.grid{display:grid}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-cols-7{grid-template-columns:repeat(7,minmax(0,1fr))}
+.items-center{align-items:center}.items-start{align-items:flex-start}
+.justify-center{justify-content:center}.justify-between{justify-content:space-between}.justify-around{justify-content:space-around}
+.relative{position:relative}.absolute{position:absolute}.inset-0{inset:0}.z-10{z-index:10}
+.w-full{width:100%}.w-5{width:1.25rem}.w-6{width:1.5rem}.w-8{width:2rem}.w-9{width:2.25rem}.w-10{width:2.5rem}.w-11{width:2.75rem}.w-14{width:3.5rem}
+.h-full{height:100%}.h-1\.5{height:.375rem}.h-2\.5{height:.625rem}.h-5{height:1.25rem}.h-6{height:1.5rem}.h-8{height:2rem}.h-9{height:2.25rem}.h-10{height:2.5rem}.h-11{height:2.75rem}
+.min-h-full{min-height:100%}.min-w-0{min-width:0}.min-w-\[56px\]{min-width:56px}.min-w-\[60px\]{min-width:60px}
+.max-w-lg{max-width:32rem}.max-w-sm{max-width:24rem}
+.p-3{padding:.75rem}.p-3\.5{padding:.875rem}.p-4{padding:1rem}.p-6{padding:1.5rem}
+.px-1{padding-left:.25rem;padding-right:.25rem}.px-1\.5{padding-left:.375rem;padding-right:.375rem}
+.px-2{padding-left:.5rem;padding-right:.5rem}.px-3{padding-left:.75rem;padding-right:.75rem}
+.px-3\.5{padding-left:.875rem;padding-right:.875rem}.px-4{padding-left:1rem;padding-right:1rem}
+.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}
+.py-0\.5{padding-top:.125rem;padding-bottom:.125rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}
+.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-2\.5{padding-top:.625rem;padding-bottom:.625rem}
+.py-3{padding-top:.75rem;padding-bottom:.75rem}.py-3\.5{padding-top:.875rem;padding-bottom:.875rem}
+.py-4{padding-top:1rem;padding-bottom:1rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}
+.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.py-12{padding-top:3rem;padding-bottom:3rem}
+.pt-1\.5{padding-top:.375rem}.pt-5{padding-top:1.25rem}.pb-2{padding-bottom:.5rem}.pb-4{padding-bottom:1rem}
+.mb-0\.5{margin-bottom:.125rem}.mb-1{margin-bottom:.25rem}.mb-1\.5{margin-bottom:.375rem}
+.mb-2{margin-bottom:.5rem}.mb-3{margin-bottom:.75rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.mb-10{margin-bottom:2.5rem}
+.mt-0\.5{margin-top:.125rem}.mt-1{margin-top:.25rem}.mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.mt-5{margin-top:1.25rem}
+.mx-auto{margin-left:auto;margin-right:auto}
+.gap-0\.5{gap:.125rem}.gap-1{gap:.25rem}.gap-1\.5{gap:.375rem}.gap-2{gap:.5rem}.gap-2\.5{gap:.625rem}.gap-3{gap:.75rem}
+.space-y-1\.5>:not([hidden])~:not([hidden]){margin-top:.375rem}.space-y-2>:not([hidden])~:not([hidden]){margin-top:.5rem}
+.space-y-3>:not([hidden])~:not([hidden]){margin-top:.75rem}.space-y-4>:not([hidden])~:not([hidden]){margin-top:1rem}
+.rounded-md{border-radius:.375rem}.rounded-lg{border-radius:.5rem}.rounded-xl{border-radius:.75rem}
+.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-full{border-radius:9999px}
+.border{border-width:1px;border-style:solid;border-color:var(--line)}.border-2{border-width:2px;border-style:solid}.border-t{border-top-width:1px;border-top-style:solid;border-color:var(--line)}
+.shadow-sm{box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.text-center{text-align:center}.text-left{text-align:left}.text-right{text-align:right}
+.text-xs{font-size:.75rem;line-height:1rem}.text-sm{font-size:.875rem;line-height:1.25rem}
+.text-lg{font-size:1.125rem}.text-xl{font-size:1.25rem}.text-2xl{font-size:1.5rem}.text-5xl{font-size:3rem;line-height:1}
+.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[14px\]{font-size:14px}.text-\[15px\]{font-size:15px}
+.text-\[22px\]{font-size:22px}.text-\[24px\]{font-size:24px}
+.font-medium{font-weight:500}.font-semibold{font-weight:600}
+.tracking-tight{letter-spacing:-.025em}.tracking-wider{letter-spacing:.05em}
+.uppercase{text-transform:uppercase}.leading-snug{line-height:1.375}.leading-tight{line-height:1.25}.leading-relaxed{line-height:1.625}
+.text-white{color:#fff}.text-red-600{color:#dc2626}.bg-white{background:var(--card)}.bg-red-50{background:#fef2f2}
+.opacity-70{opacity:.7}.line-through{text-decoration:line-through}
+.outline-none{outline:none}.block{display:block}.cursor-pointer{cursor:pointer}
+.aspect-square{aspect-ratio:1/1}
+.transition-all{transition:all .15s ease}
+.disabled\:opacity-60:disabled{opacity:.6}
+.active\:scale-90:active{transform:scale(.9)}.active\:scale-\[0\.99\]:active{transform:scale(.99)}
+  </style>
+  <!-- libs loaded by __ritmEnsureLibs -->
+
+  <style>
+    *{ -webkit-tap-highlight-color:transparent; box-sizing:border-box; }
+    :root{ --bg:#F3EEE6; --card:#FFFEFA; --forest:#2D4A3E; --forest-soft:#E4EDE7; --muted:#8A8578; --taupe:#4A463C; --line:#E2DCD0; --chip:#EDE8DF; --input:#F7F4EF; --mid:#B7C9BC; --text:#1C1A16; --nav:var(--chip); }
+    html,body,#root{ height:100%; min-height:100%; min-height:100dvh; min-height:100svh; margin:0; padding:0; background:var(--bg); background-color:var(--bg); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:var(--text); overscroll-behavior:none; -webkit-text-size-adjust:100%; }
+    html{ background:var(--bg); background-color:var(--bg); }
+    body{ -webkit-font-smoothing:antialiased; background:var(--bg); background-color:var(--bg); }
+    .desktop-shell{ min-height:100%; min-height:100dvh; width:100%; }
+    .app-frame{ width:100%; min-height:100%; min-height:100dvh; display:flex; flex-direction:column; background:var(--bg); }
+    .app-frame > *{ flex:1 1 auto; min-height:0; height:100%; max-height:100%; }
+    @media (min-width: 900px) {
+      html, body, #root{ height:100%; overflow:hidden; }
+      body{
+        background:
+          radial-gradient(ellipse 80% 50% at 15% 0%, rgba(45,74,62,0.12), transparent 55%),
+          radial-gradient(ellipse 70% 45% at 90% 100%, rgba(183,201,188,0.18), transparent 50%),
+          var(--bg);
+      }
+      .desktop-shell{
+        min-height:100dvh;
+        height:100dvh;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:24px;
+        box-sizing:border-box;
+      }
+      .app-frame{
+        width:420px;
+        max-width:calc(100vw - 48px);
+        height:min(90vh, 900px);
+        min-height:620px;
+        border-radius:28px;
+        overflow:hidden;
+        flex:0 0 auto;
+        box-shadow:
+          0 0 0 1px var(--line),
+          0 28px 80px rgba(0,0,0,0.16),
+          0 4px 16px rgba(0,0,0,0.06);
+      }
+    }
+    @media (min-width: 1280px) {
+      .app-frame{ width:440px; height:min(88vh, 940px); }
+    }
+    @media (min-width: 1600px) {
+      .app-frame{ width:460px; height:min(86vh, 980px); }
+    }
+
+    .no-scrollbar::-webkit-scrollbar{ display:none; }
+    .no-scrollbar{ -ms-overflow-style:none; scrollbar-width:none; }
+    .safe-bottom{ padding-bottom:env(safe-area-inset-bottom,8px); }
+    .safe-top{ padding-top:env(safe-area-inset-top,0px); }
+    @keyframes spin{ to{ transform:rotate(360deg); } }
+    .animate-spin{ animation:spin .7s linear infinite; }
+    @keyframes fadeIn{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:translateY(0); } }
+    .fade-in{ animation:fadeIn .22s ease-out; }
+    @keyframes tabInRight{ from{ opacity:0; transform:translateX(28px) scale(.98); } to{ opacity:1; transform:none; } }
+    @keyframes tabInLeft{ from{ opacity:0; transform:translateX(-28px) scale(.98); } to{ opacity:1; transform:none; } }
+    .tab-in-right{ animation:tabInRight .32s cubic-bezier(.22,.61,.36,1) both; }
+    .tab-in-left{ animation:tabInLeft .32s cubic-bezier(.22,.61,.36,1) both; }
+    .tab-panel{ will-change:transform,opacity; }
+    @keyframes navPop{ 0%{ transform:scale(.92); } 60%{ transform:scale(1.06); } 100%{ transform:scale(1); } }
+    .nav-pop{ animation:navPop .28s ease-out; }
+    .break-words{ overflow-wrap:anywhere; word-break:break-word; }
+    .offline-bar{ background:var(--taupe); color:#fff; font-size:12px; text-align:center; padding:6px 12px; }
+    button,input,textarea,select{ font:inherit; color:inherit; }
+    button{ background:transparent; border:none; padding:0; margin:0; cursor:pointer; -webkit-appearance:none; appearance:none; }
+    input,textarea{ -webkit-appearance:none; appearance:none; }
+    /* week strip */
+    .week-strip{ display:flex; justify-content:space-between; gap:4px; }
+    .week-day{ flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; padding:6px 0; border-radius:16px; min-width:0; }
+    .week-day-num{ width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:500; }
+    .nav-item{ flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 4px; border-radius:14px; min-width:0; }
+    .theme-toggle{ display:flex; gap:0; padding:3px; border-radius:14px; background:var(--input); }
+    .theme-toggle button{ flex:1; padding:10px 12px; border-radius:12px; font-size:13px; font-weight:500; text-align:center; }
+  </style>
+</head>
+<body>
+<div id="root"><div style="display:flex;height:100%;align-items:center;justify-content:center;background:#F3EEE6;color:#8A8578;font-family:system-ui">Загрузка…</div></div>
+<script>
+
+window.__ritmMain = function () {
+  if (!window.React || !window.ReactDOM) {
+    throw new Error("React not loaded");
+  }
+  var React = window.React;
+  var ReactDOM = window.ReactDOM;
+
+const { useState, useEffect, useMemo, useRef, useCallback } = React;
+const SUPABASE_URL = "https://gowprwyzqhpflgzhcalv.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdvd3Byd3l6cWhwZmxnemhjYWx2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEwMDU5ODgsImV4cCI6MjEwNjU4MTk4OH0.kXZbeiUm1UgGSObku9xSFFrKxOkmOkhMSKRETlfhVI4";
+const sb = window.supabase && window.supabase.createClient ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+function isOnline() {
+  return typeof navigator !== "undefined" && navigator.onLine && !!sb;
+}
+const THEMES = {
+  ritm: {
+    light: { bg: "#F3EEE6", card: "#FFFEFA", forest: "#2D4A3E", soft: "#E4EDE7", muted: "#8A8578", taupe: "#4A463C", line: "#E2DCD0", chip: "#EDE8DF", input: "#F7F4EF", mid: "#B7C9BC", text: "#1C1A16", nav: "var(--chip)" },
+    dark: { bg: "#141A17", card: "#1E2622", forest: "#8FBC9A", soft: "#24302A", muted: "#8B948C", taupe: "#C5CBC6", line: "#2C3530", chip: "#252E29", input: "#1A221E", mid: "#3D5A4A", text: "#E8EDE9", nav: "#1A211D" }
+  },
+  blush: {
+    light: { bg: "#F7ECEC", card: "#FFFCFB", forest: "#B85A6A", soft: "#F0DDE1", muted: "#8E7A7E", taupe: "#4F3D42", line: "#E8D6D9", chip: "#F2E6E8", input: "#FBF4F5", mid: "#D4A0A8", text: "#3A2A2E", nav: "#EDE0E2" },
+    dark: { bg: "#1A1416", card: "#261C1F", forest: "#E08A9A", soft: "#322428", muted: "#9A8A8E", taupe: "#D4C4C8", line: "#3A2E32", chip: "#2C2226", input: "#1E181A", mid: "#6B4050", text: "#F0E6E8", nav: "#1E181A" }
+  },
+  fern: {
+    light: { bg: "#F2F4E8", card: "#FCFDF6", forest: "#4F5E32", soft: "#E4E9D2", muted: "#6B7360", taupe: "#2E3524", line: "#E0E4D0", chip: "#EBEFDD", input: "#F6F8EE", mid: "#A8B57A", text: "#1A2014", nav: "#E6EAD8" },
+    dark: { bg: "#141610", card: "#1E2218", forest: "#A8C070", soft: "#2A3020", muted: "#8A9080", taupe: "#C8CEC0", line: "#303628", chip: "#24281C", input: "#1A1E14", mid: "#4A5830", text: "#E8ECDC", nav: "#1A1E14" }
+  },
+  dusk: {
+    light: { bg: "#ECE8E4", card: "#F9F6F2", forest: "#3A4A60", soft: "#D9E0EA", muted: "#7A8490", taupe: "#3D4048", line: "#DDD6CE", chip: "#E8E2DC", input: "#F3EFEA", mid: "#8A9BB0", text: "#1E2228", nav: "#E4DFD8" },
+    dark: { bg: "#12151A", card: "#1A1E26", forest: "#8AA4C8", soft: "#242A36", muted: "#8A929E", taupe: "#C4CAD4", line: "#2A303C", chip: "#1E2430", input: "#161A22", mid: "#3A4A60", text: "#E4E8F0", nav: "#161A22" }
+  },
+  coffee: {
+    light: { bg: "#EFE6DC", card: "#FFF9F3", forest: "#6B4A32", soft: "#E8D9C8", muted: "#8F7D6B", taupe: "#3E2E22", line: "#E0D2C2", chip: "#E9DFD3", input: "#F6EFE6", mid: "#C4A484", text: "#241A12", nav: "#E6DCD0" },
+    dark: { bg: "#16120E", card: "#221C16", forest: "#D4A574", soft: "#2E261E", muted: "#9A8A78", taupe: "#D4C8B8", line: "#3A3228", chip: "#2A241C", input: "#1A1612", mid: "#6B5038", text: "#F0E8DC", nav: "#1A1612" }
+  },
+  sakura: {
+    light: { bg: "#F0D9E4", card: "#FFF7FB", forest: "#4A3F4B", soft: "#E8C8D6", muted: "#806C79", taupe: "#16131F", line: "#E0C4D2", chip: "#F5E4EE", input: "#FBF0F6", mid: "#C1A0AC", text: "#16131F", nav: "#EAD4E0" },
+    dark: { bg: "#16131F", card: "#2A2430", forest: "#F0D9E4", soft: "#3A3240", muted: "#A890A0", taupe: "#F0D9E4", line: "#4A3F4B", chip: "#322A38", input: "#1C1826", mid: "#806C79", text: "#F5E6EE", nav: "#1C1826" }
+  },
+  mist: {
+    light: { bg: "#E6F6F1", card: "#F7FFFC", forest: "#303633", soft: "#C8F0E4", muted: "#7EA2AA", taupe: "#303633", line: "#C8E4DC", chip: "#D8F2EA", input: "#F0FAF7", mid: "#888DA7", text: "#303633", nav: "#D4EDE6" },
+    dark: { bg: "#303633", card: "#3A4240", forest: "#8BE8CB", soft: "#3E4A48", muted: "#A0A8B8", taupe: "#C8E8DC", line: "#4A5552", chip: "#3E4846", input: "#2A302E", mid: "#9C7A97", text: "#E8F2EE", nav: "#2A302E" }
+  }
+};
+const THEME_META = [
+  { id: "ritm", name: "\u041B\u0435\u0441", hint: "\u0437\u0435\u043B\u0451\u043D\u044B\u0439", sw: ["#F3EEE6", "#2D4A3E", "#B7C9BC"] },
+  { id: "blush", name: "\u0420\u043E\u0437\u0430", hint: "\u0440\u043E\u0437\u043E\u0432\u044B\u0439", sw: ["#F7ECEC", "#B85A6A", "#D4A0A8"] },
+  { id: "fern", name: "\u041F\u0430\u043F\u043E\u0440\u043E\u0442\u043D\u0438\u043A", hint: "\u043E\u043B\u0438\u0432\u043A\u043E\u0432\u044B\u0439", sw: ["#F2F4E8", "#4F5E32", "#A8B57A"] },
+  { id: "dusk", name: "\u0417\u0430\u043A\u0430\u0442", hint: "\u0441\u0438\u043D\u0438\u0439", sw: ["#ECE8E4", "#3A4A60", "#8A9BB0"] },
+  { id: "coffee", name: "\u041A\u043E\u0444\u0435", hint: "\u043A\u043E\u0440\u0438\u0447\u043D\u0435\u0432\u044B\u0439", sw: ["#EFE6DC", "#6B4A32", "#C4A484"] },
+  { id: "sakura", name: "Сакура", hint: "вишня", sw: ["#F0D9E4", "#4A3F4B", "#C1A0AC"] },
+  { id: "mist", name: "Туман", hint: "аква", sw: ["#E6F6F1", "#303633", "#8BE8CB"] }
+];
+function getThemeMode() {
+  try {
+    return localStorage.getItem("ritm_mode") || "light";
+  } catch (e) {
+    return "light";
+  }
+}
+function applyTheme(id, mode) {
+  const pack = THEMES[id] || THEMES.ritm;
+  const m = mode || getThemeMode();
+  const t = pack[m] || pack.light;
+  const r = document.documentElement.style;
+  r.setProperty("--bg", t.bg);
+  r.setProperty("--card", t.card);
+  r.setProperty("--forest", t.forest);
+  r.setProperty("--forest-soft", t.soft);
+  r.setProperty("--muted", t.muted);
+  r.setProperty("--taupe", t.taupe);
+  r.setProperty("--line", t.line);
+  r.setProperty("--chip", t.chip);
+  r.setProperty("--input", t.input);
+  r.setProperty("--mid", t.mid);
+  r.setProperty("--text", t.text);
+  r.setProperty("--nav", t.nav || t.chip);
+  document.documentElement.setAttribute("data-mode", m);
+  try {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", t.bg);
+  } catch (e) {
+  }
+  try {
+    document.documentElement.style.backgroundColor = t.bg;
+    if (document.body) document.body.style.backgroundColor = t.bg;
+    var root = document.getElementById("root");
+    if (root) root.style.backgroundColor = t.bg;
+  } catch (e) {}
+  try {
+    if (window.Android && Android.setBarColors) Android.setBarColors(t.bg, t.bg);
+  } catch (e) {}
+  try {
+    localStorage.setItem("ritm_theme", id in THEMES ? id : "ritm");
+    localStorage.setItem("ritm_mode", m);
+  } catch (e) {
+  }
+}
+try {
+  applyTheme(localStorage.getItem("ritm_theme") || "ritm", getThemeMode());
+} catch (e) {
+  applyTheme("ritm", "light");
+}
+
+const APP_VERSION = "Ritm v3";
+const APP_VERSION_CODE = 3;
+
+const UPDATE_CHECK_URL = "https://web-ritm.vercel.app/version.json";
+const APK_DOWNLOAD_URL = "https://web-ritm.vercel.app/ritm.apk";
+async function fetchLatestVersion() {
+  const res = await fetch(UPDATE_CHECK_URL + "?t=" + Date.now(), { cache: "no-store" });
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  return await res.json();
+}
+function isNewerVersion(remote) {
+  if (!remote) return false;
+  const code = parseInt(remote.versionCode, 10) || 0;
+  if (code > APP_VERSION_CODE) return true;
+  if (remote.version && String(remote.version) !== APP_VERSION && code >= APP_VERSION_CODE) {
+    // same code but different label — treat as same unless code higher
+  }
+  return code > APP_VERSION_CODE;
+}
+async function checkForUpdates(opts) {
+  opts = opts || {};
+  const force = !!opts.force;
+  try {
+    if (!force) {
+      const last = parseInt(localStorage.getItem("ritm_update_checked") || "0", 10);
+      if (Date.now() - last < 20 * 60 * 60 * 1000) return null; // ~1 day
+    }
+    if (typeof navigator !== "undefined" && !navigator.onLine) return null;
+    const data = await fetchLatestVersion();
+    localStorage.setItem("ritm_update_checked", String(Date.now()));
+    if (!isNewerVersion(data)) {
+      if (force) return { upToDate: true, data: data };
+      return null;
+    }
+    // notify once per remote version
+    const notified = localStorage.getItem("ritm_update_notified") || "";
+    const key = String(data.versionCode || data.version || "");
+    if (key && notified !== key) {
+      try {
+        if (window.Android && Android.scheduleNotification) {
+          Android.scheduleNotification("Ритм", "Доступна " + (data.version || "новая версия"), Date.now() + 1500, "update");
+        } else if (typeof Notification !== "undefined" && Notification.permission === "granted") {
+          new Notification("Ритм", { body: "Доступна " + (data.version || "новая версия") });
+        }
+        localStorage.setItem("ritm_update_notified", key);
+      } catch (e) {}
+    }
+    return { upToDate: false, data: data };
+  } catch (e) {
+    if (force) return { error: (e && e.message) || String(e) };
+    return null;
+  }
+}
+function openUpdateUrl(url) {
+  if (!url) return Promise.resolve(false);
+  function triggerWeb(u) {
+    try {
+      var a = document.createElement("a");
+      a.href = u;
+      a.setAttribute("download", "ritm.apk");
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.style.display = "none";
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function () { try { a.remove(); } catch (e) {} }, 800);
+      return true;
+    } catch (e1) {
+      try { window.open(u, "_blank"); return true; } catch (e2) {
+        try { window.location.href = u; return true; } catch (e3) { return false; }
+      }
+    }
+  }
+  function triggerAndroid(u) {
+    // WebView: <a download> does not work for APK. Open system browser / installer via Intent.
+    try {
+      var noScheme = String(u).replace(/^https?:\/\//i, "");
+      var intent = "intent://" + noScheme +
+        "#Intent;scheme=https;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;end";
+      window.location.href = intent;
+      return true;
+    } catch (e1) {
+      try {
+        window.location.href = u;
+        return true;
+      } catch (e2) {
+        return triggerWeb(u);
+      }
+    }
+  }
+  var isApp = !!(window.Android);
+  function go() {
+    if (isApp) return triggerAndroid(url);
+    return triggerWeb(url);
+  }
+  // Skip HEAD on Android (CORS/opaque) — go straight to download
+  if (isApp) {
+    go();
+    return Promise.resolve(true);
+  }
+  return fetch(url, { method: "HEAD", cache: "no-store" }).then(function (res) {
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    go();
+    return true;
+  }).catch(function () {
+    go();
+    return true;
+  });
+}
+
+const PP = {
+  key: function(userId) { return "ritm_pp_" + userId; },
+  get: function(userId) {
+    try { return parseInt(localStorage.getItem(this.key(userId)) || "0", 10) || 0; } catch (e) { return 0; }
+  },
+  hydrate: function(userId, n) {
+    var incoming = Math.max(0, parseInt(n, 10) || 0);
+    var local = this.get(userId);
+    // never clobber higher local score while offline writes may be pending
+    var hasPending = false;
+    try {
+      hasPending = (Store.getQueue() || []).some(function(item) {
+        return item.table === "users" && item.row && Object.prototype.hasOwnProperty.call(item.row, "pp");
+      });
+    } catch (e) {}
+    if (hasPending && local >= incoming) return local;
+    var v = Math.max(local, incoming);
+    try { localStorage.setItem(this.key(userId), String(v)); } catch (e) {}
+    // if local was ahead, push it
+    if (local > incoming) {
+      try { onlineWrite("users", "update", { pp: local }, { id: userId }); } catch (e) {}
+      return local;
+    }
+    return v;
+  },
+  set: function(userId, n, sync) {
+    var v = Math.max(0, n | 0);
+    try { localStorage.setItem(this.key(userId), String(v)); } catch (e) {}
+    if (sync !== false) {
+      try { onlineWrite("users", "update", { pp: v }, { id: userId }); } catch (e) {}
+    }
+    try { window.dispatchEvent(new Event("ritm-pp")); } catch (e) {}
+    return v;
+  },
+  add: function(userId, delta) {
+    return this.set(userId, this.get(userId) + (delta | 0), true);
+  }
+};
+
+const LS = {
+  user: "ritm_user",
+  habits: "ritm_habits",
+  tasks: "ritm_tasks",
+  comps: "ritm_comps",
+  notes: "ritm_notes",
+  settings: "ritm_settings",
+  queue: "ritm_sync_queue",
+  notified: "ritm_notified",
+  stats: "ritm_daily_stats"
+};
+function lsGet(k, fallback) {
+  try {
+    const v = localStorage.getItem(k);
+    return v ? JSON.parse(v) : fallback;
+  } catch (e) {
+    return fallback;
+  }
+}
+function lsSet(k, v) {
+  try {
+    localStorage.setItem(k, JSON.stringify(v));
+  } catch (e) {
+  }
+}
+function uid() {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = Math.random() * 16 | 0;
+    return (c === "x" ? r : r & 3 | 8).toString(16);
+  });
+}
+const Store = {
+  getHabits(userId) {
+    return lsGet(LS.habits, []).filter((h) => h.user_id === userId);
+  },
+  setHabits(userId, list) {
+    const all = lsGet(LS.habits, []).filter((h) => h.user_id !== userId);
+    lsSet(LS.habits, [...all, ...list]);
+  },
+  getTasks(userId) {
+    return lsGet(LS.tasks, []).filter((t) => t.user_id === userId);
+  },
+  setTasks(userId, list) {
+    const all = lsGet(LS.tasks, []).filter((t) => t.user_id !== userId);
+    lsSet(LS.tasks, [...all, ...list]);
+  },
+  getComps(userId) {
+    return lsGet(LS.comps, []).filter((c) => c.user_id === userId);
+  },
+  setComps(userId, list) {
+    const all = lsGet(LS.comps, []).filter((c) => c.user_id !== userId);
+    lsSet(LS.comps, [...all, ...list]);
+  },
+  getNotes(userId) {
+    return lsGet(LS.notes, []).filter((n) => n.user_id === userId);
+  },
+  setNotes(userId, list) {
+    const all = lsGet(LS.notes, []).filter((n) => n.user_id !== userId);
+    lsSet(LS.notes, [...all, ...list]);
+  },
+  getSettings(userId) {
+    const all = lsGet(LS.settings, {});
+    return all[userId] || { tracker_type: "heatmap", show_streak: true, share_stats: true };
+  },
+  setSettings(userId, s) {
+    const all = lsGet(LS.settings, {});
+    all[userId] = s;
+    lsSet(LS.settings, all);
+  },
+  enqueue(action) {
+    const q = lsGet(LS.queue, []);
+    q.push({ ...action, _ts: Date.now() });
+    lsSet(LS.queue, q);
+  },
+  getQueue() {
+    return lsGet(LS.queue, []);
+  },
+  setQueue(q) {
+    lsSet(LS.queue, q);
+  },
+  getStats(userId) {
+    return lsGet(LS.stats, []).filter((s) => s.user_id === userId);
+  },
+  setStats(userId, list) {
+    const all = lsGet(LS.stats, []).filter((s) => s.user_id !== userId);
+    lsSet(LS.stats, [...all, ...list]);
+  },
+  upsertStat(userId, row) {
+    const list = Store.getStats(userId);
+    const i = list.findIndex((s) => s.date === row.date);
+    if (i >= 0) list[i] = { ...list[i], ...row };
+    else list.push(row);
+    Store.setStats(userId, list);
+  }
+};
+async function flushQueue() {
+  if (!isOnline()) return;
+  let q = Store.getQueue();
+  if (!q.length) return;
+  const remaining = [];
+  for (const item of q) {
+    try {
+      if (item.op === "insert") {
+        const { error } = await sb.from(item.table).insert(item.row);
+        if (error) throw error;
+      } else if (item.op === "update") {
+        let query = sb.from(item.table).update(item.row);
+        Object.entries(item.match || {}).forEach(([k, v]) => {
+          query = query.eq(k, v);
+        });
+        const { error } = await query;
+        if (error) throw error;
+      } else if (item.op === "delete") {
+        let query = sb.from(item.table).delete();
+        Object.entries(item.match || {}).forEach(([k, v]) => {
+          query = query.eq(k, v);
+        });
+        const { error } = await query;
+        if (error) throw error;
+      } else if (item.op === "upsert") {
+        let { error } = await sb.from(item.table).upsert(item.row, item.opts || {});
+        if (error) {
+          const match = item.match || { user_id: item.row.user_id, date: item.row.date };
+          let q2 = sb.from(item.table).update(item.row);
+          Object.entries(match).forEach(([k, v]) => {
+            q2 = q2.eq(k, v);
+          });
+          const up = await q2;
+          if (up.error || up.data !== void 0 && Array.isArray(up.data) && up.data.length === 0) {
+            const ins = await sb.from(item.table).insert(item.row);
+            if (ins.error) throw ins.error;
+          }
+        }
+      }
+    } catch (e) {
+      remaining.push(item);
+    }
+  }
+  Store.setQueue(remaining);
+}
+async function pullFromServer(userId) {
+  if (!isOnline()) return null;
+  try {
+    // push local changes first so server is not behind
+    try { await flushQueue(); } catch (e) {}
+    const pendingTables = {};
+    try {
+      (Store.getQueue() || []).forEach(function(item) {
+        if (item && item.table) pendingTables[item.table] = true;
+      });
+    } catch (e) {}
+    const [h, t, c, n, s, st] = await Promise.all([
+      sb.from("habits").select("*").eq("user_id", userId),
+      sb.from("tasks").select("*").eq("user_id", userId),
+      sb.from("habit_completions").select("*").eq("user_id", userId),
+      sb.from("notes").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(50),
+      sb.from("user_settings").select("*").eq("user_id", userId).maybeSingle(),
+      sb.from("daily_stats").select("*").eq("user_id", userId).order("date", { ascending: false }).limit(60)
+    ]);
+    // do not overwrite local data while those tables still have unsynced writes
+    if (h.data && !pendingTables.habits) Store.setHabits(userId, h.data);
+    if (t.data && !pendingTables.tasks) Store.setTasks(userId, t.data);
+    if (c.data && !pendingTables.habit_completions) Store.setComps(userId, c.data);
+    if (n.data && !pendingTables.notes) Store.setNotes(userId, n.data);
+    if (s.data) Store.setSettings(userId, { tracker_type: s.data.tracker_type || "heatmap", show_streak: s.data.show_streak !== false, share_stats: s.data.share_stats !== false });
+    if (st && st.data) Store.setStats(userId, st.data.map((d) => ({ ...d, date: String(d.date).slice(0, 10), all_done: !!(d.all_done != null ? d.all_done : d.all_completed) })));
+    try {
+      const { data: me } = await sb.from("users").select("pp").eq("id", userId).maybeSingle();
+      if (me && me.pp != null) PP.hydrate(userId, me.pp);
+    } catch (e) {}
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+function onlineWrite(table, op, row, match, opts) {
+  if (navigator.onLine) {
+    Store.enqueue({ table, op, row, match, opts });
+    flushQueue();
+  } else {
+    Store.enqueue({ table, op, row, match, opts });
+  }
+}
+const DAY_LABELS = ["\u041F\u043D", "\u0412\u0442", "\u0421\u0440", "\u0427\u0442", "\u041F\u0442", "\u0421\u0431", "\u0412\u0441"];
+const MONTHS = ["\u044F\u043D\u0432\u0430\u0440\u044F", "\u0444\u0435\u0432\u0440\u0430\u043B\u044F", "\u043C\u0430\u0440\u0442\u0430", "\u0430\u043F\u0440\u0435\u043B\u044F", "\u043C\u0430\u044F", "\u0438\u044E\u043D\u044F", "\u0438\u044E\u043B\u044F", "\u0430\u0432\u0433\u0443\u0441\u0442\u0430", "\u0441\u0435\u043D\u0442\u044F\u0431\u0440\u044F", "\u043E\u043A\u0442\u044F\u0431\u0440\u044F", "\u043D\u043E\u044F\u0431\u0440\u044F", "\u0434\u0435\u043A\u0430\u0431\u0440\u044F"];
+const DAY_NAMES = ["\u0412\u043E\u0441\u043A\u0440\u0435\u0441\u0435\u043D\u044C\u0435", "\u041F\u043E\u043D\u0435\u0434\u0435\u043B\u044C\u043D\u0438\u043A", "\u0412\u0442\u043E\u0440\u043D\u0438\u043A", "\u0421\u0440\u0435\u0434\u0430", "\u0427\u0435\u0442\u0432\u0435\u0440\u0433", "\u041F\u044F\u0442\u043D\u0438\u0446\u0430", "\u0421\u0443\u0431\u0431\u043E\u0442\u0430"];
+const DAY_SHORT = ["\u0412\u0441", "\u041F\u043D", "\u0412\u0442", "\u0421\u0440", "\u0427\u0442", "\u041F\u0442", "\u0421\u0431"];
+function fmt(d, t) {
+  if (t === "iso") return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  if (t === "d") return String(d.getDate());
+  if (t === "day") return DAY_SHORT[d.getDay()];
+  if (t === "short") return d.getDate() + " " + MONTHS[d.getMonth()];
+  return DAY_NAMES[d.getDay()] + ", " + d.getDate() + " " + MONTHS[d.getMonth()];
+}
+function startOfWeek(d) {
+  const day = d.getDay(), diff = day === 0 ? -6 : 1 - day;
+  const r = new Date(d);
+  r.setDate(d.getDate() + diff);
+  r.setHours(0, 0, 0, 0);
+  return r;
+}
+function addDays(d, n) {
+  const r = new Date(d);
+  r.setDate(r.getDate() + n);
+  return r;
+}
+function isSameDay(a, b) {
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+}
+function normDate(d) {
+  if (!d) return "";
+  return String(d).slice(0, 10);
+}
+function isToday(d) {
+  return isSameDay(d, new Date());
+}
+function subDays(d, n) {
+  return addDays(d, -n);
+}
+function timeLabel(t) {
+  if (!t) return "";
+  return String(t).slice(0, 5);
+}
+function pushWidgetSnapshot(userId) {
+  if (!(window.Android && Android.updateTodayWidget)) return;
+  try {
+    const today = new Date();
+    const ds = fmt(today, "iso");
+    const dow = today.getDay() === 0 ? 7 : today.getDay();
+    const habits = Store.getHabits(userId).filter((h) => !h.is_paused && Array.isArray(h.days_of_week) && h.days_of_week.includes(dow));
+    const tasks = Store.getTasks(userId).filter((t) => t.due_date === ds);
+    const comps = Store.getComps(userId).filter((c) => normDate(c.completion_date) === ds);
+    const items = [];
+    habits.forEach((h) => {
+      const times = Array.isArray(h.times_of_day) && h.times_of_day.length ? h.times_of_day : [null];
+      times.forEach((slot) => {
+        const done = comps.some((c) => c.habit_id === h.id && (!slot && !c.time_slot || c.time_slot && slot && String(c.time_slot).slice(0, 5) === String(slot).slice(0, 5)));
+        items.push({ id: h.id, kind: "habit", title: slot ? h.title + " \xB7 " + String(slot).slice(0, 5) : h.title, done, slot });
+      });
+    });
+    tasks.forEach((t) => items.push({ id: t.id, kind: "task", title: t.title, done: !!t.is_completed }));
+    Android.updateTodayWidget(JSON.stringify({ date: ds, total: items.length, done: items.filter((i) => i.done).length, items: items.slice(0, 5) }));
+  } catch (e) {
+  }
+}
+function applyPendingWidgetToggles(userId) {
+  if (!(window.Android && Android.getPendingToggles)) return false;
+  let pending = [];
+  try {
+    pending = JSON.parse(Android.getPendingToggles() || "[]");
+  } catch (e) {
+    return false;
+  }
+  if (!pending.length) return false;
+  // Widget is always "today" — never touch other selected days
+  const ds = fmt(new Date(), "iso");
+  let changed = false;
+  pending.forEach((p) => {
+    if (!p || !p.id) return;
+    if (p.kind === "task") {
+      const tasks = Store.getTasks(userId);
+      const cur = tasks.find((t) => t.id === p.id);
+      if (!cur) return;
+      // only apply completion (widget marks done); ignore if already same
+      const done = p.done !== false;
+      if (!!cur.is_completed === done) return;
+      changed = true;
+      Store.setTasks(userId, tasks.map((t) => t.id === p.id ? { ...t, is_completed: done, completed_at: done ? (new Date()).toISOString() : null } : t));
+      onlineWrite("tasks", "update", { is_completed: done, completed_at: done ? (new Date()).toISOString() : null }, { id: p.id });
+      PP.add(userId, done ? 2 : -2);
+    }
+    if (p.kind === "habit") {
+      const comps = Store.getComps(userId);
+      const exists = comps.find((c) => c.habit_id === p.id && normDate(c.completion_date) === ds && (!p.slot && !c.time_slot || c.time_slot && p.slot && String(c.time_slot).slice(0, 5) === String(p.slot).slice(0, 5)));
+      if (p.done === false) {
+        if (exists) {
+          changed = true;
+          Store.setComps(userId, comps.filter((c) => c !== exists));
+          onlineWrite("habit_completions", "delete", null, { habit_id: p.id, completion_date: ds });
+          PP.add(userId, -1);
+        }
+      } else if (!exists) {
+        changed = true;
+        const row = { id: uid(), habit_id: p.id, user_id: userId, completion_date: ds, time_slot: p.slot || null, completed_at: (new Date()).toISOString() };
+        Store.setComps(userId, [...comps, row]);
+        onlineWrite("habit_completions", "insert", row);
+        PP.add(userId, 1);
+      }
+    }
+  });
+  try {
+    if (Android.clearPendingToggles) Android.clearPendingToggles();
+  } catch (e) {
+  }
+  if (changed) {
+    recalcStreak(userId);
+    pushWidgetSnapshot(userId);
+  }
+  return changed;
+}
+function getPlanForDate(userId, dateObj) {
+  const ds = fmt(dateObj, "iso");
+  const dow = dateObj.getDay() === 0 ? 7 : dateObj.getDay();
+  const habits = Store.getHabits(userId).filter((h) => !h.is_paused && Array.isArray(h.days_of_week) && h.days_of_week.includes(dow));
+  const tasks = Store.getTasks(userId).filter((t) => t.due_date === ds);
+  const comps = Store.getComps(userId).filter((c) => normDate(c.completion_date) === ds);
+  const items = [];
+  habits.forEach((h) => {
+    const times = Array.isArray(h.times_of_day) && h.times_of_day.length ? h.times_of_day : [null];
+    times.forEach((slot) => {
+      const done = comps.some((c) => c.habit_id === h.id && (!slot && !c.time_slot || c.time_slot && slot && String(c.time_slot).slice(0, 5) === String(slot).slice(0, 5)));
+      items.push({ kind: "habit", id: h.id, slot, done, title: h.title });
+    });
+  });
+  tasks.forEach((t) => items.push({ kind: "task", id: t.id, done: !!t.is_completed, title: t.title }));
+  return items;
+}
+function isDayFullyDone(userId, dateObj) {
+  const items = getPlanForDate(userId, dateObj);
+  if (!items.length) return null;
+  return items.every((i) => i.done);
+}
+function recalcStreak(userId) {
+  const today = new Date();
+  today.setHours(12, 0, 0, 0);
+  let streak = 0;
+  for (let i = 0; i < 400; i++) {
+    const d = addDays(today, -i);
+    const status = isDayFullyDone(userId, d);
+    if (status === null) continue;
+    if (status === true) {
+      streak++;
+      continue;
+    }
+    if (i === 0) continue;
+    break;
+  }
+  const ds = fmt(today, "iso");
+  const items = getPlanForDate(userId, today);
+  const done = items.filter((i) => i.done).length;
+  const total = items.length;
+  const fully = total > 0 && done === total;
+  const row = {
+    id: userId + "_" + ds,
+    user_id: userId,
+    day: ds,
+    date: ds,
+    total_planned: total,
+    total_completed: done,
+    completion_rate: total ? Math.round(done / total * 100) : 0,
+    all_done: fully,
+    streak_at_end_of_day: streak,
+    updated_at: (new Date()).toISOString()
+  };
+  if (typeof Store.upsertStat === "function") Store.upsertStat(userId, row);
+  onlineWrite("daily_stats", "upsert", row, null, { onConflict: "user_id,date" });
+  try {
+    localStorage.setItem("ritm_streak_" + userId, String(streak));
+  } catch (e) {
+  }
+  return streak;
+}
+function getCachedStreak(userId) {
+  try {
+    const v = localStorage.getItem("ritm_streak_" + userId);
+    if (v != null && v !== "") return parseInt(v, 10) || 0;
+  } catch (e) {
+  }
+  try { return recalcStreak(userId); } catch (e) { return 0; }
+}
+function buildLocalDayStats(userId, days) {
+  days = days || 28;
+  const out = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const date = subDays(new Date(), i);
+    const ds = fmt(date, "iso");
+    const items = getPlanForDate(userId, date);
+    const total = items.length;
+    const completed = items.filter((x) => x.done).length;
+    out.push({
+      date: ds,
+      total_planned: total,
+      total_completed: completed,
+      all_done: total > 0 && completed === total,
+      has: total > 0,
+      pct: total ? Math.round(completed / total * 100) : 0
+    });
+  }
+  return out;
+}
+function getHabitStats(userId, habit, days) {
+  days = days || 28;
+  const comps = Store.getComps(userId);
+  const times = Array.isArray(habit.times_of_day) && habit.times_of_day.length ? habit.times_of_day : [null];
+  let planned = 0, done = 0, streak = 0;
+  const dots = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const date = subDays(new Date(), i);
+    const ds = fmt(date, "iso");
+    const dow = date.getDay() === 0 ? 7 : date.getDay();
+    if (habit.is_paused || !Array.isArray(habit.days_of_week) || !habit.days_of_week.includes(dow)) {
+      dots.push({ ds, status: "skip" });
+      continue;
+    }
+    planned++;
+    const allDone = times.every(function(slot) {
+      return comps.some(function(c) {
+        return c.habit_id === habit.id && normDate(c.completion_date) === ds && (!slot && !c.time_slot || c.time_slot && slot && String(c.time_slot).slice(0, 5) === String(slot).slice(0, 5));
+      });
+    });
+    if (allDone) done++;
+    dots.push({ ds, status: allDone ? "done" : "miss" });
+  }
+  for (let i = 0; i < 400; i++) {
+    const date = subDays(new Date(), i);
+    const ds = fmt(date, "iso");
+    const dow = date.getDay() === 0 ? 7 : date.getDay();
+    if (habit.is_paused || !Array.isArray(habit.days_of_week) || !habit.days_of_week.includes(dow)) continue;
+    const allDone = times.every(function(slot) {
+      return comps.some(function(c) {
+        return c.habit_id === habit.id && normDate(c.completion_date) === ds && (!slot && !c.time_slot || c.time_slot && slot && String(c.time_slot).slice(0, 5) === String(slot).slice(0, 5));
+      });
+    });
+    if (allDone) {
+      streak++;
+      continue;
+    }
+    if (i === 0) continue;
+    break;
+  }
+  return {
+    planned,
+    done,
+    pct: planned ? Math.round(done / planned * 100) : 0,
+    streak,
+    dots
+  };
+}
+function hasNativeNotify() {
+  return !!(window.Android && Android.scheduleNotification);
+}
+async function ensureNotifyPermission() {
+  try {
+    if (window.Android && Android.requestNotifications) Android.requestNotifications();
+  } catch (e) {
+  }
+  if (hasNativeNotify()) return true;
+  if (!("Notification" in window)) return false;
+  if (Notification.permission === "granted") return true;
+  if (Notification.permission === "denied") return false;
+  const r = await Notification.requestPermission();
+  return r === "granted";
+}
+function checkDeadlineNotifications(userId) {
+  const tasks = Store.getTasks(userId).filter((t) => !t.is_completed && t.due_date);
+  const notified = lsGet(LS.notified, {});
+  const now = new Date();
+  const today = fmt(now, "iso");
+  const tomorrow = fmt(addDays(now, 1), "iso");
+  const native = hasNativeNotify();
+  tasks.forEach((t) => {
+    const due = new Date(t.due_date + "T09:00:00");
+    const half = new Date(due.getTime() - 12 * 60 * 60 * 1e3);
+    const dayBefore = new Date(due.getTime() - 24 * 60 * 60 * 1e3);
+    const key1 = t.id + "_1d";
+    const keyHalf = t.id + "_half";
+    const keyToday = t.id + "_today";
+    const prefs = function() {
+      try {
+        const u = JSON.parse(localStorage.getItem(LS.user) || "null");
+        const all = lsGet(LS.settings, {});
+        const st = u && all[u.id] || {};
+        return { en: st.notify_enabled !== false, d: st.notify_1d !== false, h: st.notify_half === true, t: st.notify_today !== false };
+      } catch (e) {
+        return { en: true, d: true, h: false, t: true };
+      }
+    }();
+    if (!prefs.en) return;
+    if (native) {
+      try {
+        const now2 = Date.now();
+        if (prefs.d && dayBefore.getTime() > now2 + 3e3) Android.scheduleNotification("\u0420\u0438\u0442\u043C", "\u041E\u0441\u0442\u0430\u043B\u0441\u044F 1 \u0434\u0435\u043D\u044C: \xAB" + t.title + "\xBB", dayBefore.getTime(), key1);
+        if (prefs.h && half.getTime() > now2 + 3e3) Android.scheduleNotification("\u0420\u0438\u0442\u043C", "\u041E\u0441\u0442\u0430\u043B\u043E\u0441\u044C \u043F\u043E\u043B\u0434\u043D\u044F: \xAB" + t.title + "\xBB", half.getTime(), keyHalf);
+        if (prefs.t && due.getTime() > now2 + 3e3) Android.scheduleNotification("\u0420\u0438\u0442\u043C", "\u0421\u0435\u0433\u043E\u0434\u043D\u044F \u0434\u0435\u0434\u043B\u0430\u0439\u043D: \xAB" + t.title + "\xBB", due.getTime(), keyToday);
+      } catch (e) {
+      }
+      return;
+    }
+    if (!("Notification" in window) || Notification.permission !== "granted") return;
+    if (t.due_date === tomorrow && !notified[key1]) {
+      new Notification("\u0420\u0438\u0442\u043C", { body: "\u041E\u0441\u0442\u0430\u043B\u0441\u044F 1 \u0434\u0435\u043D\u044C: \xAB" + t.title + "\xBB", tag: key1 });
+      notified[key1] = true;
+    }
+    if (t.due_date === today && !notified[keyToday]) {
+      new Notification("\u0420\u0438\u0442\u043C", { body: "\u0421\u0435\u0433\u043E\u0434\u043D\u044F \u0434\u0435\u0434\u043B\u0430\u0439\u043D: \xAB" + t.title + "\xBB", tag: keyToday });
+      notified[keyToday] = true;
+    }
+    if (t.due_date === tomorrow && now.getHours() >= 12 && !notified[keyHalf]) {
+      new Notification("\u0420\u0438\u0442\u043C", { body: "\u041E\u0441\u0442\u0430\u043B\u043E\u0441\u044C \u043F\u043E\u043B\u0434\u043D\u044F: \xAB" + t.title + "\xBB", tag: keyHalf });
+      notified[keyHalf] = true;
+    }
+  });
+  lsSet(LS.notified, notified);
+}
+const I = {
+  logo: (s = 18) => React.createElement("svg", { width: s, height: s, viewBox: "0 0 24 24", fill: "none", stroke: "white", strokeWidth: "2.2", strokeLinecap: "round", strokeLinejoin: "round" }, React.createElement("path", { d: "M4 12h4l2-7 4 14 2-7h4" })),
+  check: (s = 12, c = "white") => React.createElement("svg", { width: s, height: s, viewBox: "0 0 24 24", fill: "none", stroke: c, strokeWidth: "3", strokeLinecap: "round", strokeLinejoin: "round" }, React.createElement("path", { d: "M5 13l4 4L19 7" })),
+  plus: (s = 20, c = "white") => React.createElement("svg", { width: s, height: s, viewBox: "0 0 24 24", fill: "none", stroke: c, strokeWidth: "2.2", strokeLinecap: "round" }, React.createElement("path", { d: "M12 5v14M5 12h14" })),
+  cal: (a) => React.createElement("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: a ? "var(--forest)" : "var(--muted)", strokeWidth: a ? 2.2 : 1.8, strokeLinecap: "round", strokeLinejoin: "round" }, React.createElement("rect", { x: "3", y: "4", width: "18", height: "18", rx: "2" }), React.createElement("line", { x1: "16", y1: "2", x2: "16", y2: "6" }), React.createElement("line", { x1: "8", y1: "2", x2: "8", y2: "6" }), React.createElement("line", { x1: "3", y1: "10", x2: "21", y2: "10" })),
+  ref: (a) => React.createElement("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: a ? "var(--forest)" : "var(--muted)", strokeWidth: a ? 2.2 : 1.8, strokeLinecap: "round", strokeLinejoin: "round" }, React.createElement("polyline", { points: "23 4 23 10 17 10" }), React.createElement("polyline", { points: "1 20 1 14 7 14" }), React.createElement("path", { d: "M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" })),
+  chk: (a) => React.createElement("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: a ? "var(--forest)" : "var(--muted)", strokeWidth: a ? 2.2 : 1.8, strokeLinecap: "round", strokeLinejoin: "round" }, React.createElement("polyline", { points: "9 11 12 14 22 4" }), React.createElement("path", { d: "M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" })),
+  chart: (a) => React.createElement("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: a ? "var(--forest)" : "var(--muted)", strokeWidth: a ? 2.2 : 1.8, strokeLinecap: "round", strokeLinejoin: "round" }, React.createElement("path", { d: "M3 3v18h18" }), React.createElement("path", { d: "M7 16v-5" }), React.createElement("path", { d: "M12 16V8" }), React.createElement("path", { d: "M17 16v-9" })),
+  users: (a) => React.createElement("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: a ? "var(--forest)" : "var(--muted)", strokeWidth: a ? 2.2 : 1.8, strokeLinecap: "round", strokeLinejoin: "round" }, React.createElement("path", { d: "M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" }), React.createElement("circle", { cx: "9", cy: "7", r: "4" }), React.createElement("path", { d: "M23 21v-2a4 4 0 00-3-3.87" }), React.createElement("path", { d: "M16 3.13a4 4 0 010 7.75" })),
+  settings: () => React.createElement("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "var(--muted)", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round" }, React.createElement("circle", { cx: "12", cy: "12", r: "3" }), React.createElement("path", { d: "M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" })),
+  pause: () => React.createElement("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "var(--muted)", strokeWidth: "2.2", strokeLinecap: "round" }, React.createElement("rect", { x: "6", y: "4", width: "4", height: "16" }), React.createElement("rect", { x: "14", y: "4", width: "4", height: "16" })),
+  play: () => React.createElement("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "var(--muted)", strokeWidth: "2.2", strokeLinecap: "round", strokeLinejoin: "round" }, React.createElement("polygon", { points: "5 3 19 12 5 21 5 3" })),
+  trash: () => React.createElement("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "var(--muted)", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round" }, React.createElement("polyline", { points: "3 6 5 6 21 6" }), React.createElement("path", { d: "M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" })),
+  clock: () => React.createElement("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "var(--muted)", strokeWidth: "2", strokeLinecap: "round" }, React.createElement("circle", { cx: "12", cy: "12", r: "10" }), React.createElement("polyline", { points: "12 6 12 12 16 14" })),
+  x: () => React.createElement("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "var(--muted)", strokeWidth: "2.2", strokeLinecap: "round" }, React.createElement("path", { d: "M18 6L6 18M6 6l12 12" })),
+  back: () => React.createElement("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "var(--forest)", strokeWidth: "2.2", strokeLinecap: "round", strokeLinejoin: "round" }, React.createElement("path", { d: "M19 12H5M12 19l-7-7 7-7" })),
+  offline: () => React.createElement("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round" }, React.createElement("path", { d: "M1 1l22 22M16.72 11.06A10.94 10.94 0 0119 12.55M5 12.55a10.94 10.94 0 015.17-2.39M10.71 5.05A16 16 0 0122.58 9M1.42 9a15.91 15.91 0 014.7-2.88M8.53 16.11a6 6 0 016.95 0M12 20h.01" }))
+};
+function CheckCircle({ done, onClick, size = 28 }) {
+  return React.createElement(
+    "button",
+    {
+      type: "button",
+      onClick,
+      className: "flex-shrink-0 flex items-center justify-center transition-all active:scale-90",
+      style: { width: size, height: size, borderRadius: "50%", background: done ? "var(--forest)" : "transparent", border: done ? "2px solid var(--forest)" : "2px solid #C5BFB2" }
+    },
+    done && I.check(size * 0.45)
+  );
+}
+function CheckSquare({ done, onClick, size = 26 }) {
+  return React.createElement(
+    "button",
+    {
+      type: "button",
+      onClick,
+      className: "flex-shrink-0 flex items-center justify-center transition-all active:scale-90",
+      style: { width: size, height: size, borderRadius: 8, background: done ? "var(--forest)" : "transparent", border: done ? "2px solid var(--forest)" : "2px solid #C5BFB2" }
+    },
+    done && I.check(size * 0.45)
+  );
+}
+function AuthScreen({ onLogin }) {
+  const [isLogin, setIsLogin] = useState(true), [username, setUsername] = useState(""), [password, setPassword] = useState(""), [displayName, setDisplayName] = useState(""), [error, setError] = useState(""), [loading, setLoading] = useState(false);
+  const submit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      if (!isOnline()) {
+        setError("\u041D\u0443\u0436\u0435\u043D \u0438\u043D\u0442\u0435\u0440\u043D\u0435\u0442 \u0434\u043B\u044F \u0432\u0445\u043E\u0434\u0430");
+        return;
+      }
+      if (isLogin) {
+        const { data, error: err } = await sb.rpc("login_user", { p_username: username.trim(), p_password: password });
+        if (err) throw err;
+        if (!data.success) {
+          setError(data.error);
+          return;
+        }
+        onLogin({ id: data.user_id, username: data.username, display_name: data.display_name });
+      } else {
+        const { data, error: err } = await sb.rpc("register_user", { p_username: username.trim(), p_password: password, p_display_name: displayName.trim() || null });
+        if (err) throw err;
+        if (!data.success) {
+          setError(data.error);
+          return;
+        }
+        onLogin({ id: data.user_id, username: data.username, display_name: displayName.trim() || null });
+      }
+    } catch (err) {
+      setError(err.message || "\u041E\u0448\u0438\u0431\u043A\u0430");
+    } finally {
+      setLoading(false);
+    }
+  };
+  return React.createElement("div", { className: "h-full flex flex-col items-center justify-center px-6 relative", style: { background: "var(--bg)" } }, React.createElement("div", { className: "absolute", style: { top: 12, right: 14, fontSize: 11, color: "var(--muted)", letterSpacing: "0.04em" } }, APP_VERSION), React.createElement("div", { className: "w-full max-w-sm fade-in" }, React.createElement("div", { className: "flex items-center gap-3 mb-10 justify-center" }, React.createElement("div", { className: "w-11 h-11 rounded-xl flex items-center justify-center", style: { background: "var(--forest)" } }, I.logo(22)), React.createElement("span", { className: "text-2xl font-semibold tracking-tight" }, "\u0420\u0438\u0442\u043C")), React.createElement("form", { onSubmit: submit, className: "space-y-4" }, !isLogin && React.createElement("div", null, React.createElement("label", { className: "block text-sm mb-1.5", style: { color: "var(--muted)" } }, "\u0418\u043C\u044F"), React.createElement(
+    "input",
+    {
+      value: displayName,
+      onChange: (e) => setDisplayName(e.target.value),
+      placeholder: "\u041A\u0430\u043A \u0442\u0435\u0431\u044F \u0437\u043E\u0432\u0443\u0442",
+      className: "w-full px-4 py-3 rounded-2xl border outline-none text-[15px]",
+      style: { background: "var(--input)", borderColor: "var(--line)" }
+    }
+  )), React.createElement("div", null, React.createElement("label", { className: "block text-sm mb-1.5", style: { color: "var(--muted)" } }, "\u041B\u043E\u0433\u0438\u043D"), React.createElement(
+    "input",
+    {
+      value: username,
+      onChange: (e) => setUsername(e.target.value),
+      placeholder: "\u041B\u043E\u0433\u0438\u043D",
+      required: true,
+      className: "w-full px-4 py-3 rounded-2xl border outline-none text-[15px]",
+      style: { background: "var(--input)", borderColor: "var(--line)" }
+    }
+  )), React.createElement("div", null, React.createElement("label", { className: "block text-sm mb-1.5", style: { color: "var(--muted)" } }, "\u041F\u0430\u0440\u043E\u043B\u044C"), React.createElement(
+    "input",
+    {
+      type: "password",
+      value: password,
+      onChange: (e) => setPassword(e.target.value),
+      placeholder: "\u041F\u0430\u0440\u043E\u043B\u044C",
+      required: true,
+      minLength: 4,
+      className: "w-full px-4 py-3 rounded-2xl border outline-none text-[15px]",
+      style: { background: "var(--input)", borderColor: "var(--line)" }
+    }
+  )), error && React.createElement("p", { className: "text-sm text-red-600 bg-red-50 px-3 py-2 rounded-xl" }, error), React.createElement("button", { type: "submit", disabled: loading, className: "w-full py-3.5 rounded-2xl text-white font-medium text-[15px] disabled:opacity-60", style: { background: "var(--forest)" } }, loading ? "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430..." : isLogin ? "\u0412\u043E\u0439\u0442\u0438" : "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0430\u043A\u043A\u0430\u0443\u043D\u0442")), React.createElement("button", { onClick: () => {
+    setIsLogin(!isLogin);
+    setError("");
+  }, className: "w-full mt-5 text-sm", style: { color: "var(--muted)" } }, isLogin ? "\u041D\u0435\u0442 \u0430\u043A\u043A\u0430\u0443\u043D\u0442\u0430? \u0417\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u043E\u0432\u0430\u0442\u044C\u0441\u044F" : "\u0423\u0436\u0435 \u0435\u0441\u0442\u044C \u0430\u043A\u043A\u0430\u0443\u043D\u0442? \u0412\u043E\u0439\u0442\u0438")));
+}
+function BottomNav({ active, onChange }) {
+  const tabs = [
+    { id: "today", label: "\u0421\u0435\u0433\u043E\u0434\u043D\u044F", icon: I.cal },
+    { id: "habits", label: "\u041F\u0440\u0438\u0432\u044B\u0447\u043A\u0438", icon: I.ref },
+    { id: "tasks", label: "\u0417\u0430\u0434\u0430\u0447\u0438", icon: I.chk },
+    { id: "friends", label: "\u0414\u0440\u0443\u0437\u044C\u044F", icon: I.users },
+    { id: "progress", label: "\u041F\u0440\u043E\u0433\u0440\u0435\u0441\u0441", icon: I.chart }
+  ];
+  return React.createElement("nav", { className: "safe-bottom border-t px-1 pt-1.5 pb-2", style: { background: "var(--nav)", borderColor: "var(--line)" } }, React.createElement("div", { className: "flex items-center justify-around max-w-lg mx-auto" }, tabs.map((t) => {
+    const a = active === t.id;
+    return React.createElement("button", { key: t.id, type: "button", onClick: () => onChange(t.id), className: "nav-item relative" + (a ? " nav-pop" : "") }, a && React.createElement("div", { className: "absolute inset-0 rounded-2xl", style: { background: "var(--chip)" } }), React.createElement("span", { className: "relative z-10" }, t.icon(a)), React.createElement("span", { className: "relative z-10 text-[10px] font-medium", style: { color: a ? "var(--forest)" : "var(--muted)" } }, t.label));
+  })));
+}
+function TodayScreen({ user, onOpenSettings, online }) {
+  const [habits, setHabits] = useState([]), [tasks, setTasks] = useState([]), [comps, setComps] = useState([]), [selectedDate, setSelectedDate] = useState(new Date()), [streak, setStreak] = useState(() => getCachedStreak(user.id)), [pp, setPp] = useState(() => PP.get(user.id)), [showAdd, setShowAdd] = useState(false), [newTitle, setNewTitle] = useState(""), [note, setNote] = useState(""), [notes, setNotes] = useState([]);
+  const weekStart = startOfWeek(selectedDate);
+  const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
+  const dow = selectedDate.getDay() === 0 ? 7 : selectedDate.getDay();
+  const dateStr = fmt(selectedDate, "iso");
+  const planItems = useMemo(() => {
+    const items = [];
+    habits.filter((h) => !h.is_paused && Array.isArray(h.days_of_week) && h.days_of_week.includes(dow)).forEach((h) => {
+      const times = Array.isArray(h.times_of_day) && h.times_of_day.length > 0 ? h.times_of_day : [null];
+      times.forEach((t) => items.push({ type: "habit", habit: h, timeSlot: t, key: h.id + "_" + (t || "none") }));
+    });
+    tasks.filter((t) => t.due_date === dateStr).forEach((t) => items.push({ type: "task", task: t, key: "task_" + t.id }));
+    return items;
+  }, [habits, tasks, dow, dateStr]);
+  const isCompDone = (habitId, timeSlot) => comps.some((c) => c.habit_id === habitId && (!timeSlot && !c.time_slot || c.time_slot && timeSlot && String(c.time_slot).slice(0, 5) === String(timeSlot).slice(0, 5)));
+  const totalPlanned = planItems.length;
+  const totalCompleted = planItems.filter((it) => it.type === "habit" ? isCompDone(it.habit.id, it.timeSlot) : it.task.is_completed).length;
+  const progress = totalPlanned > 0 ? Math.round(totalCompleted / totalPlanned * 100) : 0;
+  const reloadLocal = useCallback(() => {
+    setHabits(Store.getHabits(user.id));
+    setTasks(Store.getTasks(user.id));
+    setComps(Store.getComps(user.id).filter((c) => normDate(c.completion_date) === dateStr));
+    setNotes(Store.getNotes(user.id).slice(0, 5));
+    setStreak(getCachedStreak(user.id));
+    setPp(PP.get(user.id));
+  }, [user.id, dateStr]);
+  // date switch: only local filter — never pull/overwrite from server
+  useEffect(() => {
+    reloadLocal();
+  }, [user.id, dateStr, reloadLocal]);
+  // network sync once per user/online, not on day switch
+  useEffect(() => {
+    if (!online) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        await flushQueue();
+        if (cancelled) return;
+        await pullFromServer(user.id);
+        if (!cancelled) reloadLocal();
+      } catch (e) {}
+      try { checkDeadlineNotifications(user.id); } catch (e) {}
+    })();
+    const onData = () => reloadLocal();
+    window.addEventListener("ritm-data", onData);
+    window.addEventListener("ritm-pp", onData);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("ritm-data", onData);
+      window.removeEventListener("ritm-pp", onData);
+    };
+  }, [user.id, online, reloadLocal]);
+  async function toggleHabit(habitId, timeSlot) {
+    const done = isCompDone(habitId, timeSlot);
+    if (done) {
+      const next = Store.getComps(user.id).filter((c) => !(c.habit_id === habitId && c.completion_date === dateStr && (!timeSlot && !c.time_slot || c.time_slot && timeSlot && String(c.time_slot).slice(0, 5) === String(timeSlot).slice(0, 5))));
+      Store.setComps(user.id, next);
+      setComps(next.filter((c) => c.completion_date === dateStr));
+      const match = { habit_id: habitId, completion_date: dateStr };
+      onlineWrite("habit_completions", "delete", null, match);
+    } else {
+      const row = { id: uid(), habit_id: habitId, user_id: user.id, completion_date: dateStr, completed_at: (new Date()).toISOString() };
+      if (timeSlot) row.time_slot = timeSlot;
+      const all = [...Store.getComps(user.id), row];
+      Store.setComps(user.id, all);
+      setComps(all.filter((c) => c.completion_date === dateStr));
+      onlineWrite("habit_completions", "insert", row);
+    }
+    if (done) PP.add(user.id, -1);
+    else PP.add(user.id, 1);
+    try { window.dispatchEvent(new Event("ritm-pp")); } catch (e) {}
+    const s = recalcStreak(user.id);
+    setStreak(s);
+    pushWidgetSnapshot(user.id);
+  }
+  function toggleTask(task) {
+    const v = !task.is_completed;
+    const all = Store.getTasks(user.id).map((t) => t.id === task.id ? { ...t, is_completed: v, completed_at: v ? (new Date()).toISOString() : null } : t);
+    Store.setTasks(user.id, all);
+    setTasks(all);
+    onlineWrite("tasks", "update", { is_completed: v, completed_at: v ? (new Date()).toISOString() : null }, { id: task.id });
+    PP.add(user.id, v ? 2 : -2);
+    try { window.dispatchEvent(new Event("ritm-pp")); } catch (e) {}
+    const s = recalcStreak(user.id);
+    setStreak(s);
+    pushWidgetSnapshot(user.id);
+  }
+  function addTask() {
+    if (!newTitle.trim()) return;
+    const row = { id: uid(), user_id: user.id, title: newTitle.trim(), due_date: dateStr, is_completed: false, created_at: (new Date()).toISOString() };
+    const all = [row, ...Store.getTasks(user.id)];
+    Store.setTasks(user.id, all);
+    setTasks(all);
+    setNewTitle("");
+    setShowAdd(false);
+    onlineWrite("tasks", "insert", row);
+    const s = recalcStreak(user.id);
+    setStreak(s);
+    pushWidgetSnapshot(user.id);
+  }
+  function saveNote() {
+    if (!note.trim()) return;
+    const row = { id: uid(), user_id: user.id, content: note.trim(), created_at: (new Date()).toISOString() };
+    const all = [row, ...Store.getNotes(user.id)];
+    Store.setNotes(user.id, all);
+    setNotes(all.slice(0, 5));
+    setNote("");
+    onlineWrite("notes", "insert", row);
+  }
+  function deleteNote(id) {
+    const all = Store.getNotes(user.id).filter((n) => n.id !== id);
+    Store.setNotes(user.id, all);
+    setNotes(all.slice(0, 5));
+    onlineWrite("notes", "delete", null, { id });
+  }
+  const greet = () => {
+    const h = (new Date()).getHours();
+    return h < 12 ? "\u0414\u043E\u0431\u0440\u043E\u0435 \u0443\u0442\u0440\u043E" : h < 18 ? "\u0414\u043E\u0431\u0440\u044B\u0439 \u0434\u0435\u043D\u044C" : "\u0414\u043E\u0431\u0440\u044B\u0439 \u0432\u0435\u0447\u0435\u0440";
+  };
+  return React.createElement("div", { className: "px-5 pt-5 pb-4 min-h-full fade-in safe-top" }, React.createElement("div", { className: "flex items-center justify-between mb-5" }, React.createElement("div", { className: "flex items-center gap-2.5" }, React.createElement("div", { className: "w-9 h-9 rounded-xl flex items-center justify-center", style: { background: "var(--forest)" } }, I.logo()), React.createElement("span", { className: "text-lg font-semibold tracking-tight" }, "\u0420\u0438\u0442\u043C")), React.createElement("button", { onClick: onOpenSettings, className: "w-9 h-9 rounded-xl flex items-center justify-center", style: { background: "var(--card)", border: "1px solid var(--line)" } }, I.settings())), React.createElement("div", { className: "flex items-start justify-between mb-4" }, React.createElement("div", null, React.createElement("p", { className: "text-sm mb-0.5", style: { color: "var(--muted)" } }, greet()), React.createElement("h1", { className: "text-[22px] font-semibold leading-tight tracking-tight" }, fmt(selectedDate, "full"))), React.createElement("div", { className: "flex gap-2" }, React.createElement("div", { className: "rounded-2xl px-3 py-2 text-center min-w-[52px]", style: { background: "var(--chip)" } }, React.createElement("p", { className: "text-[10px] uppercase tracking-wider font-medium", style: { color: "var(--muted)" } }, "PP"), React.createElement("p", { className: "text-xl font-semibold", style: { color: "var(--forest)" } }, pp)), React.createElement("div", { className: "rounded-2xl px-3 py-2 text-center min-w-[52px]", style: { background: "var(--chip)" } }, React.createElement("p", { className: "text-[10px] uppercase tracking-wider font-medium", style: { color: "var(--muted)" } }, "\u0421\u0435\u0440\u0438\u044F"), React.createElement("p", { className: "text-xl font-semibold", style: { color: "var(--forest)" } }, streak)))), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("div", { className: "flex items-center justify-between mb-2" }, React.createElement("div", null, React.createElement("h2", { className: "font-semibold text-[15px]" }, "\u041F\u043B\u0430\u043D \u0434\u043D\u044F"), React.createElement("p", { className: "text-sm", style: { color: "var(--muted)" } }, totalPlanned === 0 ? "\u041F\u043E\u043A\u0430 \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0437\u0430\u043F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u043E" : totalCompleted + " \u0438\u0437 " + totalPlanned + " \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u043E")), React.createElement("span", { className: "text-lg font-semibold", style: { color: "var(--forest)" } }, progress, "%")), React.createElement("div", { className: "h-1.5 rounded-full overflow-hidden mb-3", style: { background: "var(--chip)" } }, React.createElement("div", { className: "h-full rounded-full transition-all ", style: { width: progress + "%", background: "var(--forest)" } })), React.createElement("div", { className: "space-y-1.5" }, planItems.map((it) => {
+    if (it.type === "habit") {
+      const done2 = isCompDone(it.habit.id, it.timeSlot);
+      const timeStr = timeLabel(it.timeSlot);
+      return React.createElement(
+        "div",
+        {
+          key: it.key,
+          onClick: () => toggleHabit(it.habit.id, it.timeSlot),
+          className: "flex items-center gap-3 p-3 rounded-2xl active:scale-[0.99] transition-all cursor-pointer",
+          style: { background: done2 ? "var(--forest-soft)" : "var(--input)" }
+        },
+        React.createElement(CheckCircle, { done: done2, onClick: (e) => {
+          e.stopPropagation();
+          toggleHabit(it.habit.id, it.timeSlot);
+        } }),
+        React.createElement("div", { className: "flex-1 min-w-0" }, React.createElement("p", { className: "text-[14px] break-words leading-snug", style: { textDecoration: done2 ? "line-through" : "none", color: done2 ? "var(--muted)" : "var(--text)" } }, it.habit.title), timeStr && React.createElement("p", { className: "text-[11px] mt-0.5 flex items-center gap-1", style: { color: "var(--muted)" } }, I.clock(), " ", timeStr))
+      );
+    }
+    const done = it.task.is_completed;
+    return React.createElement(
+      "div",
+      {
+        key: it.key,
+        onClick: () => toggleTask(it.task),
+        className: "flex items-center gap-3 p-3 rounded-2xl active:scale-[0.99] transition-all cursor-pointer",
+        style: { background: done ? "var(--forest-soft)" : "var(--input)" }
+      },
+      React.createElement(CheckSquare, { done, onClick: (e) => {
+        e.stopPropagation();
+        toggleTask(it.task);
+      } }),
+      React.createElement("p", { className: "flex-1 text-[14px] break-words leading-snug min-w-0", style: { textDecoration: done ? "line-through" : "none", color: done ? "var(--muted)" : "var(--text)" } }, it.task.title)
+    );
+  }), totalPlanned === 0 && React.createElement("p", { className: "text-sm text-center py-3 leading-relaxed", style: { color: "var(--muted)" } }, "\u0414\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u043F\u0440\u0438\u0432\u044B\u0447\u043A\u0443 \u0438\u043B\u0438 \u0440\u0430\u0437\u043E\u0432\u0443\u044E \u0437\u0430\u0434\u0430\u0447\u0443")), !showAdd ? React.createElement("div", { className: "flex gap-2 mt-3" }, React.createElement("button", { onClick: () => setShowAdd(true), className: "flex-1 py-2.5 rounded-2xl border text-sm", style: { borderColor: "var(--line)", color: "var(--muted)" } }, "\u0420\u0430\u0437\u043E\u0432\u0430\u044F \u0437\u0430\u0434\u0430\u0447\u0430"), React.createElement("button", { onClick: () => setShowAdd(true), className: "px-5 py-2.5 rounded-2xl text-white text-sm font-medium", style: { background: "var(--forest)" } }, "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C")) : React.createElement("div", { className: "mt-3 flex gap-2" }, React.createElement(
+    "input",
+    {
+      autoFocus: true,
+      value: newTitle,
+      onChange: (e) => setNewTitle(e.target.value),
+      onKeyDown: (e) => e.key === "Enter" && addTask(),
+      placeholder: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0437\u0430\u0434\u0430\u0447\u0438",
+      className: "flex-1 px-4 py-2.5 rounded-2xl border outline-none text-sm",
+      style: { background: "var(--input)", borderColor: "var(--line)" }
+    }
+  ), React.createElement("button", { onClick: addTask, className: "w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0", style: { background: "var(--forest)" } }, I.plus(18)))), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "\u041D\u0435\u0434\u0435\u043B\u044F"), React.createElement("div", { className: "week-strip" }, weekDays.map((day) => {
+    const sel = isSameDay(day, selectedDate), cur = isToday(day);
+    return React.createElement(
+      "button",
+      {
+        key: day.toISOString(),
+        type: "button",
+        onClick: () => setSelectedDate(day),
+        className: "week-day",
+        style: { background: sel ? "var(--forest-soft)" : "transparent" }
+      },
+      React.createElement("span", { className: "text-[11px]", style: { color: sel ? "var(--forest)" : "var(--muted)", fontWeight: sel ? 600 : 400 } }, fmt(day, "day")),
+      React.createElement(
+        "div",
+        {
+          className: "week-day-num",
+          style: { background: sel ? "var(--forest)" : cur ? "var(--mid)" : "var(--chip)", color: sel ? "#fff" : cur ? "var(--forest)" : "var(--taupe)", boxShadow: sel ? "0 2px 10px rgba(0,0,0,0.18)" : "none" }
+        },
+        fmt(day, "d")
+      )
+    );
+  }))), React.createElement("div", { className: "rounded-3xl p-4 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "\u0417\u0430\u043C\u0435\u0442\u043A\u0438"), React.createElement("div", { className: "flex flex-col gap-2 mb-2" }, React.createElement(
+    "input",
+    {
+      value: note,
+      onChange: (e) => setNote(e.target.value),
+      onKeyDown: (e) => e.key === "Enter" && saveNote(),
+      placeholder: "\u041A\u043E\u0440\u043E\u0442\u043A\u0430\u044F \u043C\u044B\u0441\u043B\u044C",
+      className: "w-full px-4 py-2.5 rounded-2xl border outline-none text-sm",
+      style: { background: "var(--input)", borderColor: "var(--line)" }
+    }
+  ), React.createElement("button", { onClick: saveNote, className: "w-full py-2.5 rounded-2xl border text-sm font-medium", style: { borderColor: "var(--line)", color: "var(--taupe)", background: "var(--input)" } }, "\u0417\u0430\u043F\u0438\u0441\u0430\u0442\u044C")), notes.length > 0 ? React.createElement("div", { className: "space-y-1.5 mt-2" }, notes.map((n) => React.createElement("div", { key: n.id, className: "flex items-start gap-2 px-3 py-2 rounded-xl", style: { background: "var(--input)" } }, React.createElement("p", { className: "text-sm flex-1 break-words min-w-0", style: { color: "var(--taupe)" } }, n.content), React.createElement(
+    "button",
+    {
+      type: "button",
+      onClick: () => deleteNote(n.id),
+      className: "flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center",
+      style: { color: "var(--muted)", background: "var(--chip)" },
+      "aria-label": "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"
+    },
+    React.createElement("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round" }, React.createElement("path", { d: "M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" }))
+  )))) : React.createElement("p", { className: "text-sm leading-relaxed", style: { color: "var(--muted)" } }, "\u0417\u0434\u0435\u0441\u044C \u0431\u0443\u0434\u0443\u0442 \u0431\u044B\u0441\u0442\u0440\u044B\u0435 \u0437\u0430\u043C\u0435\u0442\u043A\u0438")));
+}
+function HabitsScreen({ user, online }) {
+  const [habits, setHabits] = useState([]), [showForm, setShowForm] = useState(false), [title, setTitle] = useState(""), [selectedDays, setSelectedDays] = useState([1, 2, 3, 4, 5, 6, 7]), [times, setTimes] = useState([""]), [loading, setLoading] = useState(true);
+  const reload = () => {
+    setHabits(Store.getHabits(user.id));
+    setLoading(false);
+  };
+  useEffect(() => {
+    reload();
+    if (online) pullFromServer(user.id).then(reload);
+  }, [user.id, online]);
+  function addHabit() {
+    if (!title.trim()) return;
+    const cleanTimes = times.filter((t) => t && t.length >= 4);
+    const row = { id: uid(), user_id: user.id, title: title.trim(), days_of_week: selectedDays, is_paused: false, created_at: (new Date()).toISOString() };
+    if (cleanTimes.length) row.times_of_day = cleanTimes;
+    const all = [row, ...Store.getHabits(user.id)];
+    Store.setHabits(user.id, all);
+    setHabits(all);
+    setTitle("");
+    setSelectedDays([1, 2, 3, 4, 5, 6, 7]);
+    setTimes([""]);
+    setShowForm(false);
+    onlineWrite("habits", "insert", row);
+    recalcStreak(user.id);
+    pushWidgetSnapshot(user.id);
+  }
+  function togglePause(h) {
+    const all = Store.getHabits(user.id).map((x) => x.id === h.id ? { ...x, is_paused: !x.is_paused } : x);
+    Store.setHabits(user.id, all);
+    setHabits(all);
+    onlineWrite("habits", "update", { is_paused: !h.is_paused }, { id: h.id });
+    recalcStreak(user.id);
+    pushWidgetSnapshot(user.id);
+  }
+  function deleteHabit(id) {
+    if (!confirm("\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u043F\u0440\u0438\u0432\u044B\u0447\u043A\u0443?")) return;
+    const all = Store.getHabits(user.id).filter((h) => h.id !== id);
+    Store.setHabits(user.id, all);
+    setHabits(all);
+    onlineWrite("habits", "delete", null, { id });
+    recalcStreak(user.id);
+    pushWidgetSnapshot(user.id);
+  }
+  function toggleDay(d) {
+    setSelectedDays((prev) => prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d].sort((a, b) => a - b));
+  }
+  function setTimeAt(i, val) {
+    setTimes((prev) => {
+      const n = [...prev];
+      n[i] = val;
+      return n;
+    });
+  }
+  return React.createElement("div", { className: "px-5 pt-5 pb-4 min-h-full fade-in safe-top" }, React.createElement("div", { className: "flex items-center justify-between mb-5" }, React.createElement("h1", { className: "text-[24px] font-semibold tracking-tight" }, "\u041F\u0440\u0438\u0432\u044B\u0447\u043A\u0438"), React.createElement("button", { onClick: () => setShowForm(true), className: "w-10 h-10 rounded-2xl flex items-center justify-center", style: { background: "var(--forest)" } }, I.plus(20))), showForm && React.createElement("div", { className: "rounded-3xl p-4 mb-4 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement(
+    "input",
+    {
+      autoFocus: true,
+      value: title,
+      onChange: (e) => setTitle(e.target.value),
+      placeholder: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043F\u0440\u0438\u0432\u044B\u0447\u043A\u0438",
+      className: "w-full px-4 py-3 rounded-2xl border outline-none text-[15px] mb-3",
+      style: { background: "var(--input)", borderColor: "var(--line)" }
+    }
+  ), React.createElement("p", { className: "text-sm mb-2", style: { color: "var(--muted)" } }, "\u0414\u043D\u0438 \u043D\u0435\u0434\u0435\u043B\u0438"), React.createElement("div", { className: "flex gap-1.5 mb-3" }, DAY_LABELS.map((l, i) => {
+    const d = i + 1, a = selectedDays.includes(d);
+    return React.createElement(
+      "button",
+      {
+        key: d,
+        onClick: () => toggleDay(d),
+        className: "flex-1 py-2 rounded-xl text-sm font-medium",
+        style: { background: a ? "var(--forest)" : "var(--chip)", color: a ? "#fff" : "var(--taupe)" }
+      },
+      l
+    );
+  })), React.createElement("p", { className: "text-sm mb-2", style: { color: "var(--muted)" } }, "\u0412\u0440\u0435\u043C\u044F (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)"), React.createElement("div", { className: "space-y-2 mb-3" }, times.map((t, i) => React.createElement("div", { key: i, className: "flex gap-2 items-center" }, React.createElement("input", { type: "time", value: t, onChange: (e) => setTimeAt(i, e.target.value), className: "flex-1 px-3 py-2.5 rounded-xl border outline-none text-sm", style: { background: "var(--input)", borderColor: "var(--line)" } }), times.length > 1 && React.createElement("button", { onClick: () => setTimes((prev) => prev.filter((_, idx) => idx !== i)), className: "w-9 h-9 rounded-xl flex items-center justify-center", style: { background: "var(--input)" } }, I.x()))), times.length < 4 && React.createElement("button", { onClick: () => setTimes((prev) => [...prev, ""]), className: "text-sm py-1.5", style: { color: "var(--forest)" } }, "+ \u0435\u0449\u0451 \u0432\u0440\u0435\u043C\u044F")), React.createElement("p", { className: "text-xs mb-3", style: { color: "var(--muted)" } }, "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440 08:00 \u0438 21:00 \u2014 \u0434\u0432\u0435 \u0433\u0430\u043B\u043E\u0447\u043A\u0438 \u0432 \u043F\u043B\u0430\u043D\u0435 \u0434\u043D\u044F"), React.createElement("div", { className: "flex gap-2" }, React.createElement("button", { onClick: () => setShowForm(false), className: "flex-1 py-2.5 rounded-2xl border text-sm", style: { borderColor: "var(--line)" } }, "\u041E\u0442\u043C\u0435\u043D\u0430"), React.createElement("button", { onClick: addHabit, className: "flex-1 py-2.5 rounded-2xl text-white text-sm font-medium", style: { background: "var(--forest)" } }, "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C"))), React.createElement("div", { className: "space-y-3" }, loading && React.createElement("div", { className: "flex justify-center py-10" }, React.createElement("div", { className: "w-6 h-6 border-2 rounded-full animate-spin", style: { borderColor: "var(--forest)", borderTopColor: "transparent" } })), !loading && habits.length === 0 && React.createElement("div", { className: "text-center py-12" }, React.createElement("p", { style: { color: "var(--muted)" } }, "\u041F\u043E\u043A\u0430 \u043D\u0435\u0442 \u043F\u0440\u0438\u0432\u044B\u0447\u0435\u043A")), habits.map((h) => React.createElement("div", { key: h.id, className: "rounded-3xl p-4 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)", opacity: h.is_paused ? 0.55 : 1 } }, React.createElement("div", { className: "flex items-start justify-between gap-2" }, React.createElement("div", { className: "min-w-0 flex-1" }, React.createElement("h3", { className: "font-medium text-[15px] break-words" }, h.title), React.createElement("div", { className: "flex flex-wrap gap-1 mt-2" }, DAY_LABELS.map((l, i) => {
+    const d = i + 1, a = Array.isArray(h.days_of_week) && h.days_of_week.includes(d);
+    return React.createElement("span", { key: d, className: "text-[10px] px-1.5 py-0.5 rounded-md", style: { background: a ? "var(--forest-soft)" : "var(--chip)", color: a ? "var(--forest)" : "var(--muted)" } }, l);
+  })), Array.isArray(h.times_of_day) && h.times_of_day.length > 0 && React.createElement("div", { className: "flex flex-wrap gap-1.5 mt-2" }, h.times_of_day.map((t, i) => React.createElement("span", { key: i, className: "text-[11px] px-2 py-0.5 rounded-lg flex items-center gap-1", style: { background: "var(--chip)", color: "var(--taupe)" } }, I.clock(), " ", timeLabel(t))))), React.createElement("div", { className: "flex gap-1 flex-shrink-0" }, React.createElement("button", { onClick: () => togglePause(h), className: "w-8 h-8 rounded-xl flex items-center justify-center", style: { background: "var(--input)" } }, h.is_paused ? I.play() : I.pause()), React.createElement("button", { onClick: () => deleteHabit(h.id), className: "w-8 h-8 rounded-xl flex items-center justify-center", style: { background: "var(--input)" } }, I.trash())))))));
+}
+function TasksScreen({ user, online }) {
+  const [tasks, setTasks] = useState([]), [showForm, setShowForm] = useState(false), [title, setTitle] = useState(""), [dueDate, setDueDate] = useState(fmt(new Date(), "iso")), [noDue, setNoDue] = useState(false), [editId, setEditId] = useState(null), [loading, setLoading] = useState(true);
+  const reload = () => {
+    setTasks(Store.getTasks(user.id));
+    setLoading(false);
+  };
+  useEffect(() => {
+    reload();
+    if (online) pullFromServer(user.id).then(reload);
+  }, [user.id, online]);
+  function resetForm() {
+    setTitle("");
+    setDueDate(fmt(new Date(), "iso"));
+    setNoDue(false);
+    setEditId(null);
+    setShowForm(false);
+  }
+  function openCreate() {
+    setEditId(null);
+    setTitle("");
+    setDueDate(fmt(new Date(), "iso"));
+    setNoDue(false);
+    setShowForm(true);
+  }
+  function openEdit(t) {
+    setEditId(t.id);
+    setTitle(t.title || "");
+    setNoDue(!t.due_date);
+    setDueDate(t.due_date || fmt(new Date(), "iso"));
+    setShowForm(true);
+  }
+  function saveTask() {
+    if (!title.trim()) return;
+    const due = noDue ? null : dueDate || null;
+    if (editId) {
+      const all = Store.getTasks(user.id).map((x) => x.id === editId ? { ...x, title: title.trim(), due_date: due } : x);
+      Store.setTasks(user.id, all);
+      setTasks(all);
+      onlineWrite("tasks", "update", { title: title.trim(), due_date: due }, { id: editId });
+    } else {
+      const row = { id: uid(), user_id: user.id, title: title.trim(), due_date: due, is_completed: false, created_at: (new Date()).toISOString() };
+      const all = [row, ...Store.getTasks(user.id)];
+      Store.setTasks(user.id, all);
+      setTasks(all);
+      onlineWrite("tasks", "insert", row);
+    }
+    resetForm();
+    recalcStreak(user.id);
+    pushWidgetSnapshot(user.id);
+  }
+  function toggle(t) {
+    const v = !t.is_completed;
+    const all = Store.getTasks(user.id).map((x) => x.id === t.id ? { ...x, is_completed: v, completed_at: v ? (new Date()).toISOString() : null } : x);
+    Store.setTasks(user.id, all);
+    setTasks(all);
+    onlineWrite("tasks", "update", { is_completed: v, completed_at: v ? (new Date()).toISOString() : null }, { id: t.id });
+    PP.add(user.id, v ? 2 : -2);
+    try { window.dispatchEvent(new Event("ritm-pp")); } catch (e) {}
+    recalcStreak(user.id);
+    pushWidgetSnapshot(user.id);
+  }
+  function del(id) {
+    if (!confirm("Удалить?")) return;
+    const all = Store.getTasks(user.id).filter((t) => t.id !== id);
+    Store.setTasks(user.id, all);
+    setTasks(all);
+    onlineWrite("tasks", "delete", null, { id });
+    if (editId === id) resetForm();
+    recalcStreak(user.id);
+    pushWidgetSnapshot(user.id);
+  }
+  const active = tasks.filter((t) => !t.is_completed);
+  const done = tasks.filter((t) => t.is_completed);
+  function taskMeta(t) {
+    if (!t.due_date) return "бессрочная";
+    try { return fmt(new Date(t.due_date + "T12:00:00"), "short"); } catch (e) { return t.due_date; }
+  }
+  function renderRow(t, isDone) {
+    return React.createElement("div", { key: t.id, className: "rounded-2xl p-3.5 flex items-center gap-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)", opacity: isDone ? 0.7 : 1 } },
+      React.createElement(CheckSquare, { done: !!isDone, onClick: () => toggle(t) }),
+      React.createElement("div", { className: "flex-1 min-w-0", onClick: () => openEdit(t), style: { cursor: "pointer" } },
+        React.createElement("p", { className: "text-[14px] break-words leading-snug" + (isDone ? " line-through" : ""), style: isDone ? { color: "var(--muted)" } : null }, t.title),
+        React.createElement("p", { className: "text-xs mt-0.5", style: { color: "var(--muted)" } }, taskMeta(t))
+      ),
+      React.createElement("button", { type: "button", onClick: () => openEdit(t), className: "w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0", style: { background: "var(--input)", color: "var(--muted)", fontSize: 13, fontWeight: 600 } }, "изм"),
+      React.createElement("button", { type: "button", onClick: () => del(t.id), className: "w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0", style: { background: "var(--input)" } }, I.trash())
+    );
+  }
+  return React.createElement("div", { className: "px-5 pt-5 pb-4 min-h-full fade-in safe-top" },
+    React.createElement("div", { className: "flex items-center justify-between mb-5" },
+      React.createElement("h1", { className: "text-[24px] font-semibold tracking-tight" }, "Задачи"),
+      React.createElement("button", { type: "button", onClick: openCreate, className: "w-10 h-10 rounded-2xl flex items-center justify-center", style: { background: "var(--forest)" } }, I.plus(20))
+    ),
+    showForm && React.createElement("div", { className: "rounded-3xl p-4 mb-4 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
+      React.createElement("p", { className: "text-sm font-medium mb-2", style: { color: "var(--taupe)" } }, editId ? "Редактировать задачу" : "Новая задача"),
+      React.createElement("input", {
+        autoFocus: true,
+        value: title,
+        onChange: (e) => setTitle(e.target.value),
+        placeholder: "Что нужно сделать?",
+        className: "w-full px-4 py-3 rounded-2xl border outline-none text-[15px] mb-3",
+        style: { background: "var(--input)", borderColor: "var(--line)" }
+      }),
+      React.createElement("label", { className: "flex items-center gap-2 mb-3 cursor-pointer" },
+        React.createElement("input", { type: "checkbox", checked: noDue, onChange: (e) => setNoDue(e.target.checked), style: { width: 18, height: 18 } }),
+        React.createElement("span", { className: "text-sm", style: { color: "var(--taupe)" } }, "Бессрочная (без даты)")
+      ),
+      !noDue && React.createElement("input", {
+        type: "date",
+        value: dueDate || "",
+        onChange: (e) => setDueDate(e.target.value),
+        className: "w-full px-4 py-3 rounded-2xl border outline-none text-[15px] mb-3",
+        style: { background: "var(--input)", borderColor: "var(--line)" }
+      }),
+      React.createElement("div", { className: "flex gap-2" },
+        React.createElement("button", { type: "button", onClick: resetForm, className: "flex-1 py-2.5 rounded-2xl border text-sm", style: { borderColor: "var(--line)" } }, "Отмена"),
+        React.createElement("button", { type: "button", onClick: saveTask, className: "flex-1 py-2.5 rounded-2xl text-white text-sm font-medium", style: { background: "var(--forest)" } }, editId ? "Сохранить" : "Добавить")
+      )
+    ),
+    loading ? React.createElement("div", { className: "flex justify-center py-8" }, React.createElement("div", { className: "w-6 h-6 border-2 rounded-full animate-spin", style: { borderColor: "var(--forest)", borderTopColor: "transparent" } }))
+    : React.createElement(React.Fragment, null,
+        active.length === 0 && done.length === 0 && React.createElement("p", { className: "text-sm text-center py-8", style: { color: "var(--muted)" } }, "Пока нет задач"),
+        active.length > 0 && React.createElement("div", { className: "space-y-2 mb-4" }, active.map((t) => renderRow(t, false))),
+        done.length > 0 && React.createElement("div", null,
+          React.createElement("p", { className: "text-sm mb-2 px-1", style: { color: "var(--muted)" } }, "Выполнено"),
+          React.createElement("div", { className: "space-y-2" }, done.map((t) => renderRow(t, true)))
+        )
+      )
+  );
+}
+
+function FriendStatsView({ friendId, name, username, onBack }) {
+  const [loading, setLoading] = useState(true);
+  const [allowed, setAllowed] = useState(null);
+  const [err, setErr] = useState("");
+  const [pp, setPp] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [dayStats, setDayStats] = useState([]);
+  const [habitStats, setHabitStats] = useState([]);
+  const [taskStats, setTaskStats] = useState(null);
+  const [displayName, setDisplayName] = useState(name || username || "");
+
+  useEffect(function () {
+    var cancelled = false;
+    (async function () {
+      try {
+        if (!friendId) {
+          setAllowed(false);
+          setLoading(false);
+          return;
+        }
+        if (!sb || !navigator.onLine) {
+          setAllowed(false);
+          setErr("Статистика друзей доступна только онлайн");
+          setLoading(false);
+          return;
+        }
+        var share = true;
+        try {
+          var sres = await sb.from("user_settings").select("*").eq("user_id", friendId).maybeSingle();
+          if (sres && sres.data) share = sres.data.share_stats !== false;
+        } catch (e) {}
+        if (!share) {
+          setAllowed(false);
+          setErr("");
+          setLoading(false);
+          return;
+        }
+        var results = await Promise.all([
+          sb.from("users").select("pp,display_name,username").eq("id", friendId).maybeSingle(),
+          sb.from("habits").select("*").eq("user_id", friendId),
+          sb.from("habit_completions").select("*").eq("user_id", friendId),
+          sb.from("tasks").select("*").eq("user_id", friendId)
+        ]);
+        if (cancelled) return;
+        var udata = results[0] && results[0].data;
+        var habits = (results[1] && results[1].data) || [];
+        var comps = ((results[2] && results[2].data) || []).map(function (x) {
+          return Object.assign({}, x, {
+            user_id: friendId,
+            completion_date: normDate(x.completion_date || x.date || "")
+          });
+        });
+        var tasks = ((results[3] && results[3].data) || []).map(function (x) {
+          return Object.assign({}, x, { user_id: friendId });
+        });
+        habits = habits.map(function (h) {
+          var days = h.days_of_week;
+          if (typeof days === "string") {
+            try { days = JSON.parse(days); } catch (e) { days = []; }
+          }
+          if (!Array.isArray(days)) days = [];
+          days = days.map(function (d) { return typeof d === "number" ? d : parseInt(d, 10); });
+          var times = h.times_of_day;
+          if (typeof times === "string") {
+            try { times = JSON.parse(times); } catch (e) { times = null; }
+          }
+          return Object.assign({}, h, {
+            user_id: friendId,
+            days_of_week: days,
+            times_of_day: Array.isArray(times) ? times : times,
+            is_paused: !!h.is_paused
+          });
+        });
+        Store.setHabits(friendId, habits);
+        Store.setComps(friendId, comps);
+        Store.setTasks(friendId, tasks);
+        var friendPp = udata && udata.pp != null ? udata.pp : 0;
+        var friendStreak = 0;
+        try { friendStreak = recalcStreak(friendId); } catch (e) { friendStreak = 0; }
+        var ds = [];
+        try { ds = buildLocalDayStats(friendId, 28); } catch (e) { ds = []; }
+        var hs = [];
+        try {
+          hs = habits.filter(function (h) { return !h.is_paused; }).map(function (h) {
+            var s = getHabitStats(friendId, h, 28);
+            return { habit: h, planned: s.planned, done: s.done, pct: s.pct, hstreak: s.streak, dots: s.dots };
+          });
+        } catch (e) { hs = []; }
+        var doneTasks = tasks.filter(function (t) { return t.is_completed; }).length;
+        var activeTasks = tasks.filter(function (t) { return !t.is_completed; }).length;
+        var datedTasks = tasks.filter(function (t) { return !!t.due_date; }).length;
+        var openTasks = tasks.filter(function (t) { return !t.due_date; }).length;
+        if (cancelled) return;
+        setPp(friendPp);
+        setStreak(friendStreak);
+        setDayStats(ds);
+        setHabitStats(hs);
+        setTaskStats({
+          total: tasks.length,
+          done: doneTasks,
+          active: activeTasks,
+          dated: datedTasks,
+          open: openTasks
+        });
+        if (udata) setDisplayName(udata.display_name || udata.username || name || username || "");
+        setAllowed(true);
+        setLoading(false);
+      } catch (e) {
+        if (!cancelled) {
+          setAllowed(false);
+          setErr((e && e.message) || String(e));
+          setLoading(false);
+        }
+      }
+    })();
+    return function () { cancelled = true; };
+  }, [friendId]);
+
+  if (loading) {
+    return React.createElement("div", { className: "px-5 pt-5 pb-4 min-h-full fade-in safe-top" },
+      React.createElement("div", { className: "flex items-center gap-3 mb-5" },
+        React.createElement("button", { type: "button", onClick: onBack, className: "w-9 h-9 rounded-xl flex items-center justify-center", style: { background: "var(--chip)" } }, I.back()),
+        React.createElement("h1", { className: "text-[20px] font-semibold truncate" }, displayName || "Друг")
+      ),
+      React.createElement("div", { className: "flex justify-center py-16" },
+        React.createElement("div", { className: "w-8 h-8 border-2 rounded-full animate-spin", style: { borderColor: "var(--forest)", borderTopColor: "transparent" } })
+      )
+    );
+  }
+
+  if (!allowed) {
+    return React.createElement("div", { className: "px-5 pt-5 pb-4 min-h-full fade-in safe-top" },
+      React.createElement("div", { className: "flex items-center gap-3 mb-5" },
+        React.createElement("button", { type: "button", onClick: onBack, className: "w-9 h-9 rounded-xl flex items-center justify-center", style: { background: "var(--chip)" } }, I.back()),
+        React.createElement("h1", { className: "text-[20px] font-semibold truncate" }, displayName || "Друг")
+      ),
+      React.createElement("div", { className: "rounded-3xl p-6 text-center shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
+        React.createElement("p", { className: "text-[15px] font-medium mb-2" }, "Статистика скрыта"),
+        React.createElement("p", { className: "text-sm", style: { color: "var(--muted)" } },
+          err || "Пользователь отключил показ статистики в настройках")
+      )
+    );
+  }
+
+  var last28 = dayStats || [];
+  var doneDays = last28.filter(function (d) { return d.all_done; }).length;
+  var activeDays = last28.filter(function (d) { return d.has; }).length;
+
+  return React.createElement("div", { className: "px-5 pt-5 pb-4 min-h-full fade-in safe-top" },
+    React.createElement("div", { className: "flex items-center gap-3 mb-5" },
+      React.createElement("button", { type: "button", onClick: onBack, className: "w-9 h-9 rounded-xl flex items-center justify-center", style: { background: "var(--chip)" } }, I.back()),
+      React.createElement("div", { className: "min-w-0" },
+        React.createElement("h1", { className: "text-[20px] font-semibold truncate" }, displayName || "Друг"),
+        username ? React.createElement("p", { className: "text-xs", style: { color: "var(--muted)" } }, "@" + username) : null
+      )
+    ),
+    React.createElement("div", { className: "rounded-3xl p-6 mb-3 shadow-sm text-center", style: { background: "var(--card)", border: "1px solid var(--line)" } },
+      React.createElement("p", { className: "text-sm uppercase tracking-wider mb-1", style: { color: "var(--muted)" } }, "Текущая серия"),
+      React.createElement("p", { className: "text-5xl font-semibold", style: { color: "var(--forest)" } }, streak),
+      React.createElement("p", { className: "text-lg font-semibold mt-2", style: { color: "var(--forest)" } }, pp, " PP"),
+      React.createElement("p", { className: "text-sm mt-1", style: { color: "var(--muted)" } },
+        streak === 0 ? "Нет активной серии" : streak === 1 ? "1 день подряд" : streak + " дней подряд"
+      ),
+      React.createElement("div", { className: "flex justify-center gap-8 mt-4 pt-3", style: { borderTop: "1px solid var(--line)" } },
+        React.createElement("div", { className: "text-center px-2", style: { minWidth: 90 } },
+          React.createElement("p", { className: "text-lg font-semibold", style: { color: "var(--forest)" } }, doneDays),
+          React.createElement("p", { className: "text-[10px] leading-tight mt-1", style: { color: "var(--muted)" } }, "дней закрыто")
+        ),
+        React.createElement("div", { className: "text-center px-2", style: { minWidth: 90 } },
+          React.createElement("p", { className: "text-lg font-semibold", style: { color: "var(--forest)" } }, activeDays),
+          React.createElement("p", { className: "text-[10px] leading-tight mt-1", style: { color: "var(--muted)" } }, "дней с планом")
+        )
+      )
+    ),
+    React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
+      React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "Трекер 28 дней"),
+      React.createElement("div", { className: "grid grid-cols-7 gap-1.5" },
+        last28.map(function (d) {
+          return React.createElement("div", {
+            key: d.date,
+            className: "aspect-square rounded-lg",
+            title: d.date + " · " + (d.pct || 0) + "%",
+            style: {
+              background: d.all_done ? "var(--forest)" : d.has ? "var(--forest)" : "var(--chip)",
+              opacity: d.all_done ? 1 : d.has ? (0.3 + Math.min(100, d.pct || 0) / 100 * 0.5) : 0.45
+            }
+          });
+        })
+      ),
+      !last28.some(function (d) { return d.has; }) && React.createElement("p", { className: "text-sm text-center mt-3", style: { color: "var(--muted)" } }, "Пока нет данных")
+    ),
+    taskStats && React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
+      React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "Задачи"),
+      React.createElement("div", { className: "grid grid-cols-2 gap-3" },
+        React.createElement("div", { className: "p-3 rounded-2xl text-center", style: { background: "var(--input)" } },
+          React.createElement("p", { className: "text-xl font-semibold", style: { color: "var(--forest)" } }, taskStats.done),
+          React.createElement("p", { className: "text-[11px] mt-0.5", style: { color: "var(--muted)" } }, "выполнено")
+        ),
+        React.createElement("div", { className: "p-3 rounded-2xl text-center", style: { background: "var(--input)" } },
+          React.createElement("p", { className: "text-xl font-semibold", style: { color: "var(--forest)" } }, taskStats.active),
+          React.createElement("p", { className: "text-[11px] mt-0.5", style: { color: "var(--muted)" } }, "активных")
+        ),
+        React.createElement("div", { className: "p-3 rounded-2xl text-center", style: { background: "var(--input)" } },
+          React.createElement("p", { className: "text-xl font-semibold", style: { color: "var(--forest)" } }, taskStats.dated),
+          React.createElement("p", { className: "text-[11px] mt-0.5", style: { color: "var(--muted)" } }, "с датой")
+        ),
+        React.createElement("div", { className: "p-3 rounded-2xl text-center", style: { background: "var(--input)" } },
+          React.createElement("p", { className: "text-xl font-semibold", style: { color: "var(--forest)" } }, taskStats.open),
+          React.createElement("p", { className: "text-[11px] mt-0.5", style: { color: "var(--muted)" } }, "бессрочных")
+        )
+      )
+    ),
+    React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
+      React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "Привычки"),
+      habitStats.length === 0
+        ? React.createElement("p", { className: "text-sm text-center py-4", style: { color: "var(--muted)" } }, "Нет активных привычек")
+        : React.createElement("div", { className: "space-y-3" },
+            habitStats.map(function (item) {
+              var habit = item.habit, planned = item.planned, done = item.done, pct = item.pct, hstreak = item.hstreak, dots = item.dots;
+              return React.createElement("div", { key: habit.id, className: "p-3 rounded-2xl", style: { background: "var(--input)" } },
+                React.createElement("div", { className: "flex items-start justify-between gap-2 mb-2" },
+                  React.createElement("div", { className: "min-w-0" },
+                    React.createElement("p", { className: "text-[14px] font-medium truncate" }, habit.title),
+                    React.createElement("p", { className: "text-[11px] mt-0.5", style: { color: "var(--muted)" } },
+                      done + "/" + planned + " за 28 дн · серия " + (hstreak || 0)
+                    )
+                  ),
+                  React.createElement("p", { className: "text-sm font-semibold flex-shrink-0", style: { color: "var(--forest)" } }, (pct || 0) + "%")
+                ),
+                React.createElement("div", { className: "h-1.5 rounded-full overflow-hidden mb-2", style: { background: "var(--chip)" } },
+                  React.createElement("div", { className: "h-full rounded-full", style: { width: Math.min(100, pct || 0) + "%", background: "var(--forest)" } })
+                ),
+                React.createElement("div", { className: "flex gap-0.5 flex-wrap" },
+                  (dots || []).map(function (d, idx) {
+                    var bg = d.status === "done" ? "var(--forest)" : d.status === "miss" ? "var(--mid)" : "var(--chip)";
+                    return React.createElement("div", {
+                      key: idx,
+                      className: "w-2 h-2 rounded-full",
+                      style: { background: bg, opacity: d.status === "skip" ? 0.35 : 1 }
+                    });
+                  })
+                )
+              );
+            })
+          )
+    )
+  );
+}
+
+function FriendsScreen({ user, online }) {
+  const [friends, setFriends] = useState([]), [pending, setPending] = useState([]), [search, setSearch] = useState(""), [results, setResults] = useState([]), [loading, setLoading] = useState(true), [msg, setMsg] = useState(""), [viewing, setViewing] = useState(null);
+  useEffect(() => {
+    if (online) load();
+    else setLoading(false);
+  }, [user.id, online]);
+  async function load() {
+    const { data } = await sb.from("friendships").select("*").or("requester_id.eq." + user.id + ",receiver_id.eq." + user.id);
+    if (!data) {
+      setLoading(false);
+      return;
+    }
+    const accepted = data.filter((f) => f.status === "accepted");
+    const pend = data.filter((f) => f.status === "pending" && f.receiver_id === user.id);
+    const ids = new Set();
+    accepted.forEach((f) => {
+      ids.add(f.requester_id);
+      ids.add(f.receiver_id);
+    });
+    pend.forEach((f) => ids.add(f.requester_id));
+    ids.delete(user.id);
+    let usersMap = {};
+    if (ids.size > 0) {
+      const { data: users } = await sb.from("users").select("id,username,display_name,pp").in("id", [...ids]);
+      if (users) users.forEach((u) => {
+        usersMap[u.id] = u;
+      });
+    }
+    setFriends(accepted.map((f) => {
+      const fid = f.requester_id === user.id ? f.receiver_id : f.requester_id;
+      return { ...f, friendId: fid, friend: usersMap[fid] || { username: "?" } };
+    }));
+    setPending(pend.map((f) => ({ ...f, friend: usersMap[f.requester_id] || { username: "?" } })));
+    setLoading(false);
+  }
+  async function doSearch() {
+    if (!search.trim() || !online) return;
+    const { data } = await sb.from("users").select("id,username,display_name,pp").ilike("username", "%" + search.trim().toLowerCase() + "%").neq("id", user.id).limit(10);
+    setResults(data || []);
+  }
+  async function sendRequest(fid) {
+    const { error } = await sb.from("friendships").insert({ requester_id: user.id, receiver_id: fid, status: "pending" });
+    if (error) setMsg(error.message.includes("unique") ? "\u0417\u0430\u043F\u0440\u043E\u0441 \u0443\u0436\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D" : error.message);
+    else {
+      setMsg("\u0417\u0430\u043F\u0440\u043E\u0441 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D");
+      setResults([]);
+      setSearch("");
+    }
+    setTimeout(() => setMsg(""), 2e3);
+  }
+  async function accept(fid) {
+    await sb.from("friendships").update({ status: "accepted" }).eq("id", fid);
+    load();
+  }
+  async function reject(fid) {
+    await sb.from("friendships").delete().eq("id", fid);
+    load();
+  }
+  async function removeFriend(fid) {
+    if (!confirm("\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0438\u0437 \u0434\u0440\u0443\u0437\u0435\u0439?")) return;
+    await sb.from("friendships").delete().eq("id", fid);
+    load();
+  }
+  if (!online) {
+    return React.createElement("div", { className: "px-5 pt-5 pb-4 min-h-full fade-in safe-top" }, React.createElement("h1", { className: "text-[24px] font-semibold tracking-tight mb-5" }, "\u0414\u0440\u0443\u0437\u044C\u044F"), React.createElement("div", { className: "rounded-3xl p-6 text-center shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("p", { className: "text-sm", style: { color: "var(--muted)" } }, "\u0414\u0440\u0443\u0437\u044C\u044F \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u043D\u043B\u0430\u0439\u043D"), React.createElement("p", { className: "text-xs mt-2", style: { color: "var(--muted)" } }, "\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0438\u0442\u0435\u0441\u044C \u043A \u0438\u043D\u0442\u0435\u0440\u043D\u0435\u0442\u0443, \u0447\u0442\u043E\u0431\u044B \u0438\u0441\u043A\u0430\u0442\u044C \u0434\u0440\u0443\u0437\u0435\u0439 \u0438 \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u0442\u044C")));
+  }
+  if (viewing) {
+    return React.createElement(FriendStatsView, { friendId: viewing.friendId, name: viewing.name, username: viewing.username, onBack: () => setViewing(null) });
+  }
+  return React.createElement("div", { className: "px-5 pt-5 pb-4 min-h-full fade-in safe-top" }, React.createElement("h1", { className: "text-[24px] font-semibold tracking-tight mb-5" }, "\u0414\u0440\u0443\u0437\u044C\u044F"), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("p", { className: "text-sm mb-2", style: { color: "var(--muted)" } }, "\u041D\u0430\u0439\u0442\u0438 \u043F\u043E \u043B\u043E\u0433\u0438\u043D\u0443"), React.createElement("div", { className: "flex gap-2 items-center" }, React.createElement(
+    "input",
+    {
+      value: search,
+      onChange: (e) => setSearch(e.target.value),
+      onKeyDown: (e) => e.key === "Enter" && doSearch(),
+      placeholder: "\u043B\u043E\u0433\u0438\u043D \u0434\u0440\u0443\u0433\u0430",
+      className: "flex-1 min-w-0 px-3 py-2.5 rounded-2xl border outline-none text-sm",
+      style: { background: "var(--input)", borderColor: "var(--line)" }
+    }
+  ), React.createElement("button", { onClick: doSearch, className: "shrink-0 px-3 py-2.5 rounded-2xl text-white text-sm font-medium whitespace-nowrap", style: { background: "var(--forest)" } }, "\u041D\u0430\u0439\u0442\u0438")), msg && React.createElement("p", { className: "text-sm mt-2", style: { color: "var(--forest)" } }, msg), results.length > 0 && React.createElement("div", { className: "mt-3 space-y-2" }, results.map((u) => React.createElement("div", { key: u.id, className: "flex items-center justify-between p-3 rounded-2xl", style: { background: "var(--input)" } }, React.createElement("div", null, React.createElement("p", { className: "text-[14px] font-medium" }, u.display_name || u.username), React.createElement("p", { className: "text-xs", style: { color: "var(--muted)" } }, "@", u.username)), React.createElement("button", { onClick: () => sendRequest(u.id), className: "px-3 py-1.5 rounded-xl text-sm text-white", style: { background: "var(--forest)" } }, "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C"))))), pending.length > 0 && React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "\u0412\u0445\u043E\u0434\u044F\u0449\u0438\u0435 \u0437\u0430\u043F\u0440\u043E\u0441\u044B"), React.createElement("div", { className: "space-y-2" }, pending.map((p) => React.createElement("div", { key: p.id, className: "flex items-center justify-between p-3 rounded-2xl", style: { background: "var(--input)" } }, React.createElement("div", null, React.createElement("p", { className: "text-[14px] font-medium" }, p.friend.display_name || p.friend.username)), React.createElement("div", { className: "flex gap-1.5" }, React.createElement("button", { onClick: () => accept(p.id), className: "px-3 py-1.5 rounded-xl text-sm text-white", style: { background: "var(--forest)" } }, "\u041F\u0440\u0438\u043D\u044F\u0442\u044C"), React.createElement("button", { onClick: () => reject(p.id), className: "px-3 py-1.5 rounded-xl text-sm border", style: { borderColor: "var(--line)" } }, "\u041E\u0442\u043A\u043B\u043E\u043D\u0438\u0442\u044C")))))), React.createElement("div", { className: "rounded-3xl p-4 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "\u041C\u043E\u0438 \u0434\u0440\u0443\u0437\u044C\u044F"), loading && React.createElement("div", { className: "flex justify-center py-6" }, React.createElement("div", { className: "w-6 h-6 border-2 rounded-full animate-spin", style: { borderColor: "var(--forest)", borderTopColor: "transparent" } })), !loading && friends.length === 0 && React.createElement("p", { className: "text-sm text-center py-4", style: { color: "var(--muted)" } }, "\u041F\u043E\u043A\u0430 \u043D\u0435\u0442 \u0434\u0440\u0443\u0437\u0435\u0439"), React.createElement("div", { className: "space-y-2" }, friends.map((f) => React.createElement("div", { key: f.id, className: "flex items-center gap-2 p-3 rounded-2xl", style: { background: "var(--input)" } }, React.createElement("button", { onClick: () => setViewing({ friendId: f.friendId, name: f.friend.display_name || f.friend.username, username: f.friend.username }), className: "flex-1 min-w-0 text-left" }, React.createElement("p", { className: "text-[14px] font-medium truncate" }, f.friend.display_name || f.friend.username), React.createElement("p", { className: "text-xs", style: { color: "var(--muted)" } }, "@", f.friend.username, " \xB7 ", (f.friend.pp != null ? f.friend.pp : 0), " PP")), React.createElement("button", { onClick: () => removeFriend(f.id), className: "w-8 h-8 rounded-xl flex items-center justify-center", style: { background: "#fff" } }, I.trash()))))));
+}
+function SettingsScreen({ user, onLogout, onUpdate, onBack, online }) {
+  const [displayName, setDisplayName] = useState(user.display_name || ""), [tracker, setTracker] = useState("heatmap"), [theme, setTheme] = useState("ritm"), [mode, setMode] = useState("light"), [shareStats, setShareStats] = useState(true), [nEn, setNEn] = useState(true), [n1d, setN1d] = useState(true), [nHalf, setNHalf] = useState(false), [nToday, setNToday] = useState(true), [saving, setSaving] = useState(false), [msg, setMsg] = useState(""), [updMsg, setUpdMsg] = useState(""), [updBusy, setUpdBusy] = useState(false), [updInfo, setUpdInfo] = useState(null), [notifOk, setNotifOk] = useState(typeof Notification !== "undefined" && Notification.permission === "granted" || !!(window.Android && Android.scheduleNotification));
+  useEffect(() => {
+    const local = Store.getSettings(user.id);
+    setTracker(local.tracker_type || "heatmap");
+    setTheme(local.theme || localStorage.getItem("ritm_theme") || "ritm");
+    setMode(local.mode || getThemeMode());
+    setShareStats(local.share_stats !== false);
+    setNEn(local.notify_enabled !== false);
+    setN1d(local.notify_1d !== false);
+    setNHalf(local.notify_half === true);
+    setNToday(local.notify_today !== false);
+  }, [user.id]);
+  async function save() {
+    setSaving(true);
+    Store.setSettings(user.id, { tracker_type: tracker, show_streak: true, share_stats: shareStats, theme, mode, notify_enabled: nEn, notify_1d: n1d, notify_half: nHalf, notify_today: nToday });
+    applyTheme(theme, mode);
+    if (online) {
+      onlineWrite("users", "update", { display_name: displayName.trim() || null }, { id: user.id });
+      onlineWrite("user_settings", "upsert", { user_id: user.id, tracker_type: tracker, updated_at: (new Date()).toISOString() }, { onConflict: "user_id" });
+      await flushQueue();
+    } else {
+      onlineWrite("users", "update", { display_name: displayName.trim() || null }, { id: user.id });
+      onlineWrite("user_settings", "upsert", { user_id: user.id, tracker_type: tracker, updated_at: (new Date()).toISOString() }, { onConflict: "user_id" });
+    }
+    onUpdate({ ...user, display_name: displayName.trim() || null });
+    setMsg("\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E" + (online ? "" : " (\u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u0443\u0435\u0442\u0441\u044F \u043F\u0440\u0438 \u0441\u0435\u0442\u0438)"));
+    setSaving(false);
+    setTimeout(() => setMsg(""), 2500);
+  }
+  async function enableNotif() {
+    const ok = await ensureNotifyPermission();
+    setNotifOk(ok);
+    if (ok) {
+      checkDeadlineNotifications(user.id);
+      setMsg("Уведомления включены");
+      setTimeout(() => setMsg(""), 2e3);
+    }
+  }
+  useEffect(function () {
+    // web: подтянуть apkUrl из version.json
+    if (!(window.Android && Android.scheduleNotification)) {
+      fetchLatestVersion().then(function (data) {
+        if (data) setUpdInfo(data);
+      }).catch(function () {});
+    }
+  }, []);
+  async function doCheckUpdate() {
+    setUpdBusy(true);
+    setUpdMsg("");
+    setUpdInfo(null);
+    try {
+      const r = await checkForUpdates({ force: true });
+      if (!r) {
+        setUpdMsg("Не удалось проверить");
+      } else if (r.error) {
+        setUpdMsg("Ошибка: " + r.error);
+      } else if (r.upToDate) {
+        setUpdMsg("У вас актуальная версия (" + APP_VERSION + ")");
+      } else {
+        setUpdInfo(r.data);
+        setUpdMsg("Доступна " + (r.data.version || "новая версия"));
+      }
+    } catch (e) {
+      setUpdMsg("Ошибка проверки");
+    }
+    setUpdBusy(false);
+  }
+  function doDownloadApk() {
+    var url = (updInfo && updInfo.apkUrl) || (typeof APK_DOWNLOAD_URL !== "undefined" ? APK_DOWNLOAD_URL : "https://web-ritm.vercel.app/ritm.apk");
+    setUpdMsg("Скачивание…");
+    openUpdateUrl(url).then(function () {
+      setUpdMsg("Если файл не скачался — APK ещё не загружен на сервер (404). Залейте ritm.apk в репозиторий.");
+      setTimeout(function () { setUpdMsg(""); }, 6000);
+    }).catch(function () {
+      setUpdMsg("Не удалось скачать. Проверьте, что ritm.apk лежит на сайте.");
+    });
+  }
+  return React.createElement("div", { className: "px-5 pt-5 pb-4 min-h-full fade-in safe-top" }, React.createElement("div", { className: "flex items-center gap-3 mb-5" }, React.createElement("button", { onClick: onBack, className: "w-9 h-9 rounded-xl flex items-center justify-center", style: { background: "var(--chip)" } }, I.back()), React.createElement("h1", { className: "text-[24px] font-semibold tracking-tight" }, "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438")), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "\u041F\u0440\u043E\u0444\u0438\u043B\u044C"), React.createElement("p", { className: "text-sm mb-1", style: { color: "var(--muted)" } }, "\u041B\u043E\u0433\u0438\u043D"), React.createElement("p", { className: "text-[15px] mb-3 font-medium" }, "@", user.username), React.createElement("p", { className: "text-sm mb-1.5", style: { color: "var(--muted)" } }, "\u0418\u043C\u044F"), React.createElement(
+    "input",
+    {
+      value: displayName,
+      onChange: (e) => setDisplayName(e.target.value),
+      placeholder: "\u041E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0435\u043C\u043E\u0435 \u0438\u043C\u044F",
+      className: "w-full px-4 py-3 rounded-2xl border outline-none text-[15px]",
+      style: { background: "var(--input)", borderColor: "var(--line)" }
+    }
+  )), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "\u041E\u0444\u043E\u0440\u043C\u043B\u0435\u043D\u0438\u0435"), React.createElement("p", { className: "text-sm mb-2", style: { color: "var(--muted)" } }, "\u0420\u0435\u0436\u0438\u043C"), React.createElement("div", { className: "theme-toggle mb-3" }, React.createElement(
+    "button",
+    {
+      type: "button",
+      onClick: () => {
+        setMode("light");
+        applyTheme(theme, "light");
+      },
+      style: { background: mode === "light" ? "var(--card)" : "transparent", color: mode === "light" ? "var(--forest)" : "var(--muted)", boxShadow: mode === "light" ? "0 1px 3px rgba(0,0,0,0.08)" : "none" }
+    },
+    "\u0421\u0432\u0435\u0442\u043B\u0430\u044F"
+  ), React.createElement(
+    "button",
+    {
+      type: "button",
+      onClick: () => {
+        setMode("dark");
+        applyTheme(theme, "dark");
+      },
+      style: { background: mode === "dark" ? "var(--card)" : "transparent", color: mode === "dark" ? "var(--forest)" : "var(--muted)", boxShadow: mode === "dark" ? "0 1px 3px rgba(0,0,0,0.08)" : "none" }
+    },
+    "\u0422\u0451\u043C\u043D\u0430\u044F"
+  )), React.createElement("p", { className: "text-sm mb-3", style: { color: "var(--muted)" } }, "\u041F\u0430\u043B\u0438\u0442\u0440\u0430 \u2014 \u043F\u043E\u0434\u0441\u0442\u0440\u0430\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u043F\u043E\u0434 \u0440\u0435\u0436\u0438\u043C"), React.createElement("div", { className: "grid grid-cols-2 gap-2" }, THEME_META.map((t) => {
+    const on = theme === t.id;
+    return React.createElement(
+      "button",
+      {
+        key: t.id,
+        type: "button",
+        onClick: () => {
+          setTheme(t.id);
+          applyTheme(t.id, mode);
+        },
+        className: "rounded-2xl p-3 text-left relative",
+        style: { background: on ? t.sw[0] : "var(--input)", border: on ? "2px solid " + t.sw[1] : "1.5px solid var(--line)", boxShadow: on ? "0 0 0 3px " + t.sw[1] + "33" : "none" }
+      },
+      on && React.createElement("span", { className: "absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center text-white text-[11px] font-bold", style: { background: t.sw[1] } }, "\u2713"),
+      React.createElement("div", { className: "flex gap-1.5 mb-2" }, t.sw.map((c) => React.createElement("span", { key: c, className: "w-6 h-6 rounded-full", style: { background: c, border: "1px solid rgba(0,0,0,0.08)" } }))),
+      React.createElement("p", { className: "text-sm font-semibold", style: { color: on ? t.sw[1] : "var(--text)" } }, t.name),
+      React.createElement("p", { className: "text-[11px]", style: { color: "var(--muted)" } }, t.hint)
+    );
+  }))), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "\u041F\u0440\u0438\u0432\u0430\u0442\u043D\u043E\u0441\u0442\u044C"), React.createElement(
+    "button",
+    {
+      onClick: () => setShareStats(!shareStats),
+      className: "w-full text-left px-4 py-3 rounded-2xl text-sm font-medium",
+      style: { background: shareStats ? "var(--forest-soft)" : "var(--input)", color: shareStats ? "var(--forest)" : "var(--taupe)" }
+    },
+    shareStats ? "\u0414\u0440\u0443\u0437\u044C\u044F \u0432\u0438\u0434\u044F\u0442 \u043C\u043E\u044E \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043A\u0443" : "\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043A\u0430 \u0441\u043A\u0440\u044B\u0442\u0430 \u043E\u0442 \u0434\u0440\u0443\u0437\u0435\u0439"
+  )),  React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "\u0423\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F"), React.createElement("p", { className: "text-sm mb-3", style: { color: "var(--muted)" } }, "\u0422\u043E\u043B\u044C\u043A\u043E \u0431\u0443\u0434\u0443\u0449\u0438\u0435 \u0434\u0435\u0434\u043B\u0430\u0439\u043D\u044B, \u0431\u0435\u0437 \u043F\u043E\u0432\u0442\u043E\u0440\u043E\u0432"), React.createElement(
+    "button",
+    {
+      onClick: () => setNEn(!nEn),
+      className: "w-full text-left px-4 py-3 rounded-2xl text-sm font-medium mb-2",
+      style: { background: nEn ? "var(--forest-soft)" : "var(--input)", color: nEn ? "var(--forest)" : "var(--taupe)" }
+    },
+    nEn ? "\u041D\u0430\u043F\u043E\u043C\u0438\u043D\u0430\u043D\u0438\u044F \u0432\u043A\u043B\u044E\u0447\u0435\u043D\u044B" : "\u041D\u0430\u043F\u043E\u043C\u0438\u043D\u0430\u043D\u0438\u044F \u0432\u044B\u043A\u043B\u044E\u0447\u0435\u043D\u044B"
+  ), nEn && React.createElement("div", { className: "space-y-1.5 mb-2" }, React.createElement("button", { onClick: () => setN1d(!n1d), className: "w-full text-left px-4 py-2.5 rounded-2xl text-sm", style: { background: n1d ? "var(--forest-soft)" : "var(--input)" } }, n1d ? "\u25CF" : "\u25CB", " \u0417\u0430 1 \u0434\u0435\u043D\u044C"), React.createElement("button", { onClick: () => setNHalf(!nHalf), className: "w-full text-left px-4 py-2.5 rounded-2xl text-sm", style: { background: nHalf ? "var(--forest-soft)" : "var(--input)" } }, nHalf ? "\u25CF" : "\u25CB", " \u0417\u0430 \u043F\u043E\u043B\u0434\u043D\u044F"), React.createElement("button", { onClick: () => setNToday(!nToday), className: "w-full text-left px-4 py-2.5 rounded-2xl text-sm", style: { background: nToday ? "var(--forest-soft)" : "var(--input)" } }, nToday ? "\u25CF" : "\u25CB", " \u0412 \u0434\u0435\u043D\u044C \u0434\u0435\u0434\u043B\u0430\u0439\u043D\u0430")), React.createElement("p", { className: "text-xs mb-3", style: { color: "var(--muted)" } }, "\u0412\u0438\u0434\u0436\u0435\u0442 \xAB\u0421\u0435\u0433\u043E\u0434\u043D\u044F\xBB: \u0434\u043E\u043B\u0433\u0438\u0439 \u0442\u0430\u043F \u043F\u043E \u0440\u0430\u0431\u043E\u0447\u0435\u043C\u0443 \u0441\u0442\u043E\u043B\u0443 \u2192 \u0412\u0438\u0434\u0436\u0435\u0442\u044B \u2192 \u0420\u0438\u0442\u043C"), notifOk ? React.createElement("div", null, React.createElement("p", { className: "text-sm font-medium mb-2", style: { color: "var(--forest)" } }, "\u0412\u043A\u043B\u044E\u0447\u0435\u043D\u044B"), React.createElement("button", { onClick: () => {
+    if (window.Android && Android.scheduleNotification) {
+      Android.scheduleNotification("\u0420\u0438\u0442\u043C", "\u0422\u0435\u0441\u0442\u043E\u0432\u043E\u0435 \u043D\u0430\u043F\u043E\u043C\u0438\u043D\u0430\u043D\u0438\u0435: \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u0430\u044E\u0442", Date.now() + 5e3, "ritm_test");
+    } else if ("Notification" in window && Notification.permission === "granted") {
+      setTimeout(() => new Notification("\u0420\u0438\u0442\u043C", { body: "\u0422\u0435\u0441\u0442\u043E\u0432\u043E\u0435 \u043D\u0430\u043F\u043E\u043C\u0438\u043D\u0430\u043D\u0438\u0435: \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u0430\u044E\u0442", tag: "ritm_test" }), 5e3);
+    }
+    setMsg("\u0422\u0435\u0441\u0442 \u0447\u0435\u0440\u0435\u0437 5 \u0441\u0435\u043A\u0443\u043D\u0434");
+    setTimeout(() => setMsg(""), 6e3);
+  }, className: "w-full py-2.5 rounded-2xl border text-sm font-medium", style: { borderColor: "var(--line)", color: "var(--taupe)" } }, "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435 (5 \u0441\u0435\u043A)")) : React.createElement("button", { onClick: enableNotif, className: "w-full py-2.5 rounded-2xl text-white text-sm font-medium", style: { background: "var(--forest)" } }, "\u0420\u0430\u0437\u0440\u0435\u0448\u0438\u0442\u044C \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F")), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "\u041E\u0444\u043B\u0430\u0439\u043D"), React.createElement("p", { className: "text-sm", style: { color: "var(--muted)" } }, "\u041F\u0440\u0438\u0432\u044B\u0447\u043A\u0438, \u0437\u0430\u0434\u0430\u0447\u0438 \u0438 \u0437\u0430\u043C\u0435\u0442\u043A\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u044E\u0442\u0441\u044F \u043D\u0430 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0435 \u0438 \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u0443\u044E\u0442\u0441\u044F \u043F\u0440\u0438 \u043F\u043E\u044F\u0432\u043B\u0435\u043D\u0438\u0438 \u0441\u0435\u0442\u0438. \u0414\u0440\u0443\u0437\u044C\u044F \u2014 \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u043D\u043B\u0430\u0439\u043D."), React.createElement("p", { className: "text-xs mt-2", style: { color: "var(--muted)" } }, "\u0412 \u043E\u0447\u0435\u0440\u0435\u0434\u0438 \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u0438: ", Store.getQueue().length)), msg && React.createElement("p", { className: "text-sm text-center mb-2", style: { color: "var(--forest)" } }, msg), React.createElement("button", { onClick: save, disabled: saving, className: "w-full py-3.5 rounded-2xl text-white font-medium text-[15px] mb-3 disabled:opacity-60", style: { background: "var(--forest)" } }, saving ? "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435..." : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C"), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "Productive Points"), React.createElement("p", { className: "text-3xl font-semibold mb-1", style: { color: "var(--forest)" } }, PP.get(user.id) + " PP"), React.createElement("p", { className: "text-xs", style: { color: "var(--muted)" } }, "\u041f\u0440\u0438\u0432\u044b\u0447\u043a\u0430 +1 \u00b7 \u0417\u0430\u0434\u0430\u0447\u0430 +2")), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
+      React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "Приложение"),
+      !(window.Android) ? React.createElement(React.Fragment, null,
+        React.createElement("button", {
+          type: "button",
+          onClick: doDownloadApk,
+          className: "w-full py-2.5 rounded-2xl text-white text-sm font-medium",
+          style: { background: "var(--forest)" }
+        }, "Скачать APK"),
+        React.createElement("p", { className: "text-xs text-center mt-2", style: { color: "var(--muted)" } }, "Актуальная версия: ", APP_VERSION),
+        updMsg ? React.createElement("p", { className: "text-xs text-center mt-2", style: { color: "var(--muted)" } }, updMsg) : null
+      ) : React.createElement(React.Fragment, null,
+        React.createElement("p", { className: "text-xs mb-3", style: { color: "var(--muted)" } }, "Текущая версия: ", APP_VERSION),
+        React.createElement("button", {
+          type: "button",
+          onClick: doCheckUpdate,
+          disabled: updBusy,
+          className: "w-full py-2.5 rounded-2xl text-white text-sm font-medium disabled:opacity-60 mb-2",
+          style: { background: "var(--forest)" }
+        }, updBusy ? "Проверка..." : "Проверить обновления"),
+        updMsg ? React.createElement("p", { className: "text-sm mb-2", style: { color: "var(--muted)" } }, updMsg) : null,
+        updInfo && updInfo.apkUrl ? React.createElement(React.Fragment, null,
+          React.createElement("button", {
+            type: "button",
+            onClick: function() { openUpdateUrl(updInfo.apkUrl); },
+            className: "w-full py-2.5 rounded-2xl border text-sm font-medium",
+            style: { borderColor: "var(--forest)", color: "var(--forest)" }
+          }, "Скачать " + (updInfo.version || "обновление")),
+          React.createElement("p", {
+            className: "text-[11px] text-center mt-2 break-words",
+            style: { color: "var(--muted)" }
+          }, "Если не началось — откройте в браузере:"),
+          React.createElement("a", {
+            href: updInfo.apkUrl,
+            target: "_blank",
+            rel: "noopener",
+            className: "block text-[11px] text-center break-all mt-1",
+            style: { color: "var(--forest)" },
+            onClick: function (e) {
+              e.preventDefault();
+              openUpdateUrl(updInfo.apkUrl);
+            }
+          }, updInfo.apkUrl)
+        ) : null,
+        updInfo && updInfo.changelog ? React.createElement("p", { className: "text-xs mt-2", style: { color: "var(--muted)" } }, updInfo.changelog) : null
+      )
+    ),
+    React.createElement("p", { className: "text-center text-xs mb-3", style: { color: "var(--muted)" } }, APP_VERSION), React.createElement("button", { onClick: onLogout, className: "w-full py-3.5 rounded-2xl border text-[15px] font-medium", style: { borderColor: "var(--line)", color: "var(--muted)" } }, "\u0412\u044B\u0439\u0442\u0438"));
+}
+
+function dayCellStyle(d) {
+  if (d.all_done) return { background: "var(--forest)", color: "#fff" };
+  if (!d.has) return { background: "var(--chip)", color: "var(--muted)" };
+  var p = Math.max(0, Math.min(100, d.pct || 0));
+  // solid chip + forest border weight by progress — readable text always
+  return {
+    background: "var(--chip)",
+    color: "var(--text)",
+    boxShadow: "inset 0 0 0 " + (p >= 70 ? "2px" : "1px") + " var(--forest)",
+    opacity: 1
+  };
+}
+function Sparkline({ values, height, pointWidth }) {
+  height = height || 48;
+  pointWidth = pointWidth || 10;
+  var vals = values || [];
+  var w = Math.max(vals.length * pointWidth, 80);
+  var h = height;
+  var pts = vals.map(function (v, i) {
+    var x = vals.length <= 1 ? 2 : (i / (vals.length - 1)) * (w - 4) + 2;
+    var y = h - 4 - (Math.max(0, Math.min(100, v || 0)) / 100) * (h - 8);
+    return x + "," + y;
+  }).join(" ");
+  var area = vals.length ? ("2," + (h - 2) + " " + pts + " " + (w - 2) + "," + (h - 2)) : "";
+  return React.createElement("div", {
+    className: "overflow-x-auto no-scrollbar",
+    style: {
+      WebkitOverflowScrolling: "touch",
+      width: "100%",
+      maxWidth: "100%",
+      overflowY: "hidden"
+    }
+  }, React.createElement("svg", {
+    width: w,
+    height: h,
+    style: { display: "block", maxWidth: "none" }
+  }, area ? React.createElement("polygon", {
+    points: area,
+    fill: "var(--forest)",
+    opacity: 0.12
+  }) : null, React.createElement("polyline", {
+    points: pts || "0,0",
+    fill: "none",
+    stroke: "var(--forest)",
+    strokeWidth: 2.2,
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), vals.map(function (v, i) {
+    if (v == null) return null;
+    var x = vals.length <= 1 ? 2 : (i / (vals.length - 1)) * (w - 4) + 2;
+    var y = h - 4 - (Math.max(0, Math.min(100, v || 0)) / 100) * (h - 8);
+    var done = (v || 0) >= 99.5;
+    return React.createElement("circle", {
+      key: i,
+      cx: x,
+      cy: y,
+      r: done ? 2.4 : 1.6,
+      fill: done ? "var(--forest)" : "var(--card)",
+      stroke: "var(--forest)",
+      strokeWidth: 1.2
+    });
+  })));
+}
+function ProgressScreen({ user }) {
+  var _s = useState(function () { return getCachedStreak(user.id); }), streak = _s[0], setStreak = _s[1];
+  var _t = useState("spark"), tracker = _t[0], setTracker = _t[1];
+  var _d = useState([]), dayStats = _d[0], setDayStats = _d[1];
+  var _h = useState([]), habitStats = _h[0], setHabitStats = _h[1];
+  var _e = useState(null), expanded = _e[0], setExpanded = _e[1];
+  var rebuild = useCallback(function () {
+    var local = Store.getSettings(user.id);
+    var tt = local.tracker_type || "spark";
+    if (tt === "progress") tt = "spark";
+    setTracker(tt);
+    setStreak(recalcStreak(user.id));
+    setDayStats(buildLocalDayStats(user.id, 56));
+    var hlist = Store.getHabits(user.id).filter(function (h) { return !h.is_paused; });
+    setHabitStats(hlist.map(function (h) {
+      var s = getHabitStats(user.id, h, 56);
+      return { habit: h, planned: s.planned, done: s.done, pct: s.pct, hstreak: s.streak, dots: s.dots };
+    }));
+  }, [user.id]);
+  useEffect(function () {
+    rebuild();
+    if (navigator.onLine && sb) {
+      try { pullFromServer(user.id).then(function () { rebuild(); }); } catch (e) {}
+    }
+    var onData = function () { rebuild(); };
+    window.addEventListener("ritm-data", onData);
+    return function () { return window.removeEventListener("ritm-data", onData); };
+  }, [user.id, rebuild]);
+  function switchTracker(t) {
+    setTracker(t);
+    var local = Store.getSettings(user.id) || {};
+    Store.setSettings(user.id, Object.assign({}, local, { tracker_type: t }));
+  }
+  var last = dayStats.length ? dayStats : buildLocalDayStats(user.id, 56);
+  var last28 = last.slice(-28);
+  var doneDays = last28.filter(function (d) { return d.all_done; }).length;
+  var activeDays = last28.filter(function (d) { return d.has; }).length;
+  var sparkNums = last.map(function (d) { return d.has ? (d.pct || 0) : 0; });
+  var modes = [
+    { id: "spark", label: "Спарклайн" },
+    { id: "calendar", label: "Календарь" },
+    { id: "heatmap", label: "Heatmap" }
+  ];
+  var mode = tracker === "progress" ? "spark" : tracker;
+
+  function habitDayCells(dots) {
+    var list = (dots || []).slice(-28);
+    return React.createElement("div", { className: "grid grid-cols-7 gap-1" },
+      list.map(function (d, idx) {
+        var done = d.status === "done";
+        var skip = d.status === "skip";
+        var st = done
+          ? { background: "var(--forest)", color: "#fff" }
+          : skip
+            ? { background: "var(--chip)", color: "var(--muted)", opacity: 0.45 }
+            : { background: "var(--chip)", color: "var(--text)", boxShadow: "inset 0 0 0 1px var(--forest)" };
+        return React.createElement("div", {
+          key: idx,
+          title: (d.ds || "") + " · " + d.status,
+          className: "aspect-square rounded-md flex items-center justify-center text-[9px] font-medium",
+          style: st
+        }, d.ds ? String(d.ds).slice(8) : "");
+      })
+    );
+  }
+
+  function habitHeatmap(dots) {
+    var list = (dots || []).slice(-28);
+    return React.createElement("div", { className: "grid grid-cols-7 gap-1" },
+      list.map(function (d, idx) {
+        var done = d.status === "done";
+        var skip = d.status === "skip";
+        return React.createElement("div", {
+          key: idx,
+          title: (d.ds || "") + " · " + d.status,
+          className: "aspect-square rounded-md",
+          style: {
+            background: done ? "var(--forest)" : "var(--chip)",
+            opacity: skip ? 0.35 : done ? 1 : 0.55
+          }
+        });
+      })
+    );
+  }
+
+  function habitSparkValues(dots) {
+    return (dots || []).map(function (d) {
+      if (d.status === "done") return 100;
+      return 0;
+    });
+  }
+
+  function renderMainTracker() {
+    if (mode === "spark") {
+      return React.createElement("div", {
+        className: "rounded-2xl p-3 overflow-hidden",
+        style: { background: "var(--input)", border: "1px solid var(--line)" }
+      },
+        React.createElement("div", { className: "flex items-center justify-between mb-2" },
+          React.createElement("p", { className: "text-xs", style: { color: "var(--muted)" } }, "Эффективность · листай вбок"),
+          React.createElement("p", { className: "text-xs", style: { color: "var(--muted)" } }, last.length + " дн")
+        ),
+        React.createElement("div", { style: { width: "100%", overflow: "hidden" } },
+          React.createElement(Sparkline, { values: sparkNums, height: 56, pointWidth: 11 })
+        ),
+        React.createElement("div", { className: "flex justify-between mt-1" },
+          React.createElement("span", { className: "text-[10px]", style: { color: "var(--muted)" } }, last.length ? last[0].date.slice(5) : ""),
+          React.createElement("span", { className: "text-[10px]", style: { color: "var(--muted)" } }, last.length ? last[last.length - 1].date.slice(5) : "")
+        )
+      );
+    }
+    if (mode === "calendar") {
+      return React.createElement("div", { className: "grid grid-cols-7 gap-1.5" },
+        DAY_SHORT.map(function (l, i) {
+          return React.createElement("div", { key: i, className: "text-center text-[10px]", style: { color: "var(--muted)" } }, l);
+        }),
+        last28.map(function (d) {
+          var st = dayCellStyle(d);
+          return React.createElement("div", {
+            key: d.date,
+            className: "aspect-square rounded-lg flex items-center justify-center text-[11px] font-medium",
+            title: d.date + " · " + (d.pct || 0) + "%",
+            style: st
+          }, fmt(new Date(d.date + "T12:00:00"), "d"));
+        })
+      );
+    }
+    return React.createElement("div", { className: "grid grid-cols-7 gap-1.5" },
+      last28.map(function (d) {
+        var st = dayCellStyle(d);
+        return React.createElement("div", {
+          key: d.date,
+          className: "aspect-square rounded-lg",
+          title: d.date + " · " + (d.pct || 0) + "%",
+          style: st
+        });
+      })
+    );
+  }
+
+  function renderHabitViz(item, open) {
+    var dots = item.dots || [];
+    if (mode === "spark") {
+      return React.createElement("div", {
+        className: "rounded-xl p-2 overflow-hidden",
+        style: { background: "var(--card)", border: "1px solid var(--line)" }
+      },
+        React.createElement(Sparkline, {
+          values: habitSparkValues(dots),
+          height: open ? 52 : 36,
+          pointWidth: open ? 10 : 6
+        })
+      );
+    }
+    if (mode === "calendar") {
+      return habitDayCells(dots);
+    }
+    return habitHeatmap(dots);
+  }
+
+  return React.createElement("div", { className: "px-5 pt-5 pb-4 min-h-full fade-in safe-top" },
+    React.createElement("h1", { className: "text-[24px] font-semibold tracking-tight mb-4" }, "Прогресс"),
+    React.createElement("div", { className: "rounded-3xl p-6 mb-3 shadow-sm text-center", style: { background: "var(--card)", border: "1px solid var(--line)" } },
+      React.createElement("p", { className: "text-sm uppercase tracking-wider mb-1", style: { color: "var(--muted)" } }, "Текущая серия"),
+      React.createElement("p", { className: "text-5xl font-semibold", style: { color: "var(--forest)" } }, streak),
+      React.createElement("p", { className: "text-sm mt-1", style: { color: "var(--muted)" } },
+        streak === 0 ? "Начни выполнять план дня" : streak === 1 ? "1 день подряд" : streak + " дней подряд"
+      ),
+      React.createElement("div", { className: "flex justify-center gap-8 mt-4 pt-3", style: { borderTop: "1px solid var(--line)" } },
+        React.createElement("div", { className: "text-center px-2", style: { minWidth: 90 } },
+          React.createElement("p", { className: "text-lg font-semibold", style: { color: "var(--forest)" } }, doneDays),
+          React.createElement("p", { className: "text-[10px] leading-tight mt-1", style: { color: "var(--muted)" } }, "дней закрыто")
+        ),
+        React.createElement("div", { className: "text-center px-2", style: { minWidth: 90 } },
+          React.createElement("p", { className: "text-lg font-semibold", style: { color: "var(--forest)" } }, activeDays),
+          React.createElement("p", { className: "text-[10px] leading-tight mt-1", style: { color: "var(--muted)" } }, "дней с планом")
+        )
+      )
+    ),
+    React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm overflow-hidden", style: { background: "var(--card)", border: "1px solid var(--line)" } },
+      React.createElement("div", { className: "flex items-center justify-between gap-2 mb-3 flex-wrap" },
+        React.createElement("h2", { className: "font-semibold text-[15px]" }, "Обзор"),
+        React.createElement("div", { className: "flex gap-1 p-1 rounded-xl", style: { background: "var(--input)" } },
+          modes.map(function (m) {
+            var on = mode === m.id;
+            return React.createElement("button", {
+              key: m.id,
+              type: "button",
+              onClick: function () { switchTracker(m.id); },
+              className: "px-2.5 py-1.5 rounded-lg text-[11px] font-medium whitespace-nowrap",
+              style: {
+                background: on ? "var(--forest)" : "transparent",
+                color: on ? "#fff" : "var(--muted)"
+              }
+            }, m.label);
+          })
+        )
+      ),
+      renderMainTracker(),
+      !last28.some(function (d) { return d.has; }) && React.createElement("p", { className: "text-sm text-center mt-3", style: { color: "var(--muted)" } }, "Пока нет данных")
+    ),
+    React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
+      React.createElement("h2", { className: "font-semibold text-[15px] mb-1" }, "По привычкам"),
+      React.createElement("p", { className: "text-[11px] mb-3", style: { color: "var(--muted)" } }, "Тот же вид, что в обзоре · тап — подробнее"),
+      habitStats.length === 0 && React.createElement("p", { className: "text-sm text-center py-4", style: { color: "var(--muted)" } }, "Добавь привычки, чтобы видеть статистику по каждой"),
+      React.createElement("div", { className: "space-y-3" },
+        habitStats.map(function (item) {
+          var habit = item.habit, planned = item.planned, done = item.done, pct = item.pct, hstreak = item.hstreak, dots = item.dots;
+          var open = expanded === habit.id;
+          return React.createElement("div", {
+            key: habit.id,
+            className: "p-3 rounded-2xl overflow-hidden",
+            style: {
+              background: "var(--input)",
+              border: open ? "1.5px solid var(--forest)" : "1.5px solid transparent"
+            }
+          },
+            React.createElement("button", {
+              type: "button",
+              className: "w-full text-left",
+              onClick: function () { setExpanded(open ? null : habit.id); }
+            },
+              React.createElement("div", { className: "flex items-start justify-between gap-2 mb-2" },
+                React.createElement("div", { className: "min-w-0" },
+                  React.createElement("p", { className: "text-[14px] font-medium truncate" }, habit.title),
+                  React.createElement("p", { className: "text-[11px] mt-0.5", style: { color: "var(--muted)" } },
+                    done + "/" + planned + " · серия " + (hstreak || 0) + (open ? " · свернуть" : " · подробнее")
+                  )
+                ),
+                React.createElement("p", { className: "text-sm font-semibold flex-shrink-0", style: { color: "var(--forest)" } }, (pct || 0) + "%")
+              )
+            ),
+            renderHabitViz(item, open),
+            open && React.createElement("div", { className: "mt-3 pt-3", style: { borderTop: "1px solid var(--line)" } },
+              React.createElement("p", { className: "text-[11px]", style: { color: "var(--muted)" } },
+                "Выполнено " + done + " из " + planned + " запланированных за " + (dots || []).length + " дн"
+              )
+            )
+          );
+        })
+      )
+    )
+  );
+}
+
+function App() {
+  const [user, setUser] = useState(null), [tab, setTab] = useState("today"), [tabDir, setTabDir] = useState("right"), [tabTick, setTabTick] = useState(0), [loading, setLoading] = useState(true), [online, setOnline] = useState(typeof navigator !== "undefined" ? navigator.onLine : true);
+  useEffect(() => {
+    try {
+      const s = localStorage.getItem(LS.user);
+      if (s) {
+        try {
+          setUser(JSON.parse(s));
+        } catch (e) {
+        }
+      }
+      setOnline(isOnline());
+    } catch (e) {
+    }
+    setLoading(false);
+    try {
+      checkForUpdates({ force: false }).then(function(r) {
+        if (r && r.data && !r.upToDate) {
+          try { window.dispatchEvent(new CustomEvent("ritm-update", { detail: r.data })); } catch (e) {}
+        }
+      });
+    } catch (e) {}
+    const on = () => {
+      setOnline(isOnline());
+      if (isOnline()) {
+        flushQueue();
+      }
+      try {
+        const u = JSON.parse(localStorage.getItem(LS.user) || "null");
+        if (u && isOnline()) pullFromServer(u.id);
+      } catch (e) {
+      }
+    };
+    const off = () => setOnline(false);
+    window.addEventListener("online", on);
+    window.addEventListener("offline", off);
+    const iv = setInterval(() => {
+      if (isOnline()) flushQueue();
+    }, 15e3);
+    return () => {
+      window.removeEventListener("online", on);
+      window.removeEventListener("offline", off);
+      clearInterval(iv);
+    };
+  }, []);
+  useEffect(() => {
+    if (user) {
+      window.__ritmApplyWidget = () => {
+        const changed = applyPendingWidgetToggles(user.id);
+        pushWidgetSnapshot(user.id);
+        if (changed) {
+          try {
+            window.dispatchEvent(new Event("ritm-data"));
+          } catch (e) {
+          }
+        }
+      };
+      applyPendingWidgetToggles(user.id);
+      recalcStreak(user.id);
+      pushWidgetSnapshot(user.id);
+      if (online) {
+        flushQueue().then(function() { return pullFromServer(user.id); }).catch(function(){});
+        checkDeadlineNotifications(user.id);
+      }
+      // poll widget pending — only applies real state changes for TODAY
+      const poll = setInterval(() => {
+        try {
+          if (applyPendingWidgetToggles(user.id)) {
+            window.dispatchEvent(new Event("ritm-data"));
+          }
+        } catch (e) {
+        }
+      }, 2000);
+      const onVis = () => {
+        if (document.visibilityState === "visible") {
+          applyPendingWidgetToggles(user.id);
+          pushWidgetSnapshot(user.id);
+        }
+      };
+      document.addEventListener("visibilitychange", onVis);
+      return () => {
+        clearInterval(poll);
+        document.removeEventListener("visibilitychange", onVis);
+      };
+    }
+  }, [user, online]);
+  const login = (u) => {
+    setUser(u);
+    localStorage.setItem(LS.user, JSON.stringify(u));
+    if (isOnline()) {
+      pullFromServer(u.id).then(function() {
+        try { window.dispatchEvent(new Event("ritm-pp")); } catch (e) {}
+      });
+      // load PP ASAP
+      sb.from("users").select("pp").eq("id", u.id).maybeSingle().then(function(res) {
+        if (res && res.data && res.data.pp != null) PP.hydrate(u.id, res.data.pp);
+        try { window.dispatchEvent(new Event("ritm-pp")); } catch (e) {}
+      }).catch(function(){});
+    }
+  };
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem(LS.user);
+  };
+  const updateUser = (u) => {
+    setUser(u);
+    localStorage.setItem(LS.user, JSON.stringify(u));
+  };
+  const TAB_ORDER = ["today", "habits", "tasks", "friends", "progress"];
+  const changeTab = (next) => {
+    if (!next || next === tab) return;
+    const i = TAB_ORDER.indexOf(tab);
+    const j = TAB_ORDER.indexOf(next);
+    if (i >= 0 && j >= 0) setTabDir(j > i ? "right" : "left");
+    else setTabDir("right");
+    setTab(next);
+    setTabTick((n) => n + 1);
+  };
+  const touchRef = useRef({ x: 0, y: 0, active: false });
+  const onTouchStart = (e) => {
+    if (tab === "settings") return;
+    const t = e.changedTouches[0];
+    touchRef.current = { x: t.clientX, y: t.clientY, active: true };
+  };
+  const onTouchEnd = (e) => {
+    if (!touchRef.current.active || tab === "settings") return;
+    touchRef.current.active = false;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchRef.current.x;
+    const dy = t.clientY - touchRef.current.y;
+    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+    const i = TAB_ORDER.indexOf(tab);
+    if (i < 0) return;
+    if (dx < 0 && i < TAB_ORDER.length - 1) changeTab(TAB_ORDER[i + 1]);
+    if (dx > 0 && i > 0) changeTab(TAB_ORDER[i - 1]);
+  };
+  if (loading) return React.createElement("div", { className: "h-full flex items-center justify-center", style: { background: "var(--bg)" } }, React.createElement("div", { className: "w-8 h-8 border-2 rounded-full animate-spin", style: { borderColor: "var(--forest)", borderTopColor: "transparent" } }));
+  if (!user) return React.createElement(AuthScreen, { onLogin: login });
+  return React.createElement("div", { className: "h-full flex flex-col overflow-hidden", style: { background: "var(--bg)" } }, !online && React.createElement("div", { className: "offline-bar flex items-center justify-center gap-2" }, I.offline(), " \u041E\u0444\u043B\u0430\u0439\u043D \u2014 \u0434\u0430\u043D\u043D\u044B\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u044E\u0442\u0441\u044F \u043D\u0430 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0435"), React.createElement("div", { className: "flex-1 relative overflow-y-auto no-scrollbar", onTouchStart, onTouchEnd }, React.createElement("div", { key: tab + "-" + tabTick, className: "tab-panel min-h-full " + (tabDir === "left" ? "tab-in-left" : "tab-in-right") }, tab === "today" && React.createElement(TodayScreen, { user, online, onOpenSettings: () => setTab("settings") }), tab === "habits" && React.createElement(HabitsScreen, { user, online }), tab === "tasks" && React.createElement(TasksScreen, { user, online }), tab === "friends" && React.createElement(FriendsScreen, { user, online }), tab === "progress" && React.createElement(ProgressScreen, { user }), tab === "settings" && React.createElement(SettingsScreen, { user, online, onLogout: logout, onUpdate: updateUser, onBack: () => setTab("today") }))), tab !== "settings" && React.createElement(BottomNav, { active: tab, onChange: changeTab }));
+}
+  window.__RitmApp = App;
+};
+
+function __ritmLoadScript(src) {
+  return new Promise(function (resolve, reject) {
+    var s = document.createElement("script");
+    s.src = src;
+    s.async = false;
+    s.onload = function () { resolve(src); };
+    s.onerror = function () { reject(new Error("fail " + src)); };
+    document.head.appendChild(s);
+  });
+}
+function __ritmTryUrls(urls, checkFn) {
+  var i = 0;
+  function next() {
+    if (i >= urls.length) return Promise.reject(new Error("all urls failed"));
+    var url = urls[i++];
+    return __ritmLoadScript(url).then(function () {
+      if (typeof checkFn === "function" && !checkFn()) {
+        return next();
+      }
+      return url;
+    }).catch(function () { return next(); });
+  }
+  return next();
+}
+function __ritmEnsureLibs() {
+  var chain = Promise.resolve();
+  if (!window.React) {
+    chain = chain.then(function () {
+      return __ritmTryUrls([
+        "vendor/react.production.min.js",
+        "./vendor/react.production.min.js",
+        "react.production.min.js",
+        "./react.production.min.js",
+        "https://unpkg.com/react@18.3.1/umd/react.production.min.js",
+        "https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"
+      ], function () { return !!window.React; });
+    });
+  }
+  chain = chain.then(function () {
+    if (window.ReactDOM) return;
+    return __ritmTryUrls([
+      "vendor/react-dom.production.min.js",
+      "./vendor/react-dom.production.min.js",
+      "react-dom.production.min.js",
+      "./react-dom.production.min.js",
+      "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js",
+      "https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"
+    ], function () { return !!window.ReactDOM; });
+  });
+  chain = chain.then(function () {
+    if (window.supabase) return;
+    return __ritmTryUrls([
+      "vendor/supabase.js",
+      "./vendor/supabase.js",
+      "supabase.js",
+      "./supabase.js",
+      "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"
+    ], function () { return !!window.supabase; }).catch(function () {});
+  });
+  return chain;
+}
+function __ritmBoot() {
+  var root = document.getElementById("root");
+  function fail(msg) {
+    try {
+      root.innerHTML = '<div style="padding:24px;font-family:system-ui;text-align:center;background:#F3EEE6;min-height:100%"><p style="font-size:16px;margin:0 0 8px">Не удалось загрузить</p><p style="color:#8A8578;font-size:13px;white-space:pre-wrap">' + String(msg || "") + '</p><p style="margin-top:16px;font-size:11px;color:#aaa">Ritm v3</p></div>';
+    } catch (e) {}
+  }
+  root.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;background:#F3EEE6;color:#8A8578;font-family:system-ui;font-size:14px">Загрузка Ritm v3…</div>';
+  __ritmEnsureLibs().then(function () {
+    if (!window.React || !window.ReactDOM) {
+      fail("React не загрузился.\\nПроверьте интернет или папку vendor.");
+      return;
+    }
+    try {
+      if (typeof window.__ritmMain === "function") window.__ritmMain();
+      var App = window.__RitmApp;
+      if (!App) {
+        fail("App не создан (ошибка в коде).");
+        return;
+      }
+      window.ReactDOM.createRoot(root).render(
+        window.React.createElement("div", { className: "desktop-shell" },
+          window.React.createElement("div", { className: "app-frame" },
+            window.React.createElement(App)
+          )
+        )
+      );
+    } catch (e) {
+      console.error(e);
+      fail((e && (e.stack || e.message)) || String(e));
+    }
+  }).catch(function (e) {
+    console.error(e);
+    fail("Библиотеки не загрузились.\\n" + ((e && e.message) || e));
+  });
+}
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", __ritmBoot);
+else __ritmBoot();
+
+</script>
+</body>
+</html>
