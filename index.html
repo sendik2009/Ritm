@@ -209,6 +209,7 @@ const APP_VERSION = "Ritm v2";
 const APP_VERSION_CODE = 2;
 
 const UPDATE_CHECK_URL = "https://web-ritm.vercel.app/version.json";
+const APK_DOWNLOAD_URL = "https://web-ritm.vercel.app/ritm.apk";
 async function fetchLatestVersion() {
   const res = await fetch(UPDATE_CHECK_URL + "?t=" + Date.now(), { cache: "no-store" });
   if (!res.ok) throw new Error("HTTP " + res.status);
@@ -1729,6 +1730,14 @@ function SettingsScreen({ user, onLogout, onUpdate, onBack, online }) {
       setTimeout(() => setMsg(""), 2e3);
     }
   }
+  useEffect(function () {
+    // web: подтянуть apkUrl из version.json
+    if (!(window.Android && Android.scheduleNotification)) {
+      fetchLatestVersion().then(function (data) {
+        if (data) setUpdInfo(data);
+      }).catch(function () {});
+    }
+  }, []);
   async function doCheckUpdate() {
     setUpdBusy(true);
     setUpdMsg("");
@@ -1749,6 +1758,10 @@ function SettingsScreen({ user, onLogout, onUpdate, onBack, online }) {
       setUpdMsg("Ошибка проверки");
     }
     setUpdBusy(false);
+  }
+  function doDownloadApk() {
+    var url = (updInfo && updInfo.apkUrl) || (typeof APK_DOWNLOAD_URL !== "undefined" ? APK_DOWNLOAD_URL : "https://web-ritm.vercel.app/ritm.apk");
+    openUpdateUrl(url);
   }
   return /* @__PURE__return /* @__PURE__ */ React.createElement("div", { className: "px-5 pt-5 pb-4 min-h-full fade-in safe-top" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-3 mb-5" }, /* @__PURE__ */ React.createElement("button", { onClick: onBack, className: "w-9 h-9 rounded-xl flex items-center justify-center", style: { background: "var(--chip)" } }, I.back()), /* @__PURE__ */ React.createElement("h1", { className: "text-[24px] font-semibold tracking-tight" }, "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438")), /* @__PURE__ */ React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, /* @__PURE__ */ React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "\u041F\u0440\u043E\u0444\u0438\u043B\u044C"), /* @__PURE__ */ React.createElement("p", { className: "text-sm mb-1", style: { color: "var(--muted)" } }, "\u041B\u043E\u0433\u0438\u043D"), /* @__PURE__ */ React.createElement("p", { className: "text-[15px] mb-3 font-medium" }, "@", user.username), /* @__PURE__ */ React.createElement("p", { className: "text-sm mb-1.5", style: { color: "var(--muted)" } }, "\u0418\u043C\u044F"), /* @__PURE__ */ React.createElement(
     "input",
@@ -1834,23 +1847,33 @@ function SettingsScreen({ user, onLogout, onUpdate, onBack, online }) {
     setMsg("\u0422\u0435\u0441\u0442 \u0447\u0435\u0440\u0435\u0437 5 \u0441\u0435\u043A\u0443\u043D\u0434");
     setTimeout(() => setMsg(""), 6e3);
   }, className: "w-full py-2.5 rounded-2xl border text-sm font-medium", style: { borderColor: "var(--line)", color: "var(--taupe)" } }, "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435 (5 \u0441\u0435\u043A)")) : /* @__PURE__ */ React.createElement("button", { onClick: enableNotif, className: "w-full py-2.5 rounded-2xl text-white text-sm font-medium", style: { background: "var(--forest)" } }, "\u0420\u0430\u0437\u0440\u0435\u0448\u0438\u0442\u044C \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F")), /* @__PURE__ */ React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, /* @__PURE__ */ React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "\u041E\u0444\u043B\u0430\u0439\u043D"), /* @__PURE__ */ React.createElement("p", { className: "text-sm", style: { color: "var(--muted)" } }, "\u041F\u0440\u0438\u0432\u044B\u0447\u043A\u0438, \u0437\u0430\u0434\u0430\u0447\u0438 \u0438 \u0437\u0430\u043C\u0435\u0442\u043A\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u044E\u0442\u0441\u044F \u043D\u0430 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0435 \u0438 \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u0443\u044E\u0442\u0441\u044F \u043F\u0440\u0438 \u043F\u043E\u044F\u0432\u043B\u0435\u043D\u0438\u0438 \u0441\u0435\u0442\u0438. \u0414\u0440\u0443\u0437\u044C\u044F \u2014 \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u043D\u043B\u0430\u0439\u043D."), /* @__PURE__ */ React.createElement("p", { className: "text-xs mt-2", style: { color: "var(--muted)" } }, "\u0412 \u043E\u0447\u0435\u0440\u0435\u0434\u0438 \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u0438: ", Store.getQueue().length)), msg && /* @__PURE__ */ React.createElement("p", { className: "text-sm text-center mb-2", style: { color: "var(--forest)" } }, msg), /* @__PURE__ */ React.createElement("button", { onClick: save, disabled: saving, className: "w-full py-3.5 rounded-2xl text-white font-medium text-[15px] mb-3 disabled:opacity-60", style: { background: "var(--forest)" } }, saving ? "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435..." : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C"), /* @__PURE__ */ React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "Productive Points"), React.createElement("p", { className: "text-3xl font-semibold mb-1", style: { color: "var(--forest)" } }, PP.get(user.id) + " PP"), React.createElement("p", { className: "text-xs", style: { color: "var(--muted)" } }, "\u041f\u0440\u0438\u0432\u044b\u0447\u043a\u0430 +1 \u00b7 \u0417\u0430\u0434\u0430\u0447\u0430 +2")), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
-      React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "Обновления"),
-      React.createElement("p", { className: "text-xs mb-3", style: { color: "var(--muted)" } }, "Текущая версия: ", APP_VERSION),
-      React.createElement("button", {
-        type: "button",
-        onClick: doCheckUpdate,
-        disabled: updBusy,
-        className: "w-full py-2.5 rounded-2xl text-white text-sm font-medium disabled:opacity-60 mb-2",
-        style: { background: "var(--forest)" }
-      }, updBusy ? "Проверка..." : "Проверить обновления"),
-      updMsg ? React.createElement("p", { className: "text-sm mb-2", style: { color: "var(--muted)" } }, updMsg) : null,
-      updInfo && updInfo.apkUrl ? React.createElement("button", {
-        type: "button",
-        onClick: function() { openUpdateUrl(updInfo.apkUrl); },
-        className: "w-full py-2.5 rounded-2xl border text-sm font-medium",
-        style: { borderColor: "var(--forest)", color: "var(--forest)" }
-      }, "Скачать " + (updInfo.version || "обновление")) : null,
-      updInfo && updInfo.changelog ? React.createElement("p", { className: "text-xs mt-2", style: { color: "var(--muted)" } }, updInfo.changelog) : null
+      React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "Приложение"),
+      !(window.Android) ? React.createElement(React.Fragment, null,
+        React.createElement("button", {
+          type: "button",
+          onClick: doDownloadApk,
+          className: "w-full py-2.5 rounded-2xl text-white text-sm font-medium",
+          style: { background: "var(--forest)" }
+        }, "Скачать APK"),
+        React.createElement("p", { className: "text-xs text-center mt-2", style: { color: "var(--muted)" } }, "Актуальная версия: ", APP_VERSION)
+      ) : React.createElement(React.Fragment, null,
+        React.createElement("p", { className: "text-xs mb-3", style: { color: "var(--muted)" } }, "Текущая версия: ", APP_VERSION),
+        React.createElement("button", {
+          type: "button",
+          onClick: doCheckUpdate,
+          disabled: updBusy,
+          className: "w-full py-2.5 rounded-2xl text-white text-sm font-medium disabled:opacity-60 mb-2",
+          style: { background: "var(--forest)" }
+        }, updBusy ? "Проверка..." : "Проверить обновления"),
+        updMsg ? React.createElement("p", { className: "text-sm mb-2", style: { color: "var(--muted)" } }, updMsg) : null,
+        updInfo && updInfo.apkUrl ? React.createElement("button", {
+          type: "button",
+          onClick: function() { openUpdateUrl(updInfo.apkUrl); },
+          className: "w-full py-2.5 rounded-2xl border text-sm font-medium",
+          style: { borderColor: "var(--forest)", color: "var(--forest)" }
+        }, "Скачать " + (updInfo.version || "обновление")) : null,
+        updInfo && updInfo.changelog ? React.createElement("p", { className: "text-xs mt-2", style: { color: "var(--muted)" } }, updInfo.changelog) : null
+      )
     ),
     React.createElement("p", { className: "text-center text-xs mb-3", style: { color: "var(--muted)" } }, APP_VERSION), /* @__PURE__ */ React.createElement("button", { onClick: onLogout, className: "w-full py-3.5 rounded-2xl border text-[15px] font-medium", style: { borderColor: "var(--line)", color: "var(--muted)" } }, "\u0412\u044B\u0439\u0442\u0438"));
 }
@@ -2071,12 +2094,17 @@ function __ritmLoadScript(src) {
     document.head.appendChild(s);
   });
 }
-function __ritmTryUrls(urls) {
+function __ritmTryUrls(urls, checkFn) {
   var i = 0;
   function next() {
     if (i >= urls.length) return Promise.reject(new Error("all urls failed"));
     var url = urls[i++];
-    return __ritmLoadScript(url).catch(function () { return next(); });
+    return __ritmLoadScript(url).then(function () {
+      if (typeof checkFn === "function" && !checkFn()) {
+        return next();
+      }
+      return url;
+    }).catch(function () { return next(); });
   }
   return next();
 }
@@ -2087,9 +2115,11 @@ function __ritmEnsureLibs() {
       return __ritmTryUrls([
         "vendor/react.production.min.js",
         "./vendor/react.production.min.js",
+        "react.production.min.js",
+        "./react.production.min.js",
         "https://unpkg.com/react@18.3.1/umd/react.production.min.js",
         "https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"
-      ]);
+      ], function () { return !!window.React; });
     });
   }
   chain = chain.then(function () {
@@ -2097,17 +2127,21 @@ function __ritmEnsureLibs() {
     return __ritmTryUrls([
       "vendor/react-dom.production.min.js",
       "./vendor/react-dom.production.min.js",
+      "react-dom.production.min.js",
+      "./react-dom.production.min.js",
       "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js",
       "https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"
-    ]);
+    ], function () { return !!window.ReactDOM; });
   });
   chain = chain.then(function () {
     if (window.supabase) return;
     return __ritmTryUrls([
       "vendor/supabase.js",
       "./vendor/supabase.js",
+      "supabase.js",
+      "./supabase.js",
       "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"
-    ]).catch(function () {});
+    ], function () { return !!window.supabase; }).catch(function () {});
   });
   return chain;
 }
