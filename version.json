@@ -1,7 +1,7 @@
 {
-  "version": "Ritm v6",
-  "versionCode": 6,
+  "version": "Ritm v6.1",
+  "versionCode": 61,
   "apkUrl": "https://web-ritm.vercel.app/ritm.apk",
   "webUrl": "https://web-ritm.vercel.app/",
-  "changelog": "Ritm v6: автоскачивание APK, фразы при входе, фикс навигации, тема виджета, мягкие анимации"
+  "changelog": "v6.1: читаемость Моно (тёмная), статистика привычек от даты добавления"
 }
