@@ -322,8 +322,8 @@ try {
   applyTheme("ritm", "light");
 }
 
-const APP_VERSION = "Ritm v6.1";
-const APP_VERSION_CODE = 61;
+const APP_VERSION = "Ritm v6.4";
+const APP_VERSION_CODE = 65;
 
 const UPDATE_CHECK_URL = "https://web-ritm.vercel.app/version.json";
 const APK_DOWNLOAD_URL = "https://web-ritm.vercel.app/ritm.apk";
@@ -390,7 +390,7 @@ function openUpdateUrl(url) {
       el.style.cssText = "position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:20px;";
       el.innerHTML = "<div style='background:var(--card,#1E2622);color:var(--text,#eee);border-radius:20px;padding:24px 28px;max-width:320px;text-align:center;border:1px solid var(--line,#333)'>" +
         "<p id='ritm-apk-progress-msg' style='margin:0;font-size:15px;font-weight:500'></p>" +
-        "<p style='margin:10px 0 0;font-size:12px;opacity:.6'>Не закрывайте приложение</p></div>";
+        "<p style='margin:10px 0 0;font-size:12px;opacity:.6'>После загрузки откроется установка</p></div>";
       document.body.appendChild(el);
     }
     var m2 = document.getElementById("ritm-apk-progress-msg");
@@ -400,19 +400,6 @@ function openUpdateUrl(url) {
   function hideProgress() {
     var el = document.getElementById("ritm-apk-progress");
     if (el) el.remove();
-  }
-  function triggerAnchor(link, blobUrl) {
-    try {
-      var a = document.createElement("a");
-      a.href = blobUrl || link;
-      a.setAttribute("download", "ritm.apk");
-      a.rel = "noopener";
-      a.style.display = "none";
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(function () { try { a.remove(); } catch (e) {} }, 1500);
-      return true;
-    } catch (e) { return false; }
   }
   function showFallback(link, errMsg) {
     hideProgress();
@@ -427,48 +414,73 @@ function openUpdateUrl(url) {
       box.onclick = function (e) { e.stopPropagation(); };
       var err = errMsg ? "<p style='font-size:12px;color:#e88;margin:0 0 8px'>" + errMsg + "</p>" : "";
       box.innerHTML = "<p style='font-weight:600;font-size:16px;margin:0 0 8px'>Скачать обновление</p>" + err +
-        "<p style='font-size:13px;opacity:.75;margin:0 0 12px;line-height:1.4'>Откройте ссылку в <b>Chrome</b>, затем установите APK:</p>" +
+        "<p style='font-size:13px;opacity:.75;margin:0 0 12px;line-height:1.4'>Если автозагрузка не сработала — откройте ссылку:</p>" +
         "<a href='" + link.replace(/'/g, "") + "' style='display:block;word-break:break-all;color:var(--forest,#8FBC9A);font-size:13px;margin-bottom:14px'>" + link.replace(/</g, "") + "</a>";
       var row = document.createElement("div");
       row.style.cssText = "display:flex;gap:8px";
       function mkBtn(label, primary, fn) {
         var b = document.createElement("button");
         b.textContent = label;
-        b.style.cssText = "flex:1;padding:12px;border-radius:14px;border:none;font-weight:500;background:" + (primary ? "var(--forest,#2D4A3E)" : "var(--chip,#333)") + ";color:" + (primary ? "#fff" : "inherit");
+        b.style.cssText = "flex:1;padding:12px;border-radius:14px;border:none;font-weight:500;background:" + (primary ? "var(--forest,#2D4A3E)" : "var(--chip,#333)") + ";color:" + (primary ? "var(--on-forest,#fff)" : "inherit");
         b.onclick = fn;
         return b;
       }
       row.appendChild(mkBtn("Копировать", false, function () {
         if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(link);
-        else { var ta = document.createElement("textarea"); ta.value = link; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); } catch (e) {} ta.remove(); }
       }));
-      row.appendChild(mkBtn("Открыть", true, function () { try { window.location.href = link; } catch (e) {} }));
+      row.appendChild(mkBtn("Открыть", true, function () {
+        if (window.Android && typeof Android.openExternal === "function") {
+          try { Android.openExternal(link); } catch (e) { window.location.href = link; }
+        } else window.location.href = link;
+      }));
       row.appendChild(mkBtn("Закрыть", false, function () { ov.remove(); }));
       box.appendChild(row);
       ov.appendChild(box);
       document.body.appendChild(ov);
     } catch (e) {}
   }
-  // Auto-download via fetch + blob (works in many WebViews with CORS)
+
+  // Native: DownloadManager (no browser) — v6.4+
+  if (window.Android && typeof Android.downloadAndInstall === "function") {
+    showProgress("Скачивание обновления…");
+    try {
+      Android.downloadAndInstall(u);
+      setTimeout(hideProgress, 2000);
+      return Promise.resolve(true);
+    } catch (e) {
+      // fall through
+    }
+  }
+  if (window.Android && typeof Android.openExternal === "function") {
+    showProgress("Открываем установку…");
+    try {
+      Android.openExternal(u);
+      setTimeout(hideProgress, 1200);
+      return Promise.resolve(true);
+    } catch (e) {
+      hideProgress();
+      showFallback(u, "Не удалось начать загрузку");
+      return Promise.resolve(false);
+    }
+  }
+
   showProgress("Скачивание обновления…");
   return fetch(u, { cache: "no-store" }).then(function (res) {
     if (!res.ok) throw new Error("HTTP " + res.status);
-    showProgress("Сохранение файла…");
     return res.blob();
   }).then(function (blob) {
-    var type = blob.type || "";
-    // Reject HTML mistake pages
-    if (type.indexOf("text/html") >= 0 || blob.size < 10000) {
-      throw new Error("Файл обновления недоступен на сервере");
+    if ((blob.type || "").indexOf("text/html") >= 0 || blob.size < 10000) {
+      throw new Error("Файл обновления недоступен");
     }
     var blobUrl = URL.createObjectURL(blob);
-    var ok = triggerAnchor(u, blobUrl);
+    var a = document.createElement("a");
+    a.href = blobUrl;
+    a.setAttribute("download", "ritm.apk");
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { try { a.remove(); URL.revokeObjectURL(blobUrl); } catch (e) {} }, 2000);
     hideProgress();
-    if (!ok) showFallback(u);
-    // Also try direct navigation as backup for Android install flow
-    setTimeout(function () {
-      try { URL.revokeObjectURL(blobUrl); } catch (e) {}
-    }, 60000);
     return true;
   }).catch(function (err) {
     hideProgress();
@@ -1604,6 +1616,8 @@ function FriendStatsView({ friendId, name, username, onBack }) {
   const [habitStats, setHabitStats] = useState([]);
   const [taskStats, setTaskStats] = useState(null);
   const [displayName, setDisplayName] = useState(name || username || "");
+  const [tracker, setTracker] = useState("spark");
+  const [expanded, setExpanded] = useState(null);
 
   useEffect(function () {
     var cancelled = false;
@@ -1738,9 +1752,121 @@ function FriendStatsView({ friendId, name, username, onBack }) {
     );
   }
 
-  var last28 = dayStats || [];
+  var earliest = null;
+  try {
+    habitStats.forEach(function (item) {
+      var c = getHabitCreatedDate(item.habit);
+      if (c && (!earliest || c < earliest)) earliest = c;
+    });
+  } catch (e) {}
+  var last28 = (dayStats || []).filter(function (d) {
+    return !earliest || (d.date || "") >= earliest;
+  });
   var doneDays = last28.filter(function (d) { return d.all_done; }).length;
   var activeDays = last28.filter(function (d) { return d.has; }).length;
+  var sparkNums = last28.map(function (d) { return d.has ? (d.pct || 0) : 0; });
+  var modes = [
+    { id: "spark", label: "Спарклайн" },
+    { id: "calendar", label: "Календарь" },
+    { id: "heatmap", label: "Heatmap" }
+  ];
+  var mode = tracker === "progress" ? "spark" : tracker;
+
+  function habitDayCells(dots) {
+    var list = (dots || []).filter(function (d) { return d.status !== "before"; }).slice(-28);
+    return React.createElement("div", { className: "grid grid-cols-7 gap-1" },
+      list.map(function (d, idx) {
+        var done = d.status === "done";
+        var skip = d.status === "skip";
+        var st = done
+          ? { background: "var(--forest)", color: "var(--on-forest)" }
+          : skip
+            ? { background: "var(--chip)", color: "var(--muted)", opacity: 0.45 }
+            : { background: "var(--chip)", color: "var(--text)", boxShadow: "inset 0 0 0 1px var(--forest)" };
+        return React.createElement("div", {
+          key: idx,
+          title: (d.ds || "") + " · " + d.status,
+          className: "aspect-square rounded-md flex items-center justify-center text-[9px] font-medium",
+          style: st
+        }, d.ds ? String(d.ds).slice(8) : "");
+      })
+    );
+  }
+  function habitHeatmap(dots) {
+    var list = (dots || []).filter(function (d) { return d.status !== "before"; }).slice(-28);
+    return React.createElement("div", { className: "grid grid-cols-7 gap-1" },
+      list.map(function (d, idx) {
+        var done = d.status === "done";
+        var skip = d.status === "skip";
+        return React.createElement("div", {
+          key: idx,
+          title: (d.ds || "") + " · " + d.status,
+          className: "aspect-square rounded-md",
+          style: {
+            background: done ? "var(--forest)" : "var(--chip)",
+            opacity: skip ? 0.35 : done ? 1 : 0.55
+          }
+        });
+      })
+    );
+  }
+  function habitSparkValues(dots) {
+    return (dots || []).filter(function (d) { return d.status !== "before"; }).map(function (d) {
+      return d.status === "done" ? 100 : 0;
+    });
+  }
+  function renderHabitViz(item, open) {
+    var dots = item.dots || [];
+    if (mode === "spark") {
+      return React.createElement("div", {
+        className: "rounded-xl p-2 overflow-hidden",
+        style: { background: "var(--card)", border: "1px solid var(--line)" }
+      }, React.createElement(Sparkline, { values: habitSparkValues(dots), height: open ? 52 : 36, pointWidth: open ? 10 : 6 }));
+    }
+    if (mode === "calendar") return habitDayCells(dots);
+    return habitHeatmap(dots);
+  }
+  function renderMainTracker() {
+    if (mode === "spark") {
+      return React.createElement("div", {
+        className: "rounded-2xl p-3 overflow-hidden",
+        style: { background: "var(--input)", border: "1px solid var(--line)" }
+      },
+        React.createElement("div", { className: "overflow-x-auto no-scrollbar" },
+          React.createElement(Sparkline, { values: sparkNums, height: 56, pointWidth: 10 })
+        )
+      );
+    }
+    if (mode === "calendar") {
+      return React.createElement("div", { className: "grid grid-cols-7 gap-1.5" },
+        last28.map(function (d, idx) {
+          var done = d.all_done;
+          var has = d.has;
+          return React.createElement("div", {
+            key: idx,
+            className: "aspect-square rounded-lg flex items-center justify-center text-[10px] font-medium",
+            style: {
+              background: done ? "var(--forest)" : has ? "var(--chip)" : "transparent",
+              color: done ? "var(--on-forest)" : "var(--muted)",
+              border: has && !done ? "1px solid var(--line)" : "1px solid transparent"
+            }
+          }, d.date ? String(d.date).slice(8) : "");
+        })
+      );
+    }
+    return React.createElement("div", { className: "grid grid-cols-7 gap-1" },
+      last28.map(function (d, idx) {
+        return React.createElement("div", {
+          key: idx,
+          className: "aspect-square rounded-md",
+          style: {
+            background: d.all_done ? "var(--forest)" : d.has ? "var(--chip)" : "var(--input)",
+            opacity: d.has ? 1 : 0.35
+          }
+        });
+      })
+    );
+  }
 
   return React.createElement("div", { className: "px-5 pt-5 pb-4 min-h-full fade-in safe-top" },
     React.createElement("div", { className: "flex items-center gap-3 mb-5" },
@@ -1757,91 +1883,71 @@ function FriendStatsView({ friendId, name, username, onBack }) {
       React.createElement("p", { className: "text-sm mt-1", style: { color: "var(--muted)" } },
         streak === 0 ? "Нет активной серии" : streak === 1 ? "1 день подряд" : streak + " дней подряд"
       ),
-      React.createElement("div", { className: "flex justify-center gap-8 mt-4 pt-3", style: { borderTop: "1px solid var(--line)" } },
-        React.createElement("div", { className: "text-center px-2", style: { minWidth: 90 } },
-          React.createElement("p", { className: "text-lg font-semibold", style: { color: "var(--forest)" } }, doneDays),
-          React.createElement("p", { className: "text-[10px] leading-tight mt-1", style: { color: "var(--muted)" } }, "дней закрыто")
-        ),
-        React.createElement("div", { className: "text-center px-2", style: { minWidth: 90 } },
-          React.createElement("p", { className: "text-lg font-semibold", style: { color: "var(--forest)" } }, activeDays),
-          React.createElement("p", { className: "text-[10px] leading-tight mt-1", style: { color: "var(--muted)" } }, "дней с планом")
-        )
+      React.createElement("p", { className: "text-xs mt-2", style: { color: "var(--muted)" } },
+        "Полных дней: " + doneDays + (activeDays ? " из " + activeDays : "")
       )
     ),
     React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
-      React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "Трекер 28 дней"),
-      React.createElement("div", { className: "grid grid-cols-7 gap-1.5" },
-        last28.map(function (d) {
-          return React.createElement("div", {
-            key: d.date,
-            className: "aspect-square rounded-lg",
-            title: d.date + " · " + (d.pct || 0) + "%",
-            style: {
-              background: d.all_done ? "var(--forest)" : d.has ? "var(--forest)" : "var(--chip)",
-              opacity: d.all_done ? 1 : d.has ? (0.3 + Math.min(100, d.pct || 0) / 100 * 0.5) : 0.45
-            }
-          });
-        })
+      React.createElement("div", { className: "flex items-center justify-between mb-3 gap-2 flex-wrap" },
+        React.createElement("h2", { className: "font-semibold text-[15px]" }, "Обзор"),
+        React.createElement("div", { className: "flex gap-1 p-1 rounded-2xl", style: { background: "var(--input)" } },
+          modes.map(function (m) {
+            var on = mode === m.id;
+            return React.createElement("button", {
+              key: m.id,
+              type: "button",
+              onClick: function () { setTracker(m.id); },
+              className: "px-2.5 py-1.5 rounded-xl text-[11px] font-medium",
+              style: on ? { background: "var(--forest)", color: "var(--on-forest)" } : { color: "var(--muted)" }
+            }, m.label);
+          })
+        )
       ),
-      !last28.some(function (d) { return d.has; }) && React.createElement("p", { className: "text-sm text-center mt-3", style: { color: "var(--muted)" } }, "Пока нет данных")
-    ),
-    taskStats && React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
-      React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "Задачи"),
-      React.createElement("div", { className: "grid grid-cols-2 gap-3" },
-        React.createElement("div", { className: "p-3 rounded-2xl text-center", style: { background: "var(--input)" } },
-          React.createElement("p", { className: "text-xl font-semibold", style: { color: "var(--forest)" } }, taskStats.done),
-          React.createElement("p", { className: "text-[11px] mt-0.5", style: { color: "var(--muted)" } }, "выполнено")
-        ),
-        React.createElement("div", { className: "p-3 rounded-2xl text-center", style: { background: "var(--input)" } },
-          React.createElement("p", { className: "text-xl font-semibold", style: { color: "var(--forest)" } }, taskStats.active),
-          React.createElement("p", { className: "text-[11px] mt-0.5", style: { color: "var(--muted)" } }, "активных")
-        ),
-        React.createElement("div", { className: "p-3 rounded-2xl text-center", style: { background: "var(--input)" } },
-          React.createElement("p", { className: "text-xl font-semibold", style: { color: "var(--forest)" } }, taskStats.dated),
-          React.createElement("p", { className: "text-[11px] mt-0.5", style: { color: "var(--muted)" } }, "с датой")
-        ),
-        React.createElement("div", { className: "p-3 rounded-2xl text-center", style: { background: "var(--input)" } },
-          React.createElement("p", { className: "text-xl font-semibold", style: { color: "var(--forest)" } }, taskStats.open),
-          React.createElement("p", { className: "text-[11px] mt-0.5", style: { color: "var(--muted)" } }, "бессрочных")
-        )
-      )
+      renderMainTracker()
     ),
     React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
-      React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "Привычки"),
+      React.createElement("h2", { className: "font-semibold text-[15px] mb-1" }, "По привычкам"),
+      React.createElement("p", { className: "text-[11px] mb-3", style: { color: "var(--muted)" } }, "С дня добавления · тап — подробнее"),
       habitStats.length === 0
         ? React.createElement("p", { className: "text-sm text-center py-4", style: { color: "var(--muted)" } }, "Нет активных привычек")
         : React.createElement("div", { className: "space-y-3" },
             habitStats.map(function (item) {
-              var habit = item.habit, planned = item.planned, done = item.done, pct = item.pct, hstreak = item.hstreak, dots = item.dots;
-              return React.createElement("div", { key: habit.id, className: "p-3 rounded-2xl", style: { background: "var(--input)" } },
-                React.createElement("div", { className: "flex items-start justify-between gap-2 mb-2" },
-                  React.createElement("div", { className: "min-w-0" },
-                    React.createElement("p", { className: "text-[14px] font-medium truncate" }, habit.title),
-                    React.createElement("p", { className: "text-[11px] mt-0.5", style: { color: "var(--muted)" } },
-                      done + "/" + planned + " за 28 дн · серия " + (hstreak || 0)
-                    )
-                  ),
-                  React.createElement("p", { className: "text-sm font-semibold flex-shrink-0", style: { color: "var(--forest)" } }, (pct || 0) + "%")
+              var habit = item.habit, planned = item.planned, done = item.done, pct = item.pct, hstreak = item.hstreak;
+              var open = expanded === habit.id;
+              return React.createElement("div", {
+                key: habit.id,
+                className: "p-3 rounded-2xl overflow-hidden",
+                style: { background: "var(--input)", border: open ? "1.5px solid var(--forest)" : "1.5px solid transparent" }
+              },
+                React.createElement("button", {
+                  type: "button",
+                  className: "w-full text-left",
+                  onClick: function () { setExpanded(open ? null : habit.id); }
+                },
+                  React.createElement("div", { className: "flex items-start justify-between gap-2 mb-2" },
+                    React.createElement("div", { className: "min-w-0" },
+                      React.createElement("p", { className: "text-[14px] font-medium truncate" }, habit.title),
+                      React.createElement("p", { className: "text-[11px] mt-0.5", style: { color: "var(--muted)" } },
+                        done + "/" + planned + " · серия " + (hstreak || 0) + (open ? " · свернуть" : " · подробнее")
+                      )
+                    ),
+                    React.createElement("p", { className: "text-sm font-semibold flex-shrink-0", style: { color: "var(--forest)" } }, (pct || 0) + "%")
+                  )
                 ),
-                React.createElement("div", { className: "h-1.5 rounded-full overflow-hidden mb-2", style: { background: "var(--chip)" } },
-                  React.createElement("div", { className: "h-full rounded-full", style: { width: Math.min(100, pct || 0) + "%", background: "var(--forest)" } })
-                ),
-                React.createElement("div", { className: "flex gap-0.5 flex-wrap" },
-                  (dots || []).map(function (d, idx) {
-                    var bg = d.status === "done" ? "var(--forest)" : d.status === "miss" ? "var(--mid)" : "var(--chip)";
-                    return React.createElement("div", {
-                      key: idx,
-                      className: "w-2 h-2 rounded-full",
-                      style: { background: bg, opacity: d.status === "skip" ? 0.35 : 1 }
-                    });
-                  })
-                )
+                renderHabitViz(item, open)
               );
             })
           )
+    ),
+    taskStats && React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
+      React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "Задачи"),
+      React.createElement("p", { className: "text-sm", style: { color: "var(--muted)" } },
+        "Всего " + taskStats.total + " · выполнено " + taskStats.done + " · активных " + taskStats.active
+      )
     )
   );
 }
+
 
 function FriendsScreen({ user, online }) {
   const [friends, setFriends] = useState([]), [pending, setPending] = useState([]), [search, setSearch] = useState(""), [results, setResults] = useState([]), [loading, setLoading] = useState(true), [msg, setMsg] = useState(""), [viewing, setViewing] = useState(null);
@@ -2465,10 +2571,20 @@ function ProgressScreen({ user }) {
     Store.setSettings(user.id, Object.assign({}, local, { tracker_type: t }));
   }
   var last = dayStats.length ? dayStats : buildLocalDayStats(user.id, 56);
-  var last28 = last.slice(-28);
+  var earliestHabit = null;
+  try {
+    Store.getHabits(user.id).forEach(function (h) {
+      var c = getHabitCreatedDate(h);
+      if (c && (!earliestHabit || c < earliestHabit)) earliestHabit = c;
+    });
+  } catch (e) {}
+  var lastFiltered = earliestHabit
+    ? last.filter(function (d) { return (d.date || "") >= earliestHabit; })
+    : last;
+  var last28 = lastFiltered.slice(-28);
   var doneDays = last28.filter(function (d) { return d.all_done; }).length;
   var activeDays = last28.filter(function (d) { return d.has; }).length;
-  var sparkNums = last.map(function (d) { return d.has ? (d.pct || 0) : 0; });
+  var sparkNums = lastFiltered.map(function (d) { return d.has ? (d.pct || 0) : 0; });
   var modes = [
     { id: "spark", label: "Спарклайн" },
     { id: "calendar", label: "Календарь" },
@@ -2498,7 +2614,7 @@ function ProgressScreen({ user }) {
   }
 
   function habitHeatmap(dots) {
-    var list = (dots || []).slice(-28);
+    var list = (dots || []).filter(function (d) { return d.status !== "before"; }).slice(-28);
     return React.createElement("div", { className: "grid grid-cols-7 gap-1" },
       list.map(function (d, idx) {
         var done = d.status === "done";
@@ -2517,8 +2633,9 @@ function ProgressScreen({ user }) {
   }
 
   function habitSparkValues(dots) {
-    return (dots || []).map(function (d) {
+    return (dots || []).filter(function (d) { return d.status !== "before"; }).map(function (d) {
       if (d.status === "done") return 100;
+      if (d.status === "skip") return 0;
       return 0;
     });
   }
@@ -2927,10 +3044,10 @@ function __ritmBoot() {
   var root = document.getElementById("root");
   function fail(msg) {
     try {
-      root.innerHTML = '<div style="padding:24px;font-family:system-ui;text-align:center;background:#F3EEE6;min-height:100%"><p style="font-size:16px;margin:0 0 8px">Не удалось загрузить</p><p style="color:#8A8578;font-size:13px;white-space:pre-wrap">' + String(msg || "") + '</p><p style="margin-top:16px;font-size:11px;color:#aaa">Ritm v6.1</p></div>';
+      root.innerHTML = '<div style="padding:24px;font-family:system-ui;text-align:center;background:#F3EEE6;min-height:100%"><p style="font-size:16px;margin:0 0 8px">Не удалось загрузить</p><p style="color:#8A8578;font-size:13px;white-space:pre-wrap">' + String(msg || "") + '</p><p style="margin-top:16px;font-size:11px;color:#aaa">Ritm v6.4</p></div>';
     } catch (e) {}
   }
-  root.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;background:#F3EEE6;color:#8A8578;font-family:system-ui;font-size:14px">Загрузка Ritm v6.1…</div>';
+  root.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;background:#F3EEE6;color:#8A8578;font-family:system-ui;font-size:14px">Загрузка Ritm v6.4…</div>';
   __ritmEnsureLibs().then(function () {
     if (!window.React || !window.ReactDOM) {
       fail("React не загрузился.\\nПроверьте интернет или папку vendor.");
