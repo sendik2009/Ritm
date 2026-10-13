@@ -68,6 +68,49 @@
     html,body,#root{ height:100%; min-height:100%; min-height:100dvh; min-height:100svh; margin:0; padding:0; background:var(--bg); background-color:var(--bg); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; color:var(--text); overscroll-behavior:none; -webkit-text-size-adjust:100%; }
     html{ background:var(--bg); background-color:var(--bg); }
     body{ -webkit-font-smoothing:antialiased; background:var(--bg); background-color:var(--bg); }
+    .desktop-shell{ min-height:100%; min-height:100dvh; width:100%; }
+    .app-frame{ width:100%; min-height:100%; min-height:100dvh; display:flex; flex-direction:column; background:var(--bg); }
+    .app-frame > *{ flex:1 1 auto; min-height:0; height:100%; max-height:100%; }
+    @media (min-width: 900px) {
+      html, body, #root{ height:100%; overflow:hidden; }
+      body{
+        background:
+          radial-gradient(ellipse 80% 50% at 15% 0%, rgba(45,74,62,0.12), transparent 55%),
+          radial-gradient(ellipse 70% 45% at 90% 100%, rgba(183,201,188,0.18), transparent 50%),
+          var(--bg);
+      }
+      .desktop-shell{
+        min-height:100dvh;
+        height:100dvh;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:24px;
+        box-sizing:border-box;
+      }
+      .app-frame{
+        width:420px;
+        max-width:calc(100vw - 48px);
+        height:min(90vh, 900px);
+        min-height:620px;
+        border-radius:28px;
+        overflow:hidden;
+        flex:0 0 auto;
+        box-shadow:
+          0 0 0 1px var(--line),
+          0 28px 80px rgba(0,0,0,0.16),
+          0 4px 16px rgba(0,0,0,0.06);
+      }
+    }
+    @media (min-width: 1280px) {
+      .app-frame{ width:440px; height:min(88vh, 940px); }
+    }
+    @media (min-width: 1600px) {
+      .app-frame{ width:460px; height:min(86vh, 980px); }
+    }
+
+
+
     .no-scrollbar::-webkit-scrollbar{ display:none; }
     .no-scrollbar{ -ms-overflow-style:none; scrollbar-width:none; }
     .safe-bottom{ padding-bottom:env(safe-area-inset-bottom,8px); }
@@ -1564,8 +1607,8 @@ function FriendStatsView({ friendId, name, username, onBack }) {
             className: "aspect-square rounded-lg",
             title: d.date + " · " + (d.pct || 0) + "%",
             style: {
-              background: d.all_done ? "var(--forest)" : d.has ? (d.pct > 50 ? "var(--mid)" : "var(--chip)") : "var(--chip)",
-              opacity: d.has ? 1 : 0.45
+              background: d.all_done ? "var(--forest)" : d.has ? "var(--forest)" : "var(--chip)",
+              opacity: d.all_done ? 1 : d.has ? (0.3 + Math.min(100, d.pct || 0) / 100 * 0.5) : 0.45
             }
           });
         })
@@ -1847,16 +1890,7 @@ function SettingsScreen({ user, onLogout, onUpdate, onBack, online }) {
       style: { background: shareStats ? "var(--forest-soft)" : "var(--input)", color: shareStats ? "var(--forest)" : "var(--taupe)" }
     },
     shareStats ? "\u0414\u0440\u0443\u0437\u044C\u044F \u0432\u0438\u0434\u044F\u0442 \u043C\u043E\u044E \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043A\u0443" : "\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043A\u0430 \u0441\u043A\u0440\u044B\u0442\u0430 \u043E\u0442 \u0434\u0440\u0443\u0437\u0435\u0439"
-  )), /* @__PURE__ */ React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, /* @__PURE__ */ React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "\u0422\u0438\u043F \u0442\u0440\u0435\u043A\u0435\u0440\u0430"), ["calendar", "progress", "heatmap"].map((t) => /* @__PURE__ */ React.createElement(
-    "button",
-    {
-      key: t,
-      onClick: () => setTracker(t),
-      className: "w-full text-left px-4 py-3 rounded-2xl mb-1.5 text-sm font-medium transition-all",
-      style: { background: tracker === t ? "var(--forest-soft)" : "var(--input)", color: tracker === t ? "var(--forest)" : "var(--taupe)", border: tracker === t ? "1.5px solid var(--forest)" : "1.5px solid transparent" }
-    },
-    t === "calendar" ? "\u041A\u0430\u043B\u0435\u043D\u0434\u0430\u0440\u044C" : t === "progress" ? "\u041F\u0440\u043E\u0433\u0440\u0435\u0441\u0441-\u0431\u0430\u0440\u044B" : "Heatmap"
-  ))), /* @__PURE__ */ React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, /* @__PURE__ */ React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "\u0423\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F"), /* @__PURE__ */ React.createElement("p", { className: "text-sm mb-3", style: { color: "var(--muted)" } }, "\u0422\u043E\u043B\u044C\u043A\u043E \u0431\u0443\u0434\u0443\u0449\u0438\u0435 \u0434\u0435\u0434\u043B\u0430\u0439\u043D\u044B, \u0431\u0435\u0437 \u043F\u043E\u0432\u0442\u043E\u0440\u043E\u0432"), /* @__PURE__ */ React.createElement(
+  )), /* @__PURE__ */  /* @__PURE__ */ React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, /* @__PURE__ */ React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "\u0423\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F"), /* @__PURE__ */ React.createElement("p", { className: "text-sm mb-3", style: { color: "var(--muted)" } }, "\u0422\u043E\u043B\u044C\u043A\u043E \u0431\u0443\u0434\u0443\u0449\u0438\u0435 \u0434\u0435\u0434\u043B\u0430\u0439\u043D\u044B, \u0431\u0435\u0437 \u043F\u043E\u0432\u0442\u043E\u0440\u043E\u0432"), /* @__PURE__ */ React.createElement(
     "button",
     {
       onClick: () => setNEn(!nEn),
@@ -1904,68 +1938,253 @@ function SettingsScreen({ user, onLogout, onUpdate, onBack, online }) {
     ),
     React.createElement("p", { className: "text-center text-xs mb-3", style: { color: "var(--muted)" } }, APP_VERSION), /* @__PURE__ */ React.createElement("button", { onClick: onLogout, className: "w-full py-3.5 rounded-2xl border text-[15px] font-medium", style: { borderColor: "var(--line)", color: "var(--muted)" } }, "\u0412\u044B\u0439\u0442\u0438"));
 }
+
+function dayCellStyle(d) {
+  if (d.all_done) return { background: "var(--forest)", color: "#fff", opacity: 1 };
+  if (!d.has) return { background: "var(--chip)", color: "var(--muted)", opacity: 0.5 };
+  var p = Math.max(0, Math.min(100, d.pct || 0));
+  var op = 0.28 + (p / 100) * 0.55;
+  return { background: "var(--forest)", color: "var(--text)", opacity: op };
+}
+function Sparkline({ values, height, pointWidth }) {
+  height = height || 44;
+  pointWidth = pointWidth || 10;
+  var vals = values || [];
+  var w = Math.max(vals.length * pointWidth, 120);
+  var h = height;
+  var pts = vals.map(function (v, i) {
+    var x = vals.length <= 1 ? 2 : (i / (vals.length - 1)) * (w - 4) + 2;
+    var y = h - 3 - (Math.max(0, Math.min(100, v || 0)) / 100) * (h - 6);
+    return x + "," + y;
+  }).join(" ");
+  var area = vals.length ? ("2," + (h - 2) + " " + pts + " " + (w - 2) + "," + (h - 2)) : "";
+  return React.createElement("div", {
+    className: "overflow-x-auto no-scrollbar",
+    style: { WebkitOverflowScrolling: "touch", marginLeft: -2, marginRight: -2 }
+  }, React.createElement("svg", {
+    width: w,
+    height: h,
+    style: { display: "block", minWidth: w }
+  }, area ? React.createElement("polygon", {
+    points: area,
+    fill: "var(--forest)",
+    opacity: 0.12
+  }) : null, React.createElement("polyline", {
+    points: pts,
+    fill: "none",
+    stroke: "var(--forest)",
+    strokeWidth: 2.2,
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), vals.map(function (v, i) {
+    if (v == null) return null;
+    var x = vals.length <= 1 ? 2 : (i / (vals.length - 1)) * (w - 4) + 2;
+    var y = h - 3 - (Math.max(0, Math.min(100, v || 0)) / 100) * (h - 6);
+    var done = (v || 0) >= 99.5;
+    return React.createElement("circle", {
+      key: i,
+      cx: x,
+      cy: y,
+      r: done ? 2.6 : 1.8,
+      fill: done ? "var(--forest)" : "var(--card)",
+      stroke: "var(--forest)",
+      strokeWidth: 1.2
+    });
+  })));
+}
 function ProgressScreen({ user }) {
-  const [streak, setStreak] = useState(() => getCachedStreak(user.id));
-  const [tracker, setTracker] = useState("heatmap");
-  const [dayStats, setDayStats] = useState([]);
-  const [habitStats, setHabitStats] = useState([]);
-  const rebuild = useCallback(() => {
-    const local = Store.getSettings(user.id);
+  var _s = useState(function () { return getCachedStreak(user.id); }), streak = _s[0], setStreak = _s[1];
+  var _t = useState("heatmap"), tracker = _t[0], setTracker = _t[1];
+  var _d = useState([]), dayStats = _d[0], setDayStats = _d[1];
+  var _h = useState([]), habitStats = _h[0], setHabitStats = _h[1];
+  var _e = useState(null), expanded = _e[0], setExpanded = _e[1];
+  var rebuild = useCallback(function () {
+    var local = Store.getSettings(user.id);
     setTracker(local.tracker_type || "heatmap");
     setStreak(recalcStreak(user.id));
-    setDayStats(buildLocalDayStats(user.id, 28));
-    const hlist = Store.getHabits(user.id).filter((h) => !h.is_paused);
-    setHabitStats(hlist.map((h) => {
-      const s = getHabitStats(user.id, h, 28);
+    setDayStats(buildLocalDayStats(user.id, 56));
+    var hlist = Store.getHabits(user.id).filter(function (h) { return !h.is_paused; });
+    setHabitStats(hlist.map(function (h) {
+      var s = getHabitStats(user.id, h, 56);
       return { habit: h, planned: s.planned, done: s.done, pct: s.pct, hstreak: s.streak, dots: s.dots };
     }));
   }, [user.id]);
-  useEffect(() => {
+  useEffect(function () {
     rebuild();
     if (navigator.onLine && sb) {
-      try {
-        pullFromServer(user.id).then(() => rebuild());
-      } catch (e) {
-      }
+      try { pullFromServer(user.id).then(function () { rebuild(); }); } catch (e) {}
     }
-    const onData = () => rebuild();
+    var onData = function () { rebuild(); };
     window.addEventListener("ritm-data", onData);
-    return () => window.removeEventListener("ritm-data", onData);
+    return function () { return window.removeEventListener("ritm-data", onData); };
   }, [user.id, rebuild]);
-  const last28 = dayStats.length ? dayStats : buildLocalDayStats(user.id, 28);
-  const doneDays = last28.filter((d) => d.all_done).length;
-  const activeDays = last28.filter((d) => d.has).length;
-  return /* @__PURE__ */ React.createElement("div", { className: "px-5 pt-5 pb-4 min-h-full fade-in safe-top" }, /* @__PURE__ */ React.createElement("h1", { className: "text-[24px] font-semibold tracking-tight mb-5" }, "\u041F\u0440\u043E\u0433\u0440\u0435\u0441\u0441"), /* @__PURE__ */ React.createElement("div", { className: "rounded-3xl p-6 mb-3 shadow-sm text-center", style: { background: "var(--card)", border: "1px solid var(--line)" } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm uppercase tracking-wider mb-1", style: { color: "var(--muted)" } }, "\u0422\u0435\u043A\u0443\u0449\u0430\u044F \u0441\u0435\u0440\u0438\u044F"), /* @__PURE__ */ React.createElement("p", { className: "text-5xl font-semibold", style: { color: "var(--forest)" } }, streak), /* @__PURE__ */ React.createElement("p", { className: "text-sm mt-1", style: { color: "var(--muted)" } }, streak === 0 ? "\u041D\u0430\u0447\u043D\u0438 \u0432\u044B\u043F\u043E\u043B\u043D\u044F\u0442\u044C \u043F\u043B\u0430\u043D \u0434\u043D\u044F" : streak === 1 ? "1 \u0434\u0435\u043D\u044C \u043F\u043E\u0434\u0440\u044F\u0434" : streak + " \u0434\u043D\u0435\u0439 \u043F\u043E\u0434\u0440\u044F\u0434"), /* @__PURE__ */ React.createElement("div", { className: "flex justify-center gap-8 mt-4 pt-3", style: { borderTop: "1px solid var(--line)" } }, /* @__PURE__ */ React.createElement("div", { className: "text-center px-2", style: { minWidth: 90 } }, /* @__PURE__ */ React.createElement("p", { className: "text-lg font-semibold", style: { color: "var(--forest)" } }, doneDays), /* @__PURE__ */ React.createElement("p", { className: "text-[10px] leading-tight mt-1", style: { color: "var(--muted)" } }, "дней закрыто")), /* @__PURE__ */ React.createElement("div", { className: "text-center px-2", style: { minWidth: 90 } }, /* @__PURE__ */ React.createElement("p", { className: "text-lg font-semibold", style: { color: "var(--forest)" } }, activeDays), /* @__PURE__ */ React.createElement("p", { className: "text-[10px] leading-tight mt-1", style: { color: "var(--muted)" } }, "дней с планом")))), /* @__PURE__ */ React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, /* @__PURE__ */ React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, tracker === "calendar" ? "\u041A\u0430\u043B\u0435\u043D\u0434\u0430\u0440\u044C" : tracker === "progress" ? "\u041F\u0440\u043E\u0433\u0440\u0435\u0441\u0441-\u0431\u0430\u0440\u044B" : "Heatmap"), tracker === "progress" ? /* @__PURE__ */ React.createElement("div", { className: "space-y-2" }, last28.map((d) => /* @__PURE__ */ React.createElement("div", { key: d.date, className: "flex items-center gap-2" }, /* @__PURE__ */ React.createElement("span", { className: "text-xs w-12 shrink-0", style: { color: "var(--muted)" } }, fmt(/* @__PURE__ */ new Date(d.date + "T12:00:00"), "short")), /* @__PURE__ */ React.createElement("div", { className: "flex-1 h-2.5 rounded-full overflow-hidden", style: { background: "var(--chip)" } }, /* @__PURE__ */ React.createElement("div", { className: "h-full rounded-full", style: { width: (d.pct || 0) + "%", background: d.all_done ? "var(--forest)" : "var(--mid)" } })), /* @__PURE__ */ React.createElement("span", { className: "text-xs w-8 text-right", style: { color: "var(--muted)" } }, d.pct || 0, "%")))) : tracker === "calendar" ? /* @__PURE__ */ React.createElement("div", { className: "grid grid-cols-7 gap-1.5" }, DAY_SHORT.map((l, i) => /* @__PURE__ */ React.createElement("div", { key: i, className: "text-center text-[10px]", style: { color: "var(--muted)" } }, l)), last28.map((d) => /* @__PURE__ */ React.createElement(
-    "div",
-    {
-      key: d.date,
-      className: "aspect-square rounded-lg flex items-center justify-center text-[10px] font-medium",
-      style: { background: d.all_done ? "var(--forest)" : d.has ? "var(--mid)" : "var(--chip)", color: d.all_done ? "#fff" : "var(--taupe)" }
-    },
-    fmt(/* @__PURE__ */ new Date(d.date + "T12:00:00"), "d")
-  ))) : /* @__PURE__ */ React.createElement("div", { className: "grid grid-cols-7 gap-1.5" }, last28.map((d) => /* @__PURE__ */ React.createElement(
-    "div",
-    {
-      key: d.date,
-      className: "aspect-square rounded-lg",
-      title: d.date + " \xB7 " + (d.pct || 0) + "%",
-      style: { background: d.all_done ? "var(--forest)" : d.has ? d.pct > 50 ? "var(--mid)" : "var(--chip)" : "var(--chip)", opacity: d.has ? 1 : 0.45 }
-    }
-  ))), !last28.some((d) => d.has) && /* @__PURE__ */ React.createElement("p", { className: "text-sm text-center mt-3", style: { color: "var(--muted)" } }, "\u041F\u043E\u043A\u0430 \u043D\u0435\u0442 \u0434\u0430\u043D\u043D\u044B\u0445 \u2014 \u043E\u0442\u043C\u0435\u0447\u0430\u0439 \u043F\u0440\u0438\u0432\u044B\u0447\u043A\u0438 \u0438 \u0437\u0430\u0434\u0430\u0447\u0438")), /* @__PURE__ */ React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, /* @__PURE__ */ React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "\u041F\u043E \u043F\u0440\u0438\u0432\u044B\u0447\u043A\u0430\u043C"), habitStats.length === 0 && /* @__PURE__ */ React.createElement("p", { className: "text-sm text-center py-4", style: { color: "var(--muted)" } }, "\u0414\u043E\u0431\u0430\u0432\u044C \u043F\u0440\u0438\u0432\u044B\u0447\u043A\u0438, \u0447\u0442\u043E\u0431\u044B \u0432\u0438\u0434\u0435\u0442\u044C \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043A\u0443 \u043F\u043E \u043A\u0430\u0436\u0434\u043E\u0439"), /* @__PURE__ */ React.createElement("div", { className: "space-y-4" }, habitStats.map(function(item) {
-    var habit = item.habit, planned = item.planned, done = item.done, pct = item.pct, hstreak = item.hstreak, dots = item.dots;
-    return /* @__PURE__ */ React.createElement("div", { key: habit.id, className: "p-3 rounded-2xl", style: { background: "var(--input)" } }, /* @__PURE__ */ React.createElement("div", { className: "flex items-start justify-between gap-2 mb-2" }, /* @__PURE__ */ React.createElement("div", { className: "min-w-0" }, /* @__PURE__ */ React.createElement("p", { className: "text-[14px] font-medium truncate" }, habit.title), /* @__PURE__ */ React.createElement("p", { className: "text-[11px] mt-0.5", style: { color: "var(--muted)" } }, done, " \u0438\u0437 ", planned, " \xB7 \u0441\u0435\u0440\u0438\u044F ", hstreak)), /* @__PURE__ */ React.createElement("span", { className: "text-sm font-semibold shrink-0", style: { color: "var(--forest)" } }, pct, "%")), /* @__PURE__ */ React.createElement("div", { className: "h-1.5 rounded-full overflow-hidden mb-2", style: { background: "var(--chip)" } }, /* @__PURE__ */ React.createElement("div", { className: "h-full rounded-full", style: { width: pct + "%", background: "var(--forest)" } })), /* @__PURE__ */ React.createElement("div", { className: "flex gap-0.5" }, dots.map(function(d, i) {
-      return /* @__PURE__ */ React.createElement(
-        "div",
-        {
-          key: d.ds + "-" + i,
-          className: "flex-1 h-2 rounded-sm",
-          title: d.ds,
-          style: { background: d.status === "done" ? "var(--forest)" : d.status === "miss" ? "var(--mid)" : "var(--line)", opacity: d.status === "skip" ? 0.35 : 1 }
-        }
+  function switchTracker(t) {
+    setTracker(t);
+    var local = Store.getSettings(user.id) || {};
+    Store.setSettings(user.id, Object.assign({}, local, { tracker_type: t }));
+  }
+  var last = dayStats.length ? dayStats : buildLocalDayStats(user.id, 56);
+  var last28 = last.slice(-28);
+  var doneDays = last28.filter(function (d) { return d.all_done; }).length;
+  var activeDays = last28.filter(function (d) { return d.has; }).length;
+  var sparkVals = last.map(function (d) { return d.has ? (d.pct || 0) : null; });
+  // for polyline nulls as 0 but dim - use 0 for skip
+  var sparkNums = last.map(function (d) { return d.has ? (d.pct || 0) : 0; });
+  var modes = [
+    { id: "spark", label: "Спарклайн" },
+    { id: "calendar", label: "Календарь" },
+    { id: "heatmap", label: "Heatmap" }
+  ];
+  // map old "progress" to spark
+  var mode = tracker === "progress" ? "spark" : tracker;
+
+  function renderTracker() {
+    if (mode === "spark") {
+      return React.createElement("div", null,
+        React.createElement("div", { className: "flex items-center justify-between mb-2" },
+          React.createElement("p", { className: "text-xs", style: { color: "var(--muted)" } }, "Эффективность · можно листать"),
+          React.createElement("p", { className: "text-xs", style: { color: "var(--muted)" } }, last.length + " дн")
+        ),
+        React.createElement(Sparkline, { values: sparkNums, height: 52, pointWidth: 12 }),
+        React.createElement("div", { className: "flex justify-between mt-1" },
+          React.createElement("span", { className: "text-[10px]", style: { color: "var(--muted)" } }, last.length ? last[0].date.slice(5) : ""),
+          React.createElement("span", { className: "text-[10px]", style: { color: "var(--muted)" } }, last.length ? last[last.length - 1].date.slice(5) : "")
+        )
       );
-    })));
-  }))));
+    }
+    if (mode === "calendar") {
+      return React.createElement("div", { className: "grid grid-cols-7 gap-1.5" },
+        DAY_SHORT.map(function (l, i) {
+          return React.createElement("div", { key: i, className: "text-center text-[10px]", style: { color: "var(--muted)" } }, l);
+        }),
+        last28.map(function (d) {
+          var st = dayCellStyle(d);
+          return React.createElement("div", {
+            key: d.date,
+            className: "aspect-square rounded-lg flex items-center justify-center text-[10px] font-medium",
+            title: d.date + " · " + (d.pct || 0) + "%",
+            style: st
+          }, fmt(new Date(d.date + "T12:00:00"), "d"));
+        })
+      );
+    }
+    // heatmap
+    return React.createElement("div", { className: "grid grid-cols-7 gap-1.5" },
+      last28.map(function (d) {
+        var st = dayCellStyle(d);
+        return React.createElement("div", {
+          key: d.date,
+          className: "aspect-square rounded-lg",
+          title: d.date + " · " + (d.pct || 0) + "%",
+          style: st
+        });
+      })
+    );
+  }
+
+  function habitSparkValues(dots) {
+    return (dots || []).map(function (d) {
+      if (d.status === "skip") return 0;
+      if (d.status === "done") return 100;
+      return 0;
+    });
+  }
+
+  return React.createElement("div", { className: "px-5 pt-5 pb-4 min-h-full fade-in safe-top" },
+    React.createElement("h1", { className: "text-[24px] font-semibold tracking-tight mb-4" }, "Прогресс"),
+    React.createElement("div", { className: "rounded-3xl p-6 mb-3 shadow-sm text-center", style: { background: "var(--card)", border: "1px solid var(--line)" } },
+      React.createElement("p", { className: "text-sm uppercase tracking-wider mb-1", style: { color: "var(--muted)" } }, "Текущая серия"),
+      React.createElement("p", { className: "text-5xl font-semibold", style: { color: "var(--forest)" } }, streak),
+      React.createElement("p", { className: "text-sm mt-1", style: { color: "var(--muted)" } },
+        streak === 0 ? "Начни выполнять план дня" : streak === 1 ? "1 день подряд" : streak + " дней подряд"
+      ),
+      React.createElement("div", { className: "flex justify-center gap-8 mt-4 pt-3", style: { borderTop: "1px solid var(--line)" } },
+        React.createElement("div", { className: "text-center px-2", style: { minWidth: 90 } },
+          React.createElement("p", { className: "text-lg font-semibold", style: { color: "var(--forest)" } }, doneDays),
+          React.createElement("p", { className: "text-[10px] leading-tight mt-1", style: { color: "var(--muted)" } }, "дней закрыто")
+        ),
+        React.createElement("div", { className: "text-center px-2", style: { minWidth: 90 } },
+          React.createElement("p", { className: "text-lg font-semibold", style: { color: "var(--forest)" } }, activeDays),
+          React.createElement("p", { className: "text-[10px] leading-tight mt-1", style: { color: "var(--muted)" } }, "дней с планом")
+        )
+      )
+    ),
+    React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
+      React.createElement("div", { className: "flex items-center justify-between gap-2 mb-3" },
+        React.createElement("h2", { className: "font-semibold text-[15px]" }, "Обзор"),
+        React.createElement("div", { className: "flex gap-1 p-1 rounded-xl", style: { background: "var(--input)" } },
+          modes.map(function (m) {
+            var on = mode === m.id;
+            return React.createElement("button", {
+              key: m.id,
+              type: "button",
+              onClick: function () { switchTracker(m.id === "spark" ? "spark" : m.id); },
+              className: "px-2.5 py-1.5 rounded-lg text-[11px] font-medium whitespace-nowrap",
+              style: {
+                background: on ? "var(--forest)" : "transparent",
+                color: on ? "#fff" : "var(--muted)"
+              }
+            }, m.label);
+          })
+        )
+      ),
+      renderTracker(),
+      !last28.some(function (d) { return d.has; }) && React.createElement("p", { className: "text-sm text-center mt-3", style: { color: "var(--muted)" } }, "Пока нет данных")
+    ),
+    React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
+      React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "По привычкам"),
+      habitStats.length === 0 && React.createElement("p", { className: "text-sm text-center py-4", style: { color: "var(--muted)" } }, "Добавь привычки, чтобы видеть статистику по каждой"),
+      React.createElement("div", { className: "space-y-3" },
+        habitStats.map(function (item) {
+          var habit = item.habit, planned = item.planned, done = item.done, pct = item.pct, hstreak = item.hstreak, dots = item.dots;
+          var open = expanded === habit.id;
+          var hv = habitSparkValues(dots);
+          return React.createElement("div", {
+            key: habit.id,
+            className: "p-3 rounded-2xl",
+            style: { background: "var(--input)", border: open ? "1.5px solid var(--forest)" : "1.5px solid transparent" }
+          },
+            React.createElement("button", {
+              type: "button",
+              className: "w-full text-left",
+              onClick: function () { setExpanded(open ? null : habit.id); }
+            },
+              React.createElement("div", { className: "flex items-start justify-between gap-2 mb-2" },
+                React.createElement("div", { className: "min-w-0" },
+                  React.createElement("p", { className: "text-[14px] font-medium truncate" }, habit.title),
+                  React.createElement("p", { className: "text-[11px] mt-0.5", style: { color: "var(--muted)" } },
+                    done + "/" + planned + " · серия " + (hstreak || 0) + (open ? " · свернуть" : " · подробнее")
+                  )
+                ),
+                React.createElement("p", { className: "text-sm font-semibold flex-shrink-0", style: { color: "var(--forest)" } }, (pct || 0) + "%")
+              ),
+              React.createElement(Sparkline, { values: hv, height: open ? 56 : 36, pointWidth: open ? 11 : 7 })
+            ),
+            open && React.createElement("div", { className: "mt-3 pt-3", style: { borderTop: "1px solid var(--line)" } },
+              React.createElement("div", { className: "flex gap-0.5 flex-wrap mb-2" },
+                (dots || []).map(function (d, idx) {
+                  var bg = d.status === "done" ? "var(--forest)" : d.status === "miss" ? "var(--chip)" : "var(--chip)";
+                  var op = d.status === "skip" ? 0.3 : d.status === "miss" ? 0.55 : 1;
+                  return React.createElement("div", {
+                    key: idx,
+                    title: d.ds + " · " + d.status,
+                    className: "rounded-sm",
+                    style: { width: 8, height: 8, background: bg, opacity: op }
+                  });
+                })
+              ),
+              React.createElement("p", { className: "text-[11px]", style: { color: "var(--muted)" } },
+                "Выполнено " + done + " из " + planned + " запланированных за " + (dots || []).length + " дн"
+              )
+            )
+          );
+        })
+      )
+    )
+  );
 }
+
+
 function App() {
   const [user, setUser] = useState(null), [tab, setTab] = useState("today"), [tabDir, setTabDir] = useState("right"), [tabTick, setTabTick] = useState(0), [loading, setLoading] = useState(true), [online, setOnline] = useState(typeof navigator !== "undefined" ? navigator.onLine : true);
   useEffect(() => {
@@ -2192,7 +2411,13 @@ function __ritmBoot() {
         fail("App не создан (ошибка в коде).");
         return;
       }
-      window.ReactDOM.createRoot(root).render(window.React.createElement(App));
+      window.ReactDOM.createRoot(root).render(
+        window.React.createElement("div", { className: "desktop-shell" },
+          window.React.createElement("div", { className: "app-frame" },
+            window.React.createElement(App)
+          )
+        )
+      );
     } catch (e) {
       console.error(e);
       fail((e && (e.stack || e.message)) || String(e));
