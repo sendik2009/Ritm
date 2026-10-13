@@ -227,8 +227,8 @@ const THEMES = {
     dark: { bg: "#141610", card: "#1E2218", forest: "#A8C070", soft: "#2A3020", muted: "#8A9080", taupe: "#C8CEC0", line: "#303628", chip: "#24281C", input: "#1A1E14", mid: "#4A5830", text: "#E8ECDC", nav: "#1A1E14" }
   },
   mono: {
-    light: { bg: "#F0F0F0", card: "#FFFFFF", forest: "#0A0A0A", soft: "#E4E4E4", muted: "#666666", taupe: "#1A1A1A", line: "#D4D4D4", chip: "#E8E8E8", input: "#F7F7F7", mid: "#888888", text: "#000000", nav: "#E8E8E8" },
-    dark: { bg: "#000000", card: "#121212", forest: "#F0F0F0", soft: "#1A1A1A", muted: "#8A8A8A", taupe: "#E0E0E0", line: "#2A2A2A", chip: "#1C1C1C", input: "#0D0D0D", mid: "#666666", text: "#FAFAFA", nav: "#0D0D0D", onForest: "#0A0A0A" }
+    light: { bg: "#F2F2F2", card: "#FFFFFF", forest: "#111111", soft: "#E6E6E6", muted: "#555555", taupe: "#1A1A1A", line: "#C8C8C8", chip: "#E4E4E4", input: "#F7F7F7", mid: "#777777", text: "#0A0A0A", nav: "#E8E8E8", onForest: "#FFFFFF" },
+    dark: { bg: "#000000", card: "#141414", forest: "#F5F5F5", soft: "#1E1E1E", muted: "#A8A8A8", taupe: "#E8E8E8", line: "#3A3A3A", chip: "#222222", input: "#0A0A0A", mid: "#888888", text: "#FFFFFF", nav: "#0A0A0A", onForest: "#0A0A0A" }
   },
   coffee: {
     light: { bg: "#F0E6DA", card: "#FBF6F0", forest: "#5C3A22", soft: "#E4D0B8", muted: "#8A6E58", taupe: "#3E2A18", line: "#D8C4B0", chip: "#E8D8C8", input: "#F6EFE6", mid: "#A07850", text: "#221810", nav: "#E8D8C8" },
@@ -303,6 +303,11 @@ function applyTheme(id, mode) {
     document.body.style.color = t.text;
   } catch (e) {}
   try {
+    var uid = null;
+    try { uid = JSON.parse(localStorage.getItem("ritm_user") || "null"); uid = uid && uid.id; } catch (e2) {}
+    if (uid && typeof pushWidgetSnapshot === "function") pushWidgetSnapshot(uid);
+  } catch (e3) {}
+  try {
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute("content", t.bg);
   } catch (e) {}
@@ -322,8 +327,8 @@ try {
   applyTheme("ritm", "light");
 }
 
-const APP_VERSION = "Ritm v6.4";
-const APP_VERSION_CODE = 65;
+const APP_VERSION = "Ritm v6.5";
+const APP_VERSION_CODE = 66;
 
 const UPDATE_CHECK_URL = "https://web-ritm.vercel.app/version.json";
 const APK_DOWNLOAD_URL = "https://web-ritm.vercel.app/ritm.apk";
@@ -1846,9 +1851,10 @@ function FriendStatsView({ friendId, name, username, onBack }) {
             key: idx,
             className: "aspect-square rounded-lg flex items-center justify-center text-[10px] font-medium",
             style: {
-              background: done ? "var(--forest)" : has ? "var(--chip)" : "transparent",
-              color: done ? "var(--on-forest)" : "var(--muted)",
-              border: has && !done ? "1px solid var(--line)" : "1px solid transparent"
+              background: done ? "var(--forest)" : has ? "var(--chip)" : "var(--input)",
+              color: done ? "var(--on-forest)" : has ? "var(--text)" : "var(--muted)",
+              border: has && !done ? "1.5px solid var(--forest)" : done ? "1.5px solid var(--forest)" : "1px solid var(--line)",
+              opacity: has || done ? 1 : 0.55
             }
           }, d.date ? String(d.date).slice(8) : "");
         })
@@ -3044,10 +3050,10 @@ function __ritmBoot() {
   var root = document.getElementById("root");
   function fail(msg) {
     try {
-      root.innerHTML = '<div style="padding:24px;font-family:system-ui;text-align:center;background:#F3EEE6;min-height:100%"><p style="font-size:16px;margin:0 0 8px">Не удалось загрузить</p><p style="color:#8A8578;font-size:13px;white-space:pre-wrap">' + String(msg || "") + '</p><p style="margin-top:16px;font-size:11px;color:#aaa">Ritm v6.4</p></div>';
+      root.innerHTML = '<div style="padding:24px;font-family:system-ui;text-align:center;background:#F3EEE6;min-height:100%"><p style="font-size:16px;margin:0 0 8px">Не удалось загрузить</p><p style="color:#8A8578;font-size:13px;white-space:pre-wrap">' + String(msg || "") + '</p><p style="margin-top:16px;font-size:11px;color:#aaa">Ritm v6.5</p></div>';
     } catch (e) {}
   }
-  root.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;background:#F3EEE6;color:#8A8578;font-family:system-ui;font-size:14px">Загрузка Ritm v6.4…</div>';
+  root.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;background:#F3EEE6;color:#8A8578;font-family:system-ui;font-size:14px">Загрузка Ritm v6.5…</div>';
   __ritmEnsureLibs().then(function () {
     if (!window.React || !window.ReactDOM) {
       fail("React не загрузился.\\nПроверьте интернет или папку vendor.");
