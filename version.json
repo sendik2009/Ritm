@@ -1,7 +1,7 @@
 {
-  "version": "Ritm v6.3",
-  "versionCode": 63,
+  "version": "Ritm v6.3.1",
+  "versionCode": 64,
   "apkUrl": "https://web-ritm.vercel.app/ritm.apk",
   "webUrl": "https://web-ritm.vercel.app/",
-  "changelog": "v6.3: спарклайн/heatmap с даты привычки; статистика друзей — календарь/спарклайн/heatmap"
+  "changelog": "v6.3.1: фикс белого экрана статистики"
 }
