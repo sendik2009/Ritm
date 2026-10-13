@@ -1,7 +1,7 @@
 {
-  "version": "Ritm v5",
-  "versionCode": 5,
+  "version": "Ritm v6",
+  "versionCode": 6,
   "apkUrl": "https://web-ritm.vercel.app/ritm.apk",
   "webUrl": "https://web-ritm.vercel.app/",
-  "changelog": "Ritm v5: тема Моно, светлые темы, системные полосы, анимации, пикеры даты/времени, Осень"
+  "changelog": "Ritm v6: автоскачивание APK, фразы при входе, фикс навигации, тема виджета, мягкие анимации"
 }
