@@ -1,7 +1,7 @@
 {
-  "version": "Ritm v3",
-  "versionCode": 3,
+  "version": "Ritm v4",
+  "versionCode": 4,
   "apkUrl": "https://web-ritm.vercel.app/ritm.apk",
   "webUrl": "https://web-ritm.vercel.app/",
-  "changelog": "Ritm v3: спарклайны и общий вид статистики, удобный календарь, десктоп-колонка 16:9, скачивание APK с сайта, фикс прогресса и тем"
+  "changelog": "Ritm v4: свои пикеры даты и времени под тему, тема Осень"
 }
