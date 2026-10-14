@@ -1,7 +1,7 @@
 {
-  "version": "Ritm v7",
-  "versionCode": 80,
+  "version": "Ritm v7.1",
+  "versionCode": 81,
   "apkUrl": "https://web-ritm.vercel.app/ritm.apk",
   "webUrl": "https://web-ritm.vercel.app/",
-  "changelog": "v7: обновление через PackageInstaller — скачивание в приложении, системный экран установки"
+  "changelog": "v7.1: тема «Аврора», режим статистики «Столбики»"
 }
