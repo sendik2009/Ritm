@@ -379,8 +379,8 @@ try {
   applyTheme("ritm", "light");
 }
 
-const APP_VERSION = "Ritm v7.2";
-const APP_VERSION_CODE = 82;
+const APP_VERSION = "Ritm v7.2.1";
+const APP_VERSION_CODE = 83;
 
 const UPDATE_CHECK_URL = "https://web-ritm.vercel.app/version.json";
 const APK_DOWNLOAD_URL = "https://web-ritm.vercel.app/ritm.apk";
@@ -2379,34 +2379,36 @@ function SettingsScreen({ user, onLogout, onUpdate, onBack, online }) {
     }
     setMsg("\u0422\u0435\u0441\u0442 \u0447\u0435\u0440\u0435\u0437 5 \u0441\u0435\u043A\u0443\u043D\u0434");
     setTimeout(() => setMsg(""), 6e3);
-  }, className: "w-full py-2.5 rounded-2xl border text-sm font-medium", style: { borderColor: "var(--line)", color: "var(--taupe)" } }, "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435 (5 \u0441\u0435\u043A)")) : React.createElement("button", { onClick: enableNotif, className: "w-full py-2.5 rounded-2xl text-white text-sm font-medium", style: { background: "var(--forest)", color: "var(--on-forest)" } }, "\u0420\u0430\u0437\u0440\u0435\u0448\u0438\u0442\u044C \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F")), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "\u041E\u0444\u043B\u0430\u0439\u043D"), React.createElement("p", { className: "text-sm", style: { color: "var(--muted)" } }, "\u041F\u0440\u0438\u0432\u044B\u0447\u043A\u0438, \u0437\u0430\u0434\u0430\u0447\u0438 \u0438 \u0437\u0430\u043C\u0435\u0442\u043A\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u044E\u0442\u0441\u044F \u043D\u0430 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0435 \u0438 \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u0443\u044E\u0442\u0441\u044F \u043F\u0440\u0438 \u043F\u043E\u044F\u0432\u043B\u0435\u043D\u0438\u0438 \u0441\u0435\u0442\u0438. \u0414\u0440\u0443\u0437\u044C\u044F \u2014 \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u043D\u043B\u0430\u0439\u043D."), React.createElement("p", { className: "text-xs mt-2", style: { color: "var(--muted)" } }, "\u0412 \u043E\u0447\u0435\u0440\u0435\u0434\u0438 \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u0438: ", Store.getQueue().length),
-        React.createElement("button", {
-          type: "button",
-          className: "mt-2 w-full py-2.5 rounded-2xl text-sm font-medium",
-          style: { background: "var(--chip)", color: "var(--text)", border: "1px solid var(--line)" },
-          onClick: async function () {
-            try {
-              setMsg("\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u044F\u2026");
-              var res = await flushQueue();
-              var left = (res && res.left != null) ? res.left : Store.getQueue().length;
-              setMsg("\u0413\u043E\u0442\u043E\u0432\u043E: \u0443\u0448\u043B\u043E " + ((res && res.ok) || 0) + ", \u043E\u0448\u0438\u0431\u043E\u043A " + ((res && res.fail) || 0) + ", \u0432 \u043E\u0447\u0435\u0440\u0435\u0434\u0438 " + left);
-              try { if (typeof loadAll === "function") await loadAll(); } catch (e) {}
-            } catch (e) {
-              setMsg((e && e.message) || "\u041E\u0448\u0438\u0431\u043A\u0430 \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u0438");
-            }
+  }, className: "w-full py-2.5 rounded-2xl border text-sm font-medium", style: { borderColor: "var(--line)", color: "var(--taupe)" } }, "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435 (5 \u0441\u0435\u043A)")) : React.createElement("button", { onClick: enableNotif, className: "w-full py-2.5 rounded-2xl text-white text-sm font-medium", style: { background: "var(--forest)", color: "var(--on-forest)" } }, "\u0420\u0430\u0437\u0440\u0435\u0448\u0438\u0442\u044C \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F")), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
+      React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "\u041E\u0444\u043B\u0430\u0439\u043D"),
+      React.createElement("p", { className: "text-sm", style: { color: "var(--muted)" } }, "\u041F\u0440\u0438\u0432\u044B\u0447\u043A\u0438, \u0437\u0430\u0434\u0430\u0447\u0438 \u0438 \u0437\u0430\u043C\u0435\u0442\u043A\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u044E\u0442\u0441\u044F \u043D\u0430 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0435 \u0438 \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u0443\u044E\u0442\u0441\u044F \u043F\u0440\u0438 \u043F\u043E\u044F\u0432\u043B\u0435\u043D\u0438\u0438 \u0441\u0435\u0442\u0438. \u0414\u0440\u0443\u0437\u044C\u044F \u2014 \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u043D\u043B\u0430\u0439\u043D."),
+      React.createElement("p", { className: "text-xs mt-2", style: { color: "var(--muted)" } }, "\u0412 \u043E\u0447\u0435\u0440\u0435\u0434\u0438 \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u0438: ", String((Store.getQueue() || []).length)),
+      React.createElement("button", {
+        type: "button",
+        className: "mt-2 w-full py-2.5 rounded-2xl text-sm font-medium",
+        style: { background: "var(--chip)", color: "var(--text)", border: "1px solid var(--line)" },
+        onClick: function () {
+          setMsg("\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u044F\u2026");
+          Promise.resolve(flushQueue()).then(function (res) {
+            var left = (res && res.left != null) ? res.left : (Store.getQueue() || []).length;
+            setMsg("\u0413\u043E\u0442\u043E\u0432\u043E: \u0443\u0448\u043B\u043E " + ((res && res.ok) || 0) + ", \u043E\u0448\u0438\u0431\u043E\u043A " + ((res && res.fail) || 0) + ", \u0432 \u043E\u0447\u0435\u0440\u0435\u0434\u0438 " + left);
+          }).catch(function (e) {
+            setMsg((e && e.message) || "\u041E\u0448\u0438\u0431\u043A\u0430");
+          });
+        }
+      }, "\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u0435\u0439\u0447\u0430\u0441"),
+      (Store.getQueue() || []).length > 20 ? React.createElement("button", {
+        type: "button",
+        className: "mt-2 w-full py-2 rounded-2xl text-xs",
+        style: { color: "var(--muted)" },
+        onClick: function () {
+          if (window.confirm("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u043E\u0447\u0435\u0440\u0435\u0434\u044C?")) {
+            try { Store.clearQueue(); } catch (e) { try { Store.setQueue([]); } catch (e2) {} }
+            setMsg("\u041E\u0447\u0435\u0440\u0435\u0434\u044C \u043E\u0447\u0438\u0449\u0435\u043D\u0430");
           }
-        }, "\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u0435\u0439\u0447\u0430\u0441"),
-        Store.getQueue().length > 30 ? React.createElement("button", {
-          type: "button",
-          className: "mt-2 w-full py-2 rounded-2xl text-xs",
-          style: { color: "var(--muted)" },
-          onClick: function () {
-            if (confirm("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u043E\u0447\u0435\u0440\u0435\u0434\u044C? \u041D\u0435\u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044B\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u043C\u043E\u0433\u0443\u0442 \u043F\u0440\u043E\u043F\u0430\u0441\u0442\u044C.")) {
-              Store.clearQueue();
-              setMsg("\u041E\u0447\u0435\u0440\u0435\u0434\u044C \u043E\u0447\u0438\u0449\u0435\u043D\u0430");
-            }
-          }
-        }, "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0437\u0430\u0441\u0442\u0440\u044F\u0432\u0448\u0443\u044E \u043E\u0447\u0435\u0440\u0435\u0434\u044C") : null), msg && React.createElement("p", { className: "text-sm text-center mb-2", style: { color: "var(--forest)" } }, msg), React.createElement("button", { onClick: save, disabled: saving, className: "w-full py-3.5 rounded-2xl text-white font-medium text-[15px] mb-3 disabled:opacity-60", style: { background: "var(--forest)", color: "var(--on-forest)" } }, saving ? "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435..." : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C"), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "Productive Points"), React.createElement("p", { className: "text-3xl font-semibold mb-1", style: { color: "var(--forest)" } }, PP.get(user.id) + " PP"), React.createElement("p", { className: "text-xs", style: { color: "var(--muted)" } }, "\u041f\u0440\u0438\u0432\u044b\u0447\u043a\u0430 +1 \u00b7 \u0417\u0430\u0434\u0430\u0447\u0430 +2")), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
+        }
+      }, "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u043E\u0447\u0435\u0440\u0435\u0434\u044C") : null
+    ), msg && React.createElement("p", { className: "text-sm text-center mb-2", style: { color: "var(--forest)" } }, msg), React.createElement("button", { onClick: save, disabled: saving, className: "w-full py-3.5 rounded-2xl text-white font-medium text-[15px] mb-3 disabled:opacity-60", style: { background: "var(--forest)", color: "var(--on-forest)" } }, saving ? "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435..." : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C"), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "Productive Points"), React.createElement("p", { className: "text-3xl font-semibold mb-1", style: { color: "var(--forest)" } }, PP.get(user.id) + " PP"), React.createElement("p", { className: "text-xs", style: { color: "var(--muted)" } }, "\u041f\u0440\u0438\u0432\u044b\u0447\u043a\u0430 +1 \u00b7 \u0417\u0430\u0434\u0430\u0447\u0430 +2")), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
       React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "Приложение"),
       !(window.Android) ? React.createElement(React.Fragment, null,
         React.createElement("button", {
