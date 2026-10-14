@@ -1,7 +1,7 @@
 {
-  "version": "Ritm v6.8.1",
-  "versionCode": 71,
+  "version": "Ritm v7",
+  "versionCode": 80,
   "apkUrl": "https://web-ritm.vercel.app/ritm.apk",
   "webUrl": "https://web-ritm.vercel.app/",
-  "changelog": "v6.8.1: тройной старт загрузки APK (DownloadManager + браузер + WebView listener)"
+  "changelog": "v7: обновление через PackageInstaller — скачивание в приложении, системный экран установки"
 }
