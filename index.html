@@ -244,6 +244,10 @@ const THEMES = {
     light: { bg: "#F0E6DA", card: "#FBF6F0", forest: "#5C3A22", soft: "#E4D0B8", muted: "#8A6E58", taupe: "#3E2A18", line: "#D8C4B0", chip: "#E8D8C8", input: "#F6EFE6", mid: "#A07850", text: "#221810", nav: "#E8D8C8" },
     dark: { bg: "#16120E", card: "#221C16", forest: "#D4A574", soft: "#2E261E", muted: "#9A8A78", taupe: "#D4C8B8", line: "#3A3228", chip: "#2A241C", input: "#1A1612", mid: "#6B5038", text: "#F0E8DC", nav: "#1A1612" }
   },
+  aurora: {
+    light: { bg: "#E8F0FF", card: "#F5F8FF", forest: "#3D5A9E", soft: "#D0DCF5", muted: "#6A7A9A", taupe: "#2A3A5A", line: "#C5D0E8", chip: "#DCE6F8", input: "#EEF3FC", mid: "#7A8CB0", text: "#1A2440", nav: "#DCE6F8", onForest: "#FFFFFF" },
+    dark: { bg: "#0B1020", card: "#141C30", forest: "#7EB8FF", soft: "#1A2438", muted: "#8A9BB8", taupe: "#C8D4E8", line: "#2A3548", chip: "#1C2638", input: "#0E1424", mid: "#6A7A98", text: "#E8EEF8", nav: "#0E1424", onForest: "#0B1020" }
+  },
   sakura: {
     light: { bg: "#F5E0EA", card: "#FDF2F7", forest: "#7A3D5C", soft: "#EBC8D8", muted: "#8A6078", taupe: "#4A2840", line: "#E0C0D0", chip: "#EED4E0", input: "#FAECF2", mid: "#C07098", text: "#281820", nav: "#EED4E0" },
     dark: { bg: "#16131F", card: "#2A2430", forest: "#F0D9E4", soft: "#3A3240", muted: "#A890A0", taupe: "#F0D9E4", line: "#4A3F4B", chip: "#322A38", input: "#1C1826", mid: "#806C79", text: "#F5E6EE", nav: "#1C1826" }
@@ -265,7 +269,8 @@ const THEME_META = [
   { id: "coffee", name: "\u041A\u043E\u0444\u0435", hint: "\u043A\u043E\u0440\u0438\u0447\u043D\u0435\u0432\u044B\u0439", sw: ["#EFE6DC", "#6B4A32", "#C4A484"] },
   { id: "sakura", name: "Сакура", hint: "вишня", sw: ["#F0D9E4", "#4A3F4B", "#C1A0AC"] },
   { id: "mist", name: "Туман", hint: "аква", sw: ["#E6F6F1", "#303633", "#8BE8CB"] },
-  { id: "autumn", name: "Осень", hint: "клён", sw: ["#0F1111", "#C24F1D", "#DD8838"] }
+  { id: "autumn", name: "Осень", hint: "клён", sw: ["#0F1111", "#C24F1D", "#DD8838"] },
+  { id: "aurora", name: "Аврора", hint: "северное сияние", sw: ["#0B1020", "#7EB8FF", "#3D5A9E"] }
 ];
 function getThemeMode() {
   try {
@@ -374,8 +379,8 @@ try {
   applyTheme("ritm", "light");
 }
 
-const APP_VERSION = "Ritm v6.8";
-const APP_VERSION_CODE = 70;
+const APP_VERSION = "Ritm v7.1";
+const APP_VERSION_CODE = 81;
 
 const UPDATE_CHECK_URL = "https://web-ritm.vercel.app/version.json";
 const APK_DOWNLOAD_URL = "https://web-ritm.vercel.app/ritm.apk";
@@ -492,30 +497,43 @@ function openUpdateUrl(url) {
     } catch (e) {}
   }
 
-  // Native: DownloadManager — must start download without browser
+  // v7: PackageInstaller — in-app download + system install UI
   if (window.Android) {
-    showProgress("Скачивание обновления…");
+    showProgress("Скачивание обновления… 0%");
+    window.__ritmOnUpdateProgress = function (pct) {
+      showProgress("Скачивание обновления… " + (pct || 0) + "%");
+    };
+    window.__ritmOnUpdateReady = function () {
+      showProgress("Подтвердите установку в системном окне");
+      setTimeout(hideProgress, 8000);
+    };
+    window.__ritmOnUpdateError = function (msg) {
+      hideProgress();
+      showFallback(u, msg || "Ошибка обновления");
+    };
     try {
+      if (typeof Android.installUpdate === "function") {
+        Android.installUpdate(u);
+        return Promise.resolve(true);
+      }
       if (typeof Android.downloadAndInstall === "function") {
         Android.downloadAndInstall(u);
-        setTimeout(function () {
-          hideProgress();
-        }, 2500);
+        setTimeout(hideProgress, 4000);
         return Promise.resolve(true);
       }
       if (typeof Android.openExternal === "function") {
         Android.openExternal(u);
-        setTimeout(hideProgress, 1200);
+        setTimeout(hideProgress, 2000);
         return Promise.resolve(true);
       }
     } catch (e) {
-      try {
-        if (typeof Android.openExternal === "function") Android.openExternal(u);
-      } catch (e2) {}
       hideProgress();
-      showFallback(u, (e && e.message) || "Ошибка загрузки");
+      showFallback(u, (e && e.message) || "Ошибка");
       return Promise.resolve(false);
     }
+    hideProgress();
+    showFallback(u, "Нативный мост недоступен");
+    return Promise.resolve(false);
   }
 
   showProgress("Скачивание обновления…");
@@ -1822,7 +1840,8 @@ function FriendStatsView({ friendId, name, username, onBack }) {
   var modes = [
     { id: "spark", label: "Спарклайн" },
     { id: "calendar", label: "Календарь" },
-    { id: "heatmap", label: "Heatmap" }
+    { id: "heatmap", label: "Heatmap" },
+    { id: "bars", label: "Столбики" }
   ];
   var mode = tracker === "progress" ? "spark" : tracker;
 
@@ -1907,6 +1926,34 @@ function FriendStatsView({ friendId, name, username, onBack }) {
             }
           }, d.date ? String(d.date).slice(8) : "");
         })
+      );
+    }
+    if (mode === "bars") {
+      var slice = last28.slice(-14);
+      return React.createElement("div", {
+        className: "rounded-2xl p-3 overflow-x-auto no-scrollbar",
+        style: { background: "var(--input)", border: "1px solid var(--line)" }
+      },
+        React.createElement("div", {
+          className: "flex items-end gap-1",
+          style: { height: "72px", minWidth: (slice.length * 18) + "px" }
+        },
+          slice.map(function (d, idx) {
+            var h = d.has ? Math.max(8, Math.round((d.pct || 0) / 100 * 64)) : 4;
+            return React.createElement("div", {
+              key: idx,
+              title: (d.date || "") + " · " + (d.pct || 0) + "%",
+              className: "flex-shrink-0 rounded-t-md",
+              style: {
+                width: "14px",
+                height: h + "px",
+                background: d.all_done ? "var(--forest)" : d.has ? "var(--mid)" : "var(--chip)",
+                opacity: d.has ? 1 : 0.4
+              }
+            });
+          })
+        ),
+        React.createElement("p", { className: "text-[10px] mt-2", style: { color: "var(--muted)" } }, "14 дней · высота = % выполнения")
       );
     }
     return React.createElement("div", { className: "grid grid-cols-7 gap-1" },
@@ -2643,7 +2690,8 @@ function ProgressScreen({ user }) {
   var modes = [
     { id: "spark", label: "Спарклайн" },
     { id: "calendar", label: "Календарь" },
-    { id: "heatmap", label: "Heatmap" }
+    { id: "heatmap", label: "Heatmap" },
+    { id: "bars", label: "Столбики" }
   ];
   var mode = tracker === "progress" ? "spark" : tracker;
 
@@ -3099,10 +3147,10 @@ function __ritmBoot() {
   var root = document.getElementById("root");
   function fail(msg) {
     try {
-      root.innerHTML = '<div style="padding:24px;font-family:system-ui;text-align:center;background:#F3EEE6;min-height:100%"><p style="font-size:16px;margin:0 0 8px">Не удалось загрузить</p><p style="color:#8A8578;font-size:13px;white-space:pre-wrap">' + String(msg || "") + '</p><p style="margin-top:16px;font-size:11px;color:#aaa">Ritm v6.8</p></div>';
+      root.innerHTML = '<div style="padding:24px;font-family:system-ui;text-align:center;background:#F3EEE6;min-height:100%"><p style="font-size:16px;margin:0 0 8px">Не удалось загрузить</p><p style="color:#8A8578;font-size:13px;white-space:pre-wrap">' + String(msg || "") + '</p><p style="margin-top:16px;font-size:11px;color:#aaa">Ritm v7</p></div>';
     } catch (e) {}
   }
-  root.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;background:#F3EEE6;color:#8A8578;font-family:system-ui;font-size:14px">Загрузка Ritm v6.8…</div>';
+  root.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;background:#F3EEE6;color:#8A8578;font-family:system-ui;font-size:14px">Загрузка Ritm v7…</div>';
   __ritmEnsureLibs().then(function () {
     if (!window.React || !window.ReactDOM) {
       fail("React не загрузился.\\nПроверьте интернет или папку vendor.");
