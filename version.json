@@ -1,7 +1,7 @@
 {
-  "version": "Ritm v6.5",
-  "versionCode": 66,
+  "version": "Ritm v6.6",
+  "versionCode": 67,
   "apkUrl": "https://web-ritm.vercel.app/ritm.apk",
   "webUrl": "https://web-ritm.vercel.app/",
-  "changelog": "v6.5: моно-тема читаемее; виджет подстраивается под тему"
+  "changelog": "v6.6: прогресс виджета под цвет темы; текст на светлом фоне тёмный"
 }
