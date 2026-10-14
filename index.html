@@ -379,8 +379,8 @@ try {
   applyTheme("ritm", "light");
 }
 
-const APP_VERSION = "Ritm v7.2.1";
-const APP_VERSION_CODE = 83;
+const APP_VERSION = "Ritm v7.3";
+const APP_VERSION_CODE = 84;
 
 const UPDATE_CHECK_URL = "https://web-ritm.vercel.app/version.json";
 const APK_DOWNLOAD_URL = "https://web-ritm.vercel.app/ritm.apk";
@@ -2208,254 +2208,322 @@ function FriendsScreen({ user, online }) {
   ), React.createElement("button", { onClick: doSearch, className: "shrink-0 px-3 py-2.5 rounded-2xl text-white text-sm font-medium whitespace-nowrap", style: { background: "var(--forest)", color: "var(--on-forest)" } }, "\u041D\u0430\u0439\u0442\u0438")), msg && React.createElement("p", { className: "text-sm mt-2", style: { color: "var(--forest)" } }, msg), results.length > 0 && React.createElement("div", { className: "mt-3 space-y-2" }, results.map((u) => React.createElement("div", { key: u.id, className: "flex items-center justify-between p-3 rounded-2xl", style: { background: "var(--input)" } }, React.createElement("div", null, React.createElement("p", { className: "text-[14px] font-medium" }, u.display_name || u.username), React.createElement("p", { className: "text-xs", style: { color: "var(--muted)" } }, "@", u.username)), React.createElement("button", { onClick: () => sendRequest(u.id), className: "px-3 py-1.5 rounded-xl text-sm text-white", style: { background: "var(--forest)", color: "var(--on-forest)" } }, "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C"))))), pending.length > 0 && React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "\u0412\u0445\u043E\u0434\u044F\u0449\u0438\u0435 \u0437\u0430\u043F\u0440\u043E\u0441\u044B"), React.createElement("div", { className: "space-y-2" }, pending.map((p) => React.createElement("div", { key: p.id, className: "flex items-center justify-between p-3 rounded-2xl", style: { background: "var(--input)" } }, React.createElement("div", null, React.createElement("p", { className: "text-[14px] font-medium" }, p.friend.display_name || p.friend.username)), React.createElement("div", { className: "flex gap-1.5" }, React.createElement("button", { onClick: () => accept(p.id), className: "px-3 py-1.5 rounded-xl text-sm text-white", style: { background: "var(--forest)", color: "var(--on-forest)" } }, "\u041F\u0440\u0438\u043D\u044F\u0442\u044C"), React.createElement("button", { onClick: () => reject(p.id), className: "px-3 py-1.5 rounded-xl text-sm border", style: { borderColor: "var(--line)" } }, "\u041E\u0442\u043A\u043B\u043E\u043D\u0438\u0442\u044C")))))), React.createElement("div", { className: "rounded-3xl p-4 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "\u041C\u043E\u0438 \u0434\u0440\u0443\u0437\u044C\u044F"), loading && React.createElement("div", { className: "flex justify-center py-6" }, React.createElement("div", { className: "w-6 h-6 border-2 rounded-full animate-spin", style: { borderColor: "var(--forest)", borderTopColor: "transparent" } })), !loading && friends.length === 0 && React.createElement("p", { className: "text-sm text-center py-4", style: { color: "var(--muted)" } }, "\u041F\u043E\u043A\u0430 \u043D\u0435\u0442 \u0434\u0440\u0443\u0437\u0435\u0439"), React.createElement("div", { className: "space-y-2" }, friends.map((f) => React.createElement("div", { key: f.id, className: "flex items-center gap-2 p-3 rounded-2xl", style: { background: "var(--input)" } }, React.createElement("button", { onClick: () => setViewing({ friendId: f.friendId, name: f.friend.display_name || f.friend.username, username: f.friend.username }), className: "flex-1 min-w-0 text-left" }, React.createElement("p", { className: "text-[14px] font-medium truncate" }, f.friend.display_name || f.friend.username), React.createElement("p", { className: "text-xs", style: { color: "var(--muted)" } }, "@", f.friend.username, " \xB7 ", (f.friend.pp != null ? f.friend.pp : 0), " PP")), React.createElement("button", { onClick: () => removeFriend(f.id), className: "w-8 h-8 rounded-xl flex items-center justify-center", style: { background: "var(--card)", color: "var(--text)" } }, I.trash()))))));
 }
 function SettingsScreen({ user, onLogout, onUpdate, onBack, online }) {
-  const [displayName, setDisplayName] = useState(user.display_name || ""), [tracker, setTracker] = useState("heatmap"), [theme, setTheme] = useState("ritm"), [mode, setMode] = useState("light"), [animOn, setAnimOn] = useState(getAnimEnabled()), [shareStats, setShareStats] = useState(true), [nEn, setNEn] = useState(true), [n1d, setN1d] = useState(true), [nHalf, setNHalf] = useState(false), [nToday, setNToday] = useState(true), [saving, setSaving] = useState(false), [msg, setMsg] = useState(""), [updMsg, setUpdMsg] = useState(""), [updBusy, setUpdBusy] = useState(false), [updInfo, setUpdInfo] = useState(null), [notifOk, setNotifOk] = useState(typeof Notification !== "undefined" && Notification.permission === "granted" || !!(window.Android && Android.scheduleNotification));
-  useEffect(() => {
-    const local = Store.getSettings(user.id);
-    setTracker(local.tracker_type || "heatmap");
-    setTheme(local.theme || localStorage.getItem("ritm_theme") || "ritm");
-    setMode(local.mode || getThemeMode());
-    setShareStats(local.share_stats !== false);
-    setNEn(local.notify_enabled !== false);
-    setN1d(local.notify_1d !== false);
-    setNHalf(local.notify_half === true);
-    setNToday(local.notify_today !== false);
-  }, [user.id]);
+  const [displayName, setDisplayName] = useState((user && user.display_name) || "");
+  const [tracker, setTracker] = useState("heatmap");
+  const [theme, setTheme] = useState("ritm");
+  const [mode, setMode] = useState("light");
+  const [animOn, setAnimOn] = useState(true);
+  const [shareStats, setShareStats] = useState(true);
+  const [nEn, setNEn] = useState(true);
+  const [n1d, setN1d] = useState(true);
+  const [nHalf, setNHalf] = useState(false);
+  const [nToday, setNToday] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [updMsg, setUpdMsg] = useState("");
+  const [updBusy, setUpdBusy] = useState(false);
+  const [updInfo, setUpdInfo] = useState(null);
+  const [qLen, setQLen] = useState(0);
+
+  useEffect(function () {
+    try {
+      var local = Store.getSettings(user.id) || {};
+      setTracker(local.tracker_type || "heatmap");
+      setTheme(local.theme || localStorage.getItem("ritm_theme") || "ritm");
+      setMode(local.mode || getThemeMode());
+      setShareStats(local.share_stats !== false);
+      setNEn(local.notify_enabled !== false);
+      setN1d(local.notify_1d !== false);
+      setNHalf(local.notify_half === true);
+      setNToday(local.notify_today !== false);
+      try { setAnimOn(getAnimEnabled()); } catch (e) {}
+      try { setQLen((Store.getQueue() || []).length); } catch (e) {}
+    } catch (e) {}
+  }, [user && user.id]);
+
   async function save() {
     setSaving(true);
-    Store.setSettings(user.id, { tracker_type: tracker, show_streak: true, share_stats: shareStats, theme, mode, notify_enabled: nEn, notify_1d: n1d, notify_half: nHalf, notify_today: nToday });
-    applyTheme(theme, mode);
-    if (online) {
-      onlineWrite("users", "update", { display_name: displayName.trim() || null }, { id: user.id });
-      onlineWrite("user_settings", "upsert", { user_id: user.id, tracker_type: tracker, updated_at: (new Date()).toISOString() }, { onConflict: "user_id" });
-      await flushQueue();
-    } else {
-      onlineWrite("users", "update", { display_name: displayName.trim() || null }, { id: user.id });
-      onlineWrite("user_settings", "upsert", { user_id: user.id, tracker_type: tracker, updated_at: (new Date()).toISOString() }, { onConflict: "user_id" });
-    }
-    onUpdate({ ...user, display_name: displayName.trim() || null });
-    setMsg("\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E" + (online ? "" : " (\u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u0443\u0435\u0442\u0441\u044F \u043F\u0440\u0438 \u0441\u0435\u0442\u0438)"));
-    setSaving(false);
-    setTimeout(() => setMsg(""), 2500);
-  }
-  async function enableNotif() {
-    const ok = await ensureNotifyPermission();
-    setNotifOk(ok);
-    if (ok) {
-      checkDeadlineNotifications(user.id);
-      setMsg("Уведомления включены");
-      setTimeout(() => setMsg(""), 2e3);
-    }
-  }
-  useEffect(function () {
-    // web: подтянуть apkUrl из version.json
-    if (!(window.Android && Android.scheduleNotification)) {
-      fetchLatestVersion().then(function (data) {
-        if (data) setUpdInfo(data);
-      }).catch(function () {});
-    }
-  }, []);
-  async function doCheckUpdate() {
-    setUpdBusy(true);
-    setUpdMsg("");
-    setUpdInfo(null);
+    setMsg("");
     try {
-      const r = await checkForUpdates({ force: true });
-      if (!r) {
-        setUpdMsg("Не удалось проверить");
-      } else if (r.error) {
-        setUpdMsg("Ошибка: " + r.error);
-      } else if (r.upToDate) {
-        setUpdMsg("У вас актуальная версия (" + APP_VERSION + ")");
-      } else {
+      Store.setSettings(user.id, {
+        tracker_type: tracker,
+        show_streak: true,
+        share_stats: shareStats,
+        theme: theme,
+        mode: mode,
+        notify_enabled: nEn,
+        notify_1d: n1d,
+        notify_half: nHalf,
+        notify_today: nToday
+      });
+      try { localStorage.setItem("ritm_theme", theme); } catch (e) {}
+      try { localStorage.setItem("ritm_mode", mode); } catch (e) {}
+      try { setAnimEnabled(animOn); } catch (e) {}
+      try { applyTheme(theme, mode); } catch (e) {}
+      if (displayName && displayName !== user.display_name) {
+        try {
+          await onlineWrite("users", "update", { display_name: displayName }, { id: user.id });
+          if (typeof onUpdate === "function") onUpdate(Object.assign({}, user, { display_name: displayName }));
+        } catch (e) {}
+      }
+      try {
+        await onlineWrite("user_settings", "upsert", {
+          user_id: user.id,
+          tracker_type: tracker,
+          show_streak: true,
+          share_stats: shareStats,
+          theme: theme,
+          mode: mode
+        }, { user_id: user.id });
+      } catch (e) {}
+      setMsg("\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E");
+    } catch (e) {
+      setMsg((e && e.message) || "\u041E\u0448\u0438\u0431\u043A\u0430");
+    }
+    setSaving(false);
+  }
+
+  async function doSync() {
+    setMsg("\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u044F\u2026");
+    try {
+      var res = await flushQueue();
+      var left = (res && res.left != null) ? res.left : (Store.getQueue() || []).length;
+      setQLen(left);
+      setMsg("\u0413\u043E\u0442\u043E\u0432\u043E: \u0443\u0448\u043B\u043E " + ((res && res.ok) || 0) + ", \u043E\u0448\u0438\u0431\u043E\u043A " + ((res && res.fail) || 0) + ", \u0432 \u043E\u0447\u0435\u0440\u0435\u0434\u0438 " + left);
+    } catch (e) {
+      setMsg((e && e.message) || "\u041E\u0448\u0438\u0431\u043A\u0430 \u0441\u0438\u043D\u0445\u0440\u043E");
+    }
+  }
+
+  function clearQ() {
+    if (!window.confirm("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u043E\u0447\u0435\u0440\u0435\u0434\u044C \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u0438?")) return;
+    try { Store.clearQueue(); } catch (e) { try { Store.setQueue([]); } catch (e2) {} }
+    setQLen(0);
+    setMsg("\u041E\u0447\u0435\u0440\u0435\u0434\u044C \u043E\u0447\u0438\u0449\u0435\u043D\u0430");
+  }
+
+  async function checkUpd() {
+    setUpdBusy(true);
+    setUpdMsg("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430\u2026");
+    try {
+      var r = await checkForUpdates({ force: true });
+      if (r && r.upToDate) {
+        setUpdMsg("\u0423 \u0432\u0430\u0441 \u0430\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u0430\u044F \u0432\u0435\u0440\u0441\u0438\u044F");
+        setUpdInfo(null);
+      } else if (r && r.data) {
         setUpdInfo(r.data);
-        setUpdMsg("Доступна " + (r.data.version || "новая версия"));
+        setUpdMsg("\u0414\u043E\u0441\u0442\u0443\u043F\u043D\u0430 " + (r.data.version || "\u043D\u043E\u0432\u0430\u044F \u0432\u0435\u0440\u0441\u0438\u044F"));
+      } else {
+        setUpdMsg("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C");
       }
     } catch (e) {
-      setUpdMsg("Ошибка проверки");
+      setUpdMsg((e && e.message) || "\u041E\u0448\u0438\u0431\u043A\u0430");
     }
     setUpdBusy(false);
   }
-  function doDownloadApk() {
-    var url = (updInfo && updInfo.apkUrl) || (typeof APK_DOWNLOAD_URL !== "undefined" ? APK_DOWNLOAD_URL : "https://web-ritm.vercel.app/ritm.apk");
-    setUpdMsg("Скачивание…");
-    openUpdateUrl(url).then(function () {
-      setUpdMsg("Если файл не скачался — APK ещё не загружен на сервер (404). Залейте ritm.apk в репозиторий.");
-      setTimeout(function () { setUpdMsg(""); }, 6000);
-    }).catch(function () {
-      setUpdMsg("Не удалось скачать. Проверьте, что ritm.apk лежит на сайте.");
-    });
+
+  function card(title, children) {
+    return React.createElement("div", {
+      className: "rounded-3xl p-4 mb-3 shadow-sm",
+      style: { background: "var(--card)", border: "1px solid var(--line)" }
+    }, React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, title), children);
   }
-  return React.createElement("div", { className: "px-5 pt-5 pb-4 min-h-full fade-in safe-top" }, React.createElement("div", { className: "flex items-center gap-3 mb-5" }, React.createElement("button", { onClick: onBack, className: "w-9 h-9 rounded-xl flex items-center justify-center", style: { background: "var(--chip)" } }, I.back()), React.createElement("h1", { className: "text-[24px] font-semibold tracking-tight" }, "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438")), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-3" }, "\u041F\u0440\u043E\u0444\u0438\u043B\u044C"), React.createElement("p", { className: "text-sm mb-1", style: { color: "var(--muted)" } }, "\u041B\u043E\u0433\u0438\u043D"), React.createElement("p", { className: "text-[15px] mb-3 font-medium" }, "@", user.username), React.createElement("p", { className: "text-sm mb-1.5", style: { color: "var(--muted)" } }, "\u0418\u043C\u044F"), React.createElement(
-    "input",
-    {
-      value: displayName,
-      onChange: (e) => setDisplayName(e.target.value),
-      placeholder: "\u041E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0435\u043C\u043E\u0435 \u0438\u043C\u044F",
-      className: "w-full px-4 py-3 rounded-2xl border outline-none text-[15px]",
-      style: { background: "var(--input)", borderColor: "var(--line)" }
-    }
-  )), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "\u041E\u0444\u043E\u0440\u043C\u043B\u0435\u043D\u0438\u0435"), React.createElement("p", { className: "text-sm mb-2", style: { color: "var(--muted)" } }, "\u0420\u0435\u0436\u0438\u043C"), React.createElement("div", { className: "theme-toggle mb-3" }, React.createElement(
-    "button",
-    {
+
+  function pill(active, label, onClick) {
+    return React.createElement("button", {
       type: "button",
-      onClick: () => {
-        setMode("light");
-        applyTheme(theme, "light");
-      },
-      style: { background: mode === "light" ? "var(--card)" : "transparent", color: mode === "light" ? "var(--forest)" : "var(--muted)", boxShadow: mode === "light" ? "0 1px 3px rgba(0,0,0,0.08)" : "none" }
-    },
-    "\u0421\u0432\u0435\u0442\u043B\u0430\u044F"
-  ), React.createElement(
-    "button",
-    {
-      type: "button",
-      onClick: () => {
-        setMode("dark");
-        applyTheme(theme, "dark");
-      },
-      style: { background: mode === "dark" ? "var(--card)" : "transparent", color: mode === "dark" ? "var(--forest)" : "var(--muted)", boxShadow: mode === "dark" ? "0 1px 3px rgba(0,0,0,0.08)" : "none" }
-    },
-    "\u0422\u0451\u043C\u043D\u0430\u044F"
-  )), React.createElement("p", { className: "text-sm mb-3", style: { color: "var(--muted)" } }, "\u041F\u0430\u043B\u0438\u0442\u0440\u0430 \u2014 \u043F\u043E\u0434\u0441\u0442\u0440\u0430\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u043F\u043E\u0434 \u0440\u0435\u0436\u0438\u043C"), React.createElement("div", { className: "grid grid-cols-2 gap-2" }, THEME_META.map((t) => {
-    const on = theme === t.id;
-    return React.createElement(
-      "button",
-      {
-        key: t.id,
-        type: "button",
-        onClick: () => {
-          setTheme(t.id);
-          applyTheme(t.id, mode);
-        },
-        className: "rounded-2xl p-3 text-left relative",
-        style: { background: on ? t.sw[0] : "var(--input)", border: on ? "2px solid " + t.sw[1] : "1.5px solid var(--line)", boxShadow: on ? "0 0 0 3px " + t.sw[1] + "33" : "none" }
-      },
-      on && React.createElement("span", { className: "absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center text-white text-[11px] font-bold", style: { background: t.sw[1] } }, "\u2713"),
-      React.createElement("div", { className: "flex gap-1.5 mb-2" }, t.sw.map((c) => React.createElement("span", { key: c, className: "w-6 h-6 rounded-full", style: { background: c, border: "1px solid rgba(0,0,0,0.08)" } }))),
-      React.createElement("p", { className: "text-sm font-semibold", style: { color: on ? t.sw[1] : "var(--text)" } }, t.name),
-      React.createElement("p", { className: "text-[11px]", style: { color: "var(--muted)" } }, t.hint)
-    );
-  }))), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm fade-in", style: { background: "var(--card)", border: "1px solid var(--line)" } },
-      React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "Анимации"),
-      React.createElement("p", { className: "text-[11px] mb-3", style: { color: "var(--muted)" } }, "Плавные переходы и появление элементов"),
-      React.createElement("button", {
-        type: "button",
-        onClick: function () {
-          var next = !animOn;
-          setAnimOn(next);
-          setAnimEnabled(next);
-        },
-        className: "w-full flex items-center justify-between px-3 py-3 rounded-2xl ritm-btn",
-        style: { background: "var(--input)" }
-      },
-        React.createElement("span", { className: "text-sm" }, animOn ? "Включены" : "Выключены"),
-        React.createElement("span", {
-          className: "px-3 py-1 rounded-full text-[12px] font-medium",
-          style: { background: animOn ? "var(--forest)" : "var(--chip)", color: animOn ? "var(--on-forest)" : "var(--muted)" }
-        }, animOn ? "ON" : "OFF")
-      )
-    ),
-    React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "\u041F\u0440\u0438\u0432\u0430\u0442\u043D\u043E\u0441\u0442\u044C"), React.createElement(
-    "button",
-    {
-      onClick: () => setShareStats(!shareStats),
-      className: "w-full text-left px-4 py-3 rounded-2xl text-sm font-medium",
-      style: { background: shareStats ? "var(--forest-soft)" : "var(--input)", color: shareStats ? "var(--forest)" : "var(--taupe)" }
-    },
-    shareStats ? "\u0414\u0440\u0443\u0437\u044C\u044F \u0432\u0438\u0434\u044F\u0442 \u043C\u043E\u044E \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043A\u0443" : "\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043A\u0430 \u0441\u043A\u0440\u044B\u0442\u0430 \u043E\u0442 \u0434\u0440\u0443\u0437\u0435\u0439"
-  )),  React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "\u0423\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F"), React.createElement("p", { className: "text-sm mb-3", style: { color: "var(--muted)" } }, "\u0422\u043E\u043B\u044C\u043A\u043E \u0431\u0443\u0434\u0443\u0449\u0438\u0435 \u0434\u0435\u0434\u043B\u0430\u0439\u043D\u044B, \u0431\u0435\u0437 \u043F\u043E\u0432\u0442\u043E\u0440\u043E\u0432"), React.createElement(
-    "button",
-    {
-      onClick: () => setNEn(!nEn),
-      className: "w-full text-left px-4 py-3 rounded-2xl text-sm font-medium mb-2",
-      style: { background: nEn ? "var(--forest-soft)" : "var(--input)", color: nEn ? "var(--forest)" : "var(--taupe)" }
-    },
-    nEn ? "\u041D\u0430\u043F\u043E\u043C\u0438\u043D\u0430\u043D\u0438\u044F \u0432\u043A\u043B\u044E\u0447\u0435\u043D\u044B" : "\u041D\u0430\u043F\u043E\u043C\u0438\u043D\u0430\u043D\u0438\u044F \u0432\u044B\u043A\u043B\u044E\u0447\u0435\u043D\u044B"
-  ), nEn && React.createElement("div", { className: "space-y-1.5 mb-2" }, React.createElement("button", { onClick: () => setN1d(!n1d), className: "w-full text-left px-4 py-2.5 rounded-2xl text-sm", style: { background: n1d ? "var(--forest-soft)" : "var(--input)" } }, n1d ? "\u25CF" : "\u25CB", " \u0417\u0430 1 \u0434\u0435\u043D\u044C"), React.createElement("button", { onClick: () => setNHalf(!nHalf), className: "w-full text-left px-4 py-2.5 rounded-2xl text-sm", style: { background: nHalf ? "var(--forest-soft)" : "var(--input)" } }, nHalf ? "\u25CF" : "\u25CB", " \u0417\u0430 \u043F\u043E\u043B\u0434\u043D\u044F"), React.createElement("button", { onClick: () => setNToday(!nToday), className: "w-full text-left px-4 py-2.5 rounded-2xl text-sm", style: { background: nToday ? "var(--forest-soft)" : "var(--input)" } }, nToday ? "\u25CF" : "\u25CB", " \u0412 \u0434\u0435\u043D\u044C \u0434\u0435\u0434\u043B\u0430\u0439\u043D\u0430")), React.createElement("p", { className: "text-xs mb-3", style: { color: "var(--muted)" } }, "\u0412\u0438\u0434\u0436\u0435\u0442 \xAB\u0421\u0435\u0433\u043E\u0434\u043D\u044F\xBB: \u0434\u043E\u043B\u0433\u0438\u0439 \u0442\u0430\u043F \u043F\u043E \u0440\u0430\u0431\u043E\u0447\u0435\u043C\u0443 \u0441\u0442\u043E\u043B\u0443 \u2192 \u0412\u0438\u0434\u0436\u0435\u0442\u044B \u2192 \u0420\u0438\u0442\u043C"), notifOk ? React.createElement("div", null, React.createElement("p", { className: "text-sm font-medium mb-2", style: { color: "var(--forest)" } }, "\u0412\u043A\u043B\u044E\u0447\u0435\u043D\u044B"), React.createElement("button", { onClick: () => {
-    if (window.Android && Android.scheduleNotification) {
-      Android.scheduleNotification("\u0420\u0438\u0442\u043C", "\u0422\u0435\u0441\u0442\u043E\u0432\u043E\u0435 \u043D\u0430\u043F\u043E\u043C\u0438\u043D\u0430\u043D\u0438\u0435: \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u0430\u044E\u0442", Date.now() + 5e3, "ritm_test");
-    } else if ("Notification" in window && Notification.permission === "granted") {
-      setTimeout(() => new Notification("\u0420\u0438\u0442\u043C", { body: "\u0422\u0435\u0441\u0442\u043E\u0432\u043E\u0435 \u043D\u0430\u043F\u043E\u043C\u0438\u043D\u0430\u043D\u0438\u0435: \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u0430\u044E\u0442", tag: "ritm_test" }), 5e3);
-    }
-    setMsg("\u0422\u0435\u0441\u0442 \u0447\u0435\u0440\u0435\u0437 5 \u0441\u0435\u043A\u0443\u043D\u0434");
-    setTimeout(() => setMsg(""), 6e3);
-  }, className: "w-full py-2.5 rounded-2xl border text-sm font-medium", style: { borderColor: "var(--line)", color: "var(--taupe)" } }, "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435 (5 \u0441\u0435\u043A)")) : React.createElement("button", { onClick: enableNotif, className: "w-full py-2.5 rounded-2xl text-white text-sm font-medium", style: { background: "var(--forest)", color: "var(--on-forest)" } }, "\u0420\u0430\u0437\u0440\u0435\u0448\u0438\u0442\u044C \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F")), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
-      React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "\u041E\u0444\u043B\u0430\u0439\u043D"),
-      React.createElement("p", { className: "text-sm", style: { color: "var(--muted)" } }, "\u041F\u0440\u0438\u0432\u044B\u0447\u043A\u0438, \u0437\u0430\u0434\u0430\u0447\u0438 \u0438 \u0437\u0430\u043C\u0435\u0442\u043A\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u044E\u0442\u0441\u044F \u043D\u0430 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0435 \u0438 \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u0443\u044E\u0442\u0441\u044F \u043F\u0440\u0438 \u043F\u043E\u044F\u0432\u043B\u0435\u043D\u0438\u0438 \u0441\u0435\u0442\u0438. \u0414\u0440\u0443\u0437\u044C\u044F \u2014 \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u043D\u043B\u0430\u0439\u043D."),
-      React.createElement("p", { className: "text-xs mt-2", style: { color: "var(--muted)" } }, "\u0412 \u043E\u0447\u0435\u0440\u0435\u0434\u0438 \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u0438: ", String((Store.getQueue() || []).length)),
-      React.createElement("button", {
-        type: "button",
-        className: "mt-2 w-full py-2.5 rounded-2xl text-sm font-medium",
-        style: { background: "var(--chip)", color: "var(--text)", border: "1px solid var(--line)" },
-        onClick: function () {
-          setMsg("\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u044F\u2026");
-          Promise.resolve(flushQueue()).then(function (res) {
-            var left = (res && res.left != null) ? res.left : (Store.getQueue() || []).length;
-            setMsg("\u0413\u043E\u0442\u043E\u0432\u043E: \u0443\u0448\u043B\u043E " + ((res && res.ok) || 0) + ", \u043E\u0448\u0438\u0431\u043E\u043A " + ((res && res.fail) || 0) + ", \u0432 \u043E\u0447\u0435\u0440\u0435\u0434\u0438 " + left);
-          }).catch(function (e) {
-            setMsg((e && e.message) || "\u041E\u0448\u0438\u0431\u043A\u0430");
-          });
-        }
-      }, "\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u0435\u0439\u0447\u0430\u0441"),
-      (Store.getQueue() || []).length > 20 ? React.createElement("button", {
-        type: "button",
-        className: "mt-2 w-full py-2 rounded-2xl text-xs",
-        style: { color: "var(--muted)" },
-        onClick: function () {
-          if (window.confirm("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u043E\u0447\u0435\u0440\u0435\u0434\u044C?")) {
-            try { Store.clearQueue(); } catch (e) { try { Store.setQueue([]); } catch (e2) {} }
-            setMsg("\u041E\u0447\u0435\u0440\u0435\u0434\u044C \u043E\u0447\u0438\u0449\u0435\u043D\u0430");
-          }
-        }
-      }, "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u043E\u0447\u0435\u0440\u0435\u0434\u044C") : null
-    ), msg && React.createElement("p", { className: "text-sm text-center mb-2", style: { color: "var(--forest)" } }, msg), React.createElement("button", { onClick: save, disabled: saving, className: "w-full py-3.5 rounded-2xl text-white font-medium text-[15px] mb-3 disabled:opacity-60", style: { background: "var(--forest)", color: "var(--on-forest)" } }, saving ? "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435..." : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C"), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "Productive Points"), React.createElement("p", { className: "text-3xl font-semibold mb-1", style: { color: "var(--forest)" } }, PP.get(user.id) + " PP"), React.createElement("p", { className: "text-xs", style: { color: "var(--muted)" } }, "\u041f\u0440\u0438\u0432\u044b\u0447\u043a\u0430 +1 \u00b7 \u0417\u0430\u0434\u0430\u0447\u0430 +2")), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
-      React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "Приложение"),
-      !(window.Android) ? React.createElement(React.Fragment, null,
+      onClick: onClick,
+      className: "px-3 py-2 rounded-xl text-sm font-medium",
+      style: {
+        background: active ? "var(--forest)" : "var(--chip)",
+        color: active ? "var(--on-forest)" : "var(--text)",
+        border: "1px solid var(--line)"
+      }
+    }, label);
+  }
+
+  try {
+    var themes = (typeof THEME_META !== "undefined" && THEME_META) ? THEME_META : [];
+    var pp = 0;
+    try { pp = PP.get(user.id) || 0; } catch (e) {}
+
+    return React.createElement("div", { className: "px-5 pt-5 pb-4 min-h-full fade-in safe-top" },
+      React.createElement("div", { className: "flex items-center gap-3 mb-5" },
         React.createElement("button", {
           type: "button",
-          onClick: doDownloadApk,
-          className: "w-full py-2.5 rounded-2xl text-white text-sm font-medium",
-          style: { background: "var(--forest)", color: "var(--on-forest)" }
-        }, "Скачать APK"),
-        React.createElement("p", { className: "text-xs text-center mt-2", style: { color: "var(--muted)" } }, "Актуальная версия: ", APP_VERSION),
-        updMsg ? React.createElement("p", { className: "text-xs text-center mt-2", style: { color: "var(--muted)" } }, updMsg) : null
-      ) : React.createElement(React.Fragment, null,
-        React.createElement("p", { className: "text-xs mb-3", style: { color: "var(--muted)" } }, "Текущая версия: ", APP_VERSION),
-        React.createElement("button", {
-          type: "button",
-          onClick: doCheckUpdate,
-          disabled: updBusy,
-          className: "w-full py-2.5 rounded-2xl text-white text-sm font-medium disabled:opacity-60 mb-2",
-          style: { background: "var(--forest)", color: "var(--on-forest)" }
-        }, updBusy ? "Проверка..." : "Проверить обновления"),
-        updMsg ? React.createElement("p", { className: "text-sm mb-2", style: { color: "var(--muted)" } }, updMsg) : null,
-        updInfo && updInfo.apkUrl ? React.createElement(React.Fragment, null,
+          onClick: onBack,
+          className: "w-9 h-9 rounded-xl flex items-center justify-center",
+          style: { background: "var(--chip)" }
+        }, (I && I.back) ? I.back() : "\u2190"),
+        React.createElement("h1", { className: "text-[24px] font-semibold tracking-tight" }, "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438")
+      ),
+
+      card("\u041F\u0440\u043E\u0444\u0438\u043B\u044C",
+        React.createElement(React.Fragment, null,
+          React.createElement("p", { className: "text-sm mb-1", style: { color: "var(--muted)" } }, "\u041B\u043E\u0433\u0438\u043D"),
+          React.createElement("p", { className: "text-[15px] mb-3 font-medium" }, "@", (user && user.username) || ""),
+          React.createElement("p", { className: "text-sm mb-1.5", style: { color: "var(--muted)" } }, "\u0418\u043C\u044F"),
+          React.createElement("input", {
+            value: displayName,
+            onChange: function (e) { setDisplayName(e.target.value); },
+            placeholder: "\u0418\u043C\u044F",
+            className: "w-full px-4 py-3 rounded-2xl border outline-none text-[15px]",
+            style: { background: "var(--input)", borderColor: "var(--line)", color: "var(--text)" }
+          })
+        )
+      ),
+
+      card("\u0422\u0435\u043C\u0430",
+        React.createElement(React.Fragment, null,
+          React.createElement("div", { className: "flex gap-2 mb-3 flex-wrap" },
+            pill(mode === "light", "\u0421\u0432\u0435\u0442\u043B\u0430\u044F", function () { setMode("light"); applyTheme(theme, "light"); }),
+            pill(mode === "dark", "\u0422\u0451\u043C\u043D\u0430\u044F", function () { setMode("dark"); applyTheme(theme, "dark"); })
+          ),
+          React.createElement("div", { className: "grid grid-cols-2 gap-2" },
+            themes.map(function (t) {
+              var on = theme === t.id;
+              return React.createElement("button", {
+                key: t.id,
+                type: "button",
+                onClick: function () { setTheme(t.id); applyTheme(t.id, mode); },
+                className: "p-3 rounded-2xl text-left",
+                style: {
+                  background: on ? "var(--soft)" : "var(--input)",
+                  border: on ? "2px solid var(--forest)" : "1px solid var(--line)"
+                }
+              },
+                React.createElement("div", { className: "flex gap-1.5 mb-2" },
+                  (t.sw || []).map(function (c) {
+                    return React.createElement("span", {
+                      key: c,
+                      className: "w-6 h-6 rounded-full",
+                      style: { background: c, border: "1px solid rgba(0,0,0,0.08)" }
+                    });
+                  })
+                ),
+                React.createElement("p", { className: "text-sm font-medium" }, t.name),
+                React.createElement("p", { className: "text-[11px]", style: { color: "var(--muted)" } }, t.hint || "")
+              );
+            })
+          )
+        )
+      ),
+
+      card("\u0410\u043D\u0438\u043C\u0430\u0446\u0438\u0438",
+        React.createElement("div", { className: "flex gap-2" },
+          pill(animOn, "\u0412\u043A\u043B", function () { setAnimOn(true); setAnimEnabled(true); }),
+          pill(!animOn, "\u0412\u044B\u043A\u043B", function () { setAnimOn(false); setAnimEnabled(false); })
+        )
+      ),
+
+      card("\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043A\u0430",
+        React.createElement(React.Fragment, null,
+          React.createElement("p", { className: "text-sm mb-2", style: { color: "var(--muted)" } }, "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u0434\u0440\u0443\u0437\u044C\u044F\u043C"),
+          React.createElement("div", { className: "flex gap-2" },
+            pill(shareStats, "\u0414\u0430", function () { setShareStats(true); }),
+            pill(!shareStats, "\u041D\u0435\u0442", function () { setShareStats(false); })
+          )
+        )
+      ),
+
+      card("\u0423\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F",
+        React.createElement(React.Fragment, null,
+          React.createElement("div", { className: "flex gap-2 mb-2 flex-wrap" },
+            pill(nEn, "\u0412\u043A\u043B", function () { setNEn(true); }),
+            pill(!nEn, "\u0412\u044B\u043A\u043B", function () { setNEn(false); })
+          ),
+          nEn ? React.createElement("div", { className: "flex flex-col gap-2" },
+            pill(n1d, "\u0417\u0430 1 \u0434\u0435\u043D\u044C", function () { setN1d(!n1d); }),
+            pill(nHalf, "\u0417\u0430 \u043F\u043E\u043B\u0434\u043D\u044F", function () { setNHalf(!nHalf); }),
+            pill(nToday, "\u0412 \u0434\u0435\u043D\u044C \u0434\u0435\u0434\u043B\u0430\u0439\u043D\u0430", function () { setNToday(!nToday); })
+          ) : null
+        )
+      ),
+
+      card("\u041E\u0444\u043B\u0430\u0439\u043D",
+        React.createElement(React.Fragment, null,
+          React.createElement("p", { className: "text-sm mb-2", style: { color: "var(--muted)" } },
+            "\u0414\u0430\u043D\u043D\u044B\u0435 \u0445\u0440\u0430\u043D\u044F\u0442\u0441\u044F \u043D\u0430 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0435 \u0438 \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u0443\u044E\u0442\u0441\u044F \u043F\u0440\u0438 \u043F\u043E\u044F\u0432\u043B\u0435\u043D\u0438\u0438 \u0441\u0435\u0442\u0438."
+          ),
+          React.createElement("p", { className: "text-xs mb-2", style: { color: "var(--muted)" } },
+            "\u0412 \u043E\u0447\u0435\u0440\u0435\u0434\u0438: ", String(qLen)
+          ),
           React.createElement("button", {
             type: "button",
-            onClick: function() { openUpdateUrl(updInfo.apkUrl); },
-            className: "w-full py-2.5 rounded-2xl border text-sm font-medium",
-            style: { borderColor: "var(--forest)", color: "var(--forest)" }
-          }, "Скачать " + (updInfo.version || "обновление")),
-          React.createElement("p", {
-            className: "text-[11px] text-center mt-2 break-words",
+            onClick: doSync,
+            className: "w-full py-2.5 rounded-2xl text-sm font-medium mb-2",
+            style: { background: "var(--chip)", color: "var(--text)", border: "1px solid var(--line)" }
+          }, "\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u0435\u0439\u0447\u0430\u0441"),
+          qLen > 20 ? React.createElement("button", {
+            type: "button",
+            onClick: clearQ,
+            className: "w-full py-2 rounded-2xl text-xs",
             style: { color: "var(--muted)" }
-          }, "Если не началось — откройте в браузере:"),
-          React.createElement("a", {
-            href: updInfo.apkUrl,
-            target: "_blank",
-            rel: "noopener",
-            className: "block text-[11px] text-center break-all mt-1",
-            style: { color: "var(--forest)" },
-            onClick: function (e) {
-              e.preventDefault();
-              openUpdateUrl(updInfo.apkUrl);
-            }
-          }, updInfo.apkUrl)
-        ) : null,
-        updInfo && updInfo.changelog ? React.createElement("p", { className: "text-xs mt-2", style: { color: "var(--muted)" } }, updInfo.changelog) : null
-      )
-    ),
-    React.createElement("p", { className: "text-center text-xs mb-3", style: { color: "var(--muted)" } }, APP_VERSION), React.createElement("button", { onClick: onLogout, className: "w-full py-3.5 rounded-2xl border text-[15px] font-medium", style: { borderColor: "var(--line)", color: "var(--muted)" } }, "\u0412\u044B\u0439\u0442\u0438"));
+          }, "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u043E\u0447\u0435\u0440\u0435\u0434\u044C") : null
+        )
+      ),
+
+      msg ? React.createElement("p", { className: "text-sm text-center mb-2", style: { color: "var(--forest)" } }, msg) : null,
+
+      React.createElement("button", {
+        type: "button",
+        onClick: save,
+        disabled: saving,
+        className: "w-full py-3.5 rounded-2xl font-medium text-[15px] mb-3 disabled:opacity-60",
+        style: { background: "var(--forest)", color: "var(--on-forest)" }
+      }, saving ? "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435\u2026" : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C"),
+
+      card("Productive Points",
+        React.createElement(React.Fragment, null,
+          React.createElement("p", { className: "text-xl font-semibold mb-1" }, String(pp), " PP"),
+          React.createElement("p", { className: "text-xs", style: { color: "var(--muted)" } }, "\u041F\u0440\u0438\u0432\u044B\u0447\u043A\u0430 +1 \u00B7 \u0417\u0430\u0434\u0430\u0447\u0430 +2")
+        )
+      ),
+
+      card("\u041F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0435",
+        React.createElement(React.Fragment, null,
+          React.createElement("p", { className: "text-sm mb-2", style: { color: "var(--muted)" } },
+            "\u0422\u0435\u043A\u0443\u0449\u0430\u044F \u0432\u0435\u0440\u0441\u0438\u044F: ", APP_VERSION
+          ),
+          React.createElement("button", {
+            type: "button",
+            onClick: checkUpd,
+            disabled: updBusy,
+            className: "w-full py-2.5 rounded-2xl text-sm font-medium mb-2",
+            style: { background: "var(--chip)", color: "var(--text)", border: "1px solid var(--line)" }
+          }, updBusy ? "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430\u2026" : "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F"),
+          updMsg ? React.createElement("p", { className: "text-xs mb-2", style: { color: "var(--muted)" } }, updMsg) : null,
+          updInfo && updInfo.apkUrl ? React.createElement("button", {
+            type: "button",
+            onClick: function () { openUpdateUrl(updInfo.apkUrl || APK_DOWNLOAD_URL); },
+            className: "w-full py-2.5 rounded-2xl text-sm font-medium",
+            style: { background: "var(--forest)", color: "var(--on-forest)" }
+          }, "\u0421\u043A\u0430\u0447\u0430\u0442\u044C \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435") : null
+        )
+      ),
+
+      React.createElement("button", {
+        type: "button",
+        onClick: onLogout,
+        className: "w-full py-3.5 rounded-2xl border text-[15px] font-medium mb-6",
+        style: { borderColor: "var(--line)", color: "var(--muted)" }
+      }, "\u0412\u044B\u0439\u0442\u0438")
+    );
+  } catch (err) {
+    return React.createElement("div", {
+      className: "px-5 pt-10",
+      style: { color: "#c00" }
+    },
+      React.createElement("p", { className: "font-semibold mb-2" }, "\u041E\u0448\u0438\u0431\u043A\u0430 \u043D\u0430\u0441\u0442\u0440\u043E\u0435\u043A"),
+      React.createElement("p", { className: "text-sm mb-3" }, String(err && err.message || err)),
+      React.createElement("button", {
+        type: "button",
+        onClick: onBack,
+        className: "px-4 py-2 rounded-xl",
+        style: { background: "var(--chip)" }
+      }, "\u041D\u0430\u0437\u0430\u0434")
+    );
+  }
 }
 
 function dayCellStyle(d) {
