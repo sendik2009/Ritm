@@ -379,8 +379,8 @@ try {
   applyTheme("ritm", "light");
 }
 
-const APP_VERSION = "Ritm v7.1";
-const APP_VERSION_CODE = 81;
+const APP_VERSION = "Ritm v7.2";
+const APP_VERSION_CODE = 82;
 
 const UPDATE_CHECK_URL = "https://web-ritm.vercel.app/version.json";
 const APK_DOWNLOAD_URL = "https://web-ritm.vercel.app/ritm.apk";
@@ -669,18 +669,34 @@ const Store = {
     all[userId] = s;
     lsSet(LS.settings, all);
   },
+  _queueKey(action) {
+    if (!action) return "";
+    var m = action.match || {};
+    var row = action.row || {};
+    var id = m.id || row.id || "";
+    var uid = m.user_id || row.user_id || "";
+    var date = m.date || row.date || "";
+    var hid = m.habit_id || row.habit_id || "";
+    return [action.table || "", action.op || "", id, uid, date, hid].join("|");
+  },
   enqueue(action) {
-    const q = lsGet(LS.queue, []);
-    q.push({ ...action, _ts: Date.now() });
-    lsSet(LS.queue, q);
+    var q = lsGet(KEYS.queue, []) || [];
+    var key = this._queueKey(action);
+    q = q.filter(function (item) { return Store._queueKey(item) !== key; });
+    q.push(Object.assign({}, action, { _ts: Date.now(), _tries: 0 }));
+    if (q.length > 200) q = q.slice(-200);
+    lsSet(KEYS.queue, q);
   },
   getQueue() {
-    return lsGet(LS.queue, []);
+    return lsGet(KEYS.queue, []) || [];
   },
   setQueue(q) {
-    lsSet(LS.queue, q);
+    lsSet(KEYS.queue, q || []);
   },
-  getStats(userId) {
+  clearQueue() {
+    lsSet(KEYS.queue, []);
+  },
+    getStats(userId) {
     return lsGet(LS.stats, []).filter((s) => s.user_id === userId);
   },
   setStats(userId, list) {
@@ -696,50 +712,86 @@ const Store = {
   }
 };
 async function flushQueue() {
-  if (!isOnline()) return;
-  let q = Store.getQueue();
-  if (!q.length) return;
-  const remaining = [];
-  for (const item of q) {
+  if (!isOnline()) return { ok: 0, fail: 0, left: (Store.getQueue() || []).length };
+  if (flushQueue._busy) return { ok: 0, fail: 0, left: (Store.getQueue() || []).length, busy: true };
+  flushQueue._busy = true;
+  var ok = 0, fail = 0;
+  try {
+    var q = Store.getQueue() || [];
+    if (!q.length) return { ok: 0, fail: 0, left: 0 };
+    // compact duplicates (keep latest by key)
     try {
-      if (item.op === "insert") {
-        const { error } = await sb.from(item.table).insert(item.row);
-        if (error) throw error;
-      } else if (item.op === "update") {
-        let query = sb.from(item.table).update(item.row);
-        Object.entries(item.match || {}).forEach(([k, v]) => {
-          query = query.eq(k, v);
-        });
-        const { error } = await query;
-        if (error) throw error;
-      } else if (item.op === "delete") {
-        let query = sb.from(item.table).delete();
-        Object.entries(item.match || {}).forEach(([k, v]) => {
-          query = query.eq(k, v);
-        });
-        const { error } = await query;
-        if (error) throw error;
-      } else if (item.op === "upsert") {
-        let { error } = await sb.from(item.table).upsert(item.row, item.opts || {});
-        if (error) {
-          const match = item.match || { user_id: item.row.user_id, date: item.row.date };
-          let q2 = sb.from(item.table).update(item.row);
-          Object.entries(match).forEach(([k, v]) => {
-            q2 = q2.eq(k, v);
-          });
-          const up = await q2;
-          if (up.error || up.data !== void 0 && Array.isArray(up.data) && up.data.length === 0) {
-            const ins = await sb.from(item.table).insert(item.row);
-            if (ins.error) throw ins.error;
+      var map = {};
+      q.forEach(function (item) {
+        map[Store._queueKey(item)] = item;
+      });
+      q = Object.keys(map).map(function (k) { return map[k]; });
+    } catch (e) {}
+    var remaining = [];
+    for (var i = 0; i < q.length; i++) {
+      var item = q[i];
+      if (!item || !item.table || !item.op) continue;
+      try {
+        var error = null;
+        if (item.op === "insert") {
+          var ins = await sb.from(item.table).insert(item.row);
+          error = ins.error;
+          if (error && (error.code === "23505" || /duplicate|unique/i.test(String(error.message || "")))) error = null;
+        } else if (item.op === "update") {
+          var query = sb.from(item.table).update(item.row);
+          Object.entries(item.match || {}).forEach(function (kv) { query = query.eq(kv[0], kv[1]); });
+          var up = await query;
+          error = up.error;
+        } else if (item.op === "delete") {
+          var dq = sb.from(item.table).delete();
+          Object.entries(item.match || {}).forEach(function (kv) { dq = dq.eq(kv[0], kv[1]); });
+          var del = await dq;
+          error = del.error;
+        } else if (item.op === "upsert") {
+          var us = await sb.from(item.table).upsert(item.row, item.opts || {});
+          error = us.error;
+          if (error) {
+            var match = item.match || {};
+            if (item.row) {
+              if (item.row.user_id && !match.user_id) match.user_id = item.row.user_id;
+              if (item.row.date && !match.date) match.date = item.row.date;
+              if (item.row.id && !match.id) match.id = item.row.id;
+              if (item.row.habit_id && !match.habit_id) match.habit_id = item.row.habit_id;
+            }
+            var q2 = sb.from(item.table).update(item.row);
+            Object.entries(match).forEach(function (kv) { q2 = q2.eq(kv[0], kv[1]); });
+            var up2 = await q2;
+            if (up2.error) {
+              var ins2 = await sb.from(item.table).insert(item.row);
+              error = ins2.error;
+              if (error && (error.code === "23505" || /duplicate|unique/i.test(String(error.message || "")))) error = null;
+            } else {
+              error = null;
+            }
           }
+        } else {
+          error = null;
+        }
+        if (error) throw error;
+        ok++;
+      } catch (e) {
+        item._tries = (item._tries || 0) + 1;
+        item._lastError = (e && (e.message || e.code)) || String(e);
+        if (item._tries < 6) {
+          remaining.push(item);
+          fail++;
+        } else {
+          try { console.warn("ritm drop queue item", item.table, item.op, item._lastError); } catch (e2) {}
         }
       }
-    } catch (e) {
-      remaining.push(item);
     }
+    Store.setQueue(remaining);
+    return { ok: ok, fail: fail, left: remaining.length };
+  } finally {
+    flushQueue._busy = false;
   }
-  Store.setQueue(remaining);
 }
+
 async function pullFromServer(userId) {
   if (!isOnline()) return null;
   try {
@@ -775,13 +827,36 @@ async function pullFromServer(userId) {
     return false;
   }
 }
-function onlineWrite(table, op, row, match, opts) {
-  if (navigator.onLine) {
-    Store.enqueue({ table, op, row, match, opts });
+async function onlineWrite(table, op, row, match, opts) {
+  if (navigator.onLine && sb) {
+    try {
+      var error = null;
+      if (op === "insert") {
+        var r = await sb.from(table).insert(row);
+        error = r.error;
+        if (error && (error.code === "23505" || /duplicate|unique/i.test(String(error.message || "")))) error = null;
+      } else if (op === "update") {
+        var q = sb.from(table).update(row);
+        Object.entries(match || {}).forEach(function (kv) { q = q.eq(kv[0], kv[1]); });
+        var r2 = await q;
+        error = r2.error;
+      } else if (op === "delete") {
+        var q3 = sb.from(table).delete();
+        Object.entries(match || {}).forEach(function (kv) { q3 = q3.eq(kv[0], kv[1]); });
+        var r3 = await q3;
+        error = r3.error;
+      } else if (op === "upsert") {
+        var r4 = await sb.from(table).upsert(row, opts || {});
+        error = r4.error;
+      }
+      if (!error) return true;
+    } catch (e) {}
+    Store.enqueue({ table: table, op: op, row: row, match: match, opts: opts });
     flushQueue();
-  } else {
-    Store.enqueue({ table, op, row, match, opts });
+    return false;
   }
+  Store.enqueue({ table: table, op: op, row: row, match: match, opts: opts });
+  return false;
 }
 const DAY_LABELS = ["\u041F\u043D", "\u0412\u0442", "\u0421\u0440", "\u0427\u0442", "\u041F\u0442", "\u0421\u0431", "\u0412\u0441"];
 const MONTHS = ["\u044F\u043D\u0432\u0430\u0440\u044F", "\u0444\u0435\u0432\u0440\u0430\u043B\u044F", "\u043C\u0430\u0440\u0442\u0430", "\u0430\u043F\u0440\u0435\u043B\u044F", "\u043C\u0430\u044F", "\u0438\u044E\u043D\u044F", "\u0438\u044E\u043B\u044F", "\u0430\u0432\u0433\u0443\u0441\u0442\u0430", "\u0441\u0435\u043D\u0442\u044F\u0431\u0440\u044F", "\u043E\u043A\u0442\u044F\u0431\u0440\u044F", "\u043D\u043E\u044F\u0431\u0440\u044F", "\u0434\u0435\u043A\u0430\u0431\u0440\u044F"];
@@ -2304,7 +2379,34 @@ function SettingsScreen({ user, onLogout, onUpdate, onBack, online }) {
     }
     setMsg("\u0422\u0435\u0441\u0442 \u0447\u0435\u0440\u0435\u0437 5 \u0441\u0435\u043A\u0443\u043D\u0434");
     setTimeout(() => setMsg(""), 6e3);
-  }, className: "w-full py-2.5 rounded-2xl border text-sm font-medium", style: { borderColor: "var(--line)", color: "var(--taupe)" } }, "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435 (5 \u0441\u0435\u043A)")) : React.createElement("button", { onClick: enableNotif, className: "w-full py-2.5 rounded-2xl text-white text-sm font-medium", style: { background: "var(--forest)", color: "var(--on-forest)" } }, "\u0420\u0430\u0437\u0440\u0435\u0448\u0438\u0442\u044C \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F")), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "\u041E\u0444\u043B\u0430\u0439\u043D"), React.createElement("p", { className: "text-sm", style: { color: "var(--muted)" } }, "\u041F\u0440\u0438\u0432\u044B\u0447\u043A\u0438, \u0437\u0430\u0434\u0430\u0447\u0438 \u0438 \u0437\u0430\u043C\u0435\u0442\u043A\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u044E\u0442\u0441\u044F \u043D\u0430 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0435 \u0438 \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u0443\u044E\u0442\u0441\u044F \u043F\u0440\u0438 \u043F\u043E\u044F\u0432\u043B\u0435\u043D\u0438\u0438 \u0441\u0435\u0442\u0438. \u0414\u0440\u0443\u0437\u044C\u044F \u2014 \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u043D\u043B\u0430\u0439\u043D."), React.createElement("p", { className: "text-xs mt-2", style: { color: "var(--muted)" } }, "\u0412 \u043E\u0447\u0435\u0440\u0435\u0434\u0438 \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u0438: ", Store.getQueue().length)), msg && React.createElement("p", { className: "text-sm text-center mb-2", style: { color: "var(--forest)" } }, msg), React.createElement("button", { onClick: save, disabled: saving, className: "w-full py-3.5 rounded-2xl text-white font-medium text-[15px] mb-3 disabled:opacity-60", style: { background: "var(--forest)", color: "var(--on-forest)" } }, saving ? "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435..." : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C"), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "Productive Points"), React.createElement("p", { className: "text-3xl font-semibold mb-1", style: { color: "var(--forest)" } }, PP.get(user.id) + " PP"), React.createElement("p", { className: "text-xs", style: { color: "var(--muted)" } }, "\u041f\u0440\u0438\u0432\u044b\u0447\u043a\u0430 +1 \u00b7 \u0417\u0430\u0434\u0430\u0447\u0430 +2")), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
+  }, className: "w-full py-2.5 rounded-2xl border text-sm font-medium", style: { borderColor: "var(--line)", color: "var(--taupe)" } }, "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435 (5 \u0441\u0435\u043A)")) : React.createElement("button", { onClick: enableNotif, className: "w-full py-2.5 rounded-2xl text-white text-sm font-medium", style: { background: "var(--forest)", color: "var(--on-forest)" } }, "\u0420\u0430\u0437\u0440\u0435\u0448\u0438\u0442\u044C \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F")), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "\u041E\u0444\u043B\u0430\u0439\u043D"), React.createElement("p", { className: "text-sm", style: { color: "var(--muted)" } }, "\u041F\u0440\u0438\u0432\u044B\u0447\u043A\u0438, \u0437\u0430\u0434\u0430\u0447\u0438 \u0438 \u0437\u0430\u043C\u0435\u0442\u043A\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u044E\u0442\u0441\u044F \u043D\u0430 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0435 \u0438 \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u0443\u044E\u0442\u0441\u044F \u043F\u0440\u0438 \u043F\u043E\u044F\u0432\u043B\u0435\u043D\u0438\u0438 \u0441\u0435\u0442\u0438. \u0414\u0440\u0443\u0437\u044C\u044F \u2014 \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u043D\u043B\u0430\u0439\u043D."), React.createElement("p", { className: "text-xs mt-2", style: { color: "var(--muted)" } }, "\u0412 \u043E\u0447\u0435\u0440\u0435\u0434\u0438 \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u0438: ", Store.getQueue().length),
+        React.createElement("button", {
+          type: "button",
+          className: "mt-2 w-full py-2.5 rounded-2xl text-sm font-medium",
+          style: { background: "var(--chip)", color: "var(--text)", border: "1px solid var(--line)" },
+          onClick: async function () {
+            try {
+              setMsg("\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u044F\u2026");
+              var res = await flushQueue();
+              var left = (res && res.left != null) ? res.left : Store.getQueue().length;
+              setMsg("\u0413\u043E\u0442\u043E\u0432\u043E: \u0443\u0448\u043B\u043E " + ((res && res.ok) || 0) + ", \u043E\u0448\u0438\u0431\u043E\u043A " + ((res && res.fail) || 0) + ", \u0432 \u043E\u0447\u0435\u0440\u0435\u0434\u0438 " + left);
+              try { if (typeof loadAll === "function") await loadAll(); } catch (e) {}
+            } catch (e) {
+              setMsg((e && e.message) || "\u041E\u0448\u0438\u0431\u043A\u0430 \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u0438");
+            }
+          }
+        }, "\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u0435\u0439\u0447\u0430\u0441"),
+        Store.getQueue().length > 30 ? React.createElement("button", {
+          type: "button",
+          className: "mt-2 w-full py-2 rounded-2xl text-xs",
+          style: { color: "var(--muted)" },
+          onClick: function () {
+            if (confirm("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u043E\u0447\u0435\u0440\u0435\u0434\u044C? \u041D\u0435\u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044B\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u043C\u043E\u0433\u0443\u0442 \u043F\u0440\u043E\u043F\u0430\u0441\u0442\u044C.")) {
+              Store.clearQueue();
+              setMsg("\u041E\u0447\u0435\u0440\u0435\u0434\u044C \u043E\u0447\u0438\u0449\u0435\u043D\u0430");
+            }
+          }
+        }, "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0437\u0430\u0441\u0442\u0440\u044F\u0432\u0448\u0443\u044E \u043E\u0447\u0435\u0440\u0435\u0434\u044C") : null), msg && React.createElement("p", { className: "text-sm text-center mb-2", style: { color: "var(--forest)" } }, msg), React.createElement("button", { onClick: save, disabled: saving, className: "w-full py-3.5 rounded-2xl text-white font-medium text-[15px] mb-3 disabled:opacity-60", style: { background: "var(--forest)", color: "var(--on-forest)" } }, saving ? "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435..." : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C"), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } }, React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "Productive Points"), React.createElement("p", { className: "text-3xl font-semibold mb-1", style: { color: "var(--forest)" } }, PP.get(user.id) + " PP"), React.createElement("p", { className: "text-xs", style: { color: "var(--muted)" } }, "\u041f\u0440\u0438\u0432\u044b\u0447\u043a\u0430 +1 \u00b7 \u0417\u0430\u0434\u0430\u0447\u0430 +2")), React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
       React.createElement("h2", { className: "font-semibold text-[15px] mb-2" }, "Приложение"),
       !(window.Android) ? React.createElement(React.Fragment, null,
         React.createElement("button", {
