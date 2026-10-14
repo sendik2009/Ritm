@@ -1,7 +1,7 @@
 {
-  "version": "Ritm v7.2.1",
-  "versionCode": 83,
+  "version": "Ritm v7.3",
+  "versionCode": 84,
   "apkUrl": "https://web-ritm.vercel.app/ritm.apk",
   "webUrl": "https://web-ritm.vercel.app/",
-  "changelog": "v7.2.1: фикс чёрного экрана в настройках"
+  "changelog": "v7.3: полный ремонт экрана настроек"
 }
