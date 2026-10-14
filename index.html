@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+<link rel="icon" href="icons/ic_launcher_512.png"/>
+<link rel="apple-touch-icon" href="icons/ic_launcher_512.png"/>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#16131F" />
@@ -343,6 +345,16 @@ function applyTheme(id, mode) {
     if (uid && typeof pushWidgetSnapshot === "function") pushWidgetSnapshot(uid);
   } catch (e3) {}
   try {
+    if (window.Android && typeof Android.setLauncherIcon === "function") {
+      var iconKey = "default";
+      if (id === "mono" && m === "dark") iconKey = "mono";
+      else if (m === "dark") iconKey = "dark";
+      else if (id === "mono" || id === "sakura" || id === "blush" || id === "autumn" || id === "coffee") iconKey = "light";
+      else if (m === "light") iconKey = "default";
+      Android.setLauncherIcon(iconKey);
+    }
+  } catch (e4) {}
+  try {
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute("content", t.bg);
   } catch (e) {}
@@ -362,8 +374,8 @@ try {
   applyTheme("ritm", "light");
 }
 
-const APP_VERSION = "Ritm v6.6";
-const APP_VERSION_CODE = 67;
+const APP_VERSION = "Ritm v6.8";
+const APP_VERSION_CODE = 70;
 
 const UPDATE_CHECK_URL = "https://web-ritm.vercel.app/version.json";
 const APK_DOWNLOAD_URL = "https://web-ritm.vercel.app/ritm.apk";
@@ -480,26 +492,28 @@ function openUpdateUrl(url) {
     } catch (e) {}
   }
 
-  // Native: DownloadManager (no browser) — v6.4+
-  if (window.Android && typeof Android.downloadAndInstall === "function") {
+  // Native: DownloadManager — must start download without browser
+  if (window.Android) {
     showProgress("Скачивание обновления…");
     try {
-      Android.downloadAndInstall(u);
-      setTimeout(hideProgress, 2000);
-      return Promise.resolve(true);
+      if (typeof Android.downloadAndInstall === "function") {
+        Android.downloadAndInstall(u);
+        setTimeout(function () {
+          hideProgress();
+        }, 2500);
+        return Promise.resolve(true);
+      }
+      if (typeof Android.openExternal === "function") {
+        Android.openExternal(u);
+        setTimeout(hideProgress, 1200);
+        return Promise.resolve(true);
+      }
     } catch (e) {
-      // fall through
-    }
-  }
-  if (window.Android && typeof Android.openExternal === "function") {
-    showProgress("Открываем установку…");
-    try {
-      Android.openExternal(u);
-      setTimeout(hideProgress, 1200);
-      return Promise.resolve(true);
-    } catch (e) {
+      try {
+        if (typeof Android.openExternal === "function") Android.openExternal(u);
+      } catch (e2) {}
       hideProgress();
-      showFallback(u, "Не удалось начать загрузку");
+      showFallback(u, (e && e.message) || "Ошибка загрузки");
       return Promise.resolve(false);
     }
   }
@@ -3085,10 +3099,10 @@ function __ritmBoot() {
   var root = document.getElementById("root");
   function fail(msg) {
     try {
-      root.innerHTML = '<div style="padding:24px;font-family:system-ui;text-align:center;background:#F3EEE6;min-height:100%"><p style="font-size:16px;margin:0 0 8px">Не удалось загрузить</p><p style="color:#8A8578;font-size:13px;white-space:pre-wrap">' + String(msg || "") + '</p><p style="margin-top:16px;font-size:11px;color:#aaa">Ritm v6.6</p></div>';
+      root.innerHTML = '<div style="padding:24px;font-family:system-ui;text-align:center;background:#F3EEE6;min-height:100%"><p style="font-size:16px;margin:0 0 8px">Не удалось загрузить</p><p style="color:#8A8578;font-size:13px;white-space:pre-wrap">' + String(msg || "") + '</p><p style="margin-top:16px;font-size:11px;color:#aaa">Ritm v6.8</p></div>';
     } catch (e) {}
   }
-  root.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;background:#F3EEE6;color:#8A8578;font-family:system-ui;font-size:14px">Загрузка Ritm v6.6…</div>';
+  root.innerHTML = '<div style="display:flex;height:100%;align-items:center;justify-content:center;background:#F3EEE6;color:#8A8578;font-family:system-ui;font-size:14px">Загрузка Ritm v6.8…</div>';
   __ritmEnsureLibs().then(function () {
     if (!window.React || !window.ReactDOM) {
       fail("React не загрузился.\\nПроверьте интернет или папку vendor.");
