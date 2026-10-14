@@ -1,7 +1,7 @@
 {
-  "version": "Ritm v7.2",
-  "versionCode": 82,
+  "version": "Ritm v7.2.1",
+  "versionCode": 83,
   "apkUrl": "https://web-ritm.vercel.app/ritm.apk",
   "webUrl": "https://web-ritm.vercel.app/",
-  "changelog": "v7.2: починка синхронизации — дедуп очереди, ретраи, кнопка синхронизации"
+  "changelog": "v7.2.1: фикс чёрного экрана в настройках"
 }
