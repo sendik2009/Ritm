@@ -1,7 +1,7 @@
 {
-  "version": "Ritm v7.3",
-  "versionCode": 84,
+  "version": "Ritm v7.3.1",
+  "versionCode": 85,
   "apkUrl": "https://web-ritm.vercel.app/ritm.apk",
   "webUrl": "https://web-ritm.vercel.app/",
-  "changelog": "v7.3: полный ремонт экрана настроек"
+  "changelog": "v7.3.1: фикс режима «Столбики» в статистике"
 }
