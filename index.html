@@ -379,8 +379,8 @@ try {
   applyTheme("ritm", "light");
 }
 
-const APP_VERSION = "Ritm v7.3";
-const APP_VERSION_CODE = 84;
+const APP_VERSION = "Ritm v7.3.1";
+const APP_VERSION_CODE = 85;
 
 const UPDATE_CHECK_URL = "https://web-ritm.vercel.app/version.json";
 const APK_DOWNLOAD_URL = "https://web-ritm.vercel.app/ritm.apk";
@@ -2869,6 +2869,39 @@ function ProgressScreen({ user }) {
 
   function habitDayCells(dots) {
     var list = (dots || []).filter(function (d) { return d.status !== "before"; }).slice(-28);
+    if (mode === "bars") {
+      var slice = list.slice(-14);
+      return React.createElement("div", {
+        className: "flex items-end gap-1 overflow-x-auto no-scrollbar",
+        style: { height: "56px" }
+      },
+        slice.map(function (d, idx) {
+          var done = d.status === "done";
+          var skip = d.status === "skip";
+          var h = done ? 48 : skip ? 12 : 28;
+          return React.createElement("div", {
+            key: idx,
+            title: (d.ds || "") + " · " + d.status,
+            className: "rounded-t-md flex-shrink-0",
+            style: {
+              width: "12px",
+              height: h + "px",
+              background: done ? "var(--forest)" : skip ? "var(--chip)" : "var(--mid)",
+              opacity: skip ? 0.4 : 1
+            }
+          });
+        })
+      );
+    }
+    if (mode === "spark") {
+      var vals = list.slice(-28).map(function (d) {
+        return d.status === "done" ? 100 : d.status === "skip" ? 0 : 40;
+      });
+      return React.createElement("div", { className: "overflow-x-auto no-scrollbar" },
+        React.createElement(Sparkline, { values: vals, height: 40, pointWidth: 8 })
+      );
+    }
+    // calendar / heatmap: square grid
     return React.createElement("div", { className: "grid grid-cols-7 gap-1" },
       list.map(function (d, idx) {
         var done = d.status === "done";
@@ -2881,9 +2914,9 @@ function ProgressScreen({ user }) {
         return React.createElement("div", {
           key: idx,
           title: (d.ds || "") + " · " + d.status,
-          className: "aspect-square rounded-md flex items-center justify-center text-[9px] font-medium",
+          className: "aspect-square rounded-md flex items-center justify-center",
           style: st
-        }, d.ds ? String(d.ds).slice(8) : "");
+        });
       })
     );
   }
