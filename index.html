@@ -352,11 +352,16 @@ function applyTheme(id, mode) {
   try {
     if (window.Android && typeof Android.setLauncherIcon === "function") {
       var iconKey = "default";
-      if (id === "mono" && m === "dark") iconKey = "mono";
-      else if (m === "dark") iconKey = "dark";
-      else if (id === "mono" || id === "sakura" || id === "blush" || id === "autumn" || id === "coffee") iconKey = "light";
-      else if (m === "light") iconKey = "default";
-      Android.setLauncherIcon(iconKey);
+      if (m === "dark") {
+        iconKey = (id === "mono") ? "mono" : "dark";
+      } else {
+        // light mode: light aliases for warm/pastel themes, default for forest-like
+        if (id === "mono" || id === "sakura" || id === "blush" || id === "autumn" || id === "coffee" || id === "aurora" || id === "mist")
+          iconKey = "light";
+        else
+          iconKey = "default";
+      }
+      try { Android.setLauncherIcon(iconKey); } catch (eIcon) {}
     }
   } catch (e4) {}
   try {
@@ -379,15 +384,53 @@ try {
   applyTheme("ritm", "light");
 }
 
-const APP_VERSION = "Ritm v7.3.1";
-const APP_VERSION_CODE = 85;
+const APP_VERSION = "Ritm v7.4.1";
+const APP_VERSION_CODE = 87;
 
-const UPDATE_CHECK_URL = "https://web-ritm.vercel.app/version.json";
-const APK_DOWNLOAD_URL = "https://web-ritm.vercel.app/ritm.apk";
+const UPDATE_CHECK_URLS = [
+  "https://web-ritm.vercel.app/version.json",
+  "https://cdn.jsdelivr.net/gh/sendik2009/Ritm@main/version.json",
+  "https://raw.githubusercontent.com/sendik2009/Ritm/main/version.json"
+];
+const APK_DOWNLOAD_URLS = [
+  "https://web-ritm.vercel.app/ritm.apk",
+  "https://cdn.jsdelivr.net/gh/sendik2009/Ritm@main/ritm.apk",
+  "https://raw.githubusercontent.com/sendik2009/Ritm/main/ritm.apk"
+];
+const UPDATE_CHECK_URL = UPDATE_CHECK_URLS[0];
+const APK_DOWNLOAD_URL = APK_DOWNLOAD_URLS[0];
 async function fetchLatestVersion() {
-  const res = await fetch(UPDATE_CHECK_URL + "?t=" + Date.now(), { cache: "no-store" });
-  if (!res.ok) throw new Error("HTTP " + res.status);
-  return await res.json();
+  var lastErr = null;
+  for (var i = 0; i < UPDATE_CHECK_URLS.length; i++) {
+    try {
+      var res = await fetch(UPDATE_CHECK_URLS[i] + "?t=" + Date.now(), { cache: "no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      var data = await res.json();
+      if (data && (data.version || data.versionCode)) return data;
+      throw new Error("bad json");
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr || new Error("version check failed");
+}
+function pickApkUrl(remote) {
+  var urls = [];
+  if (remote && remote.apkUrl) urls.push(remote.apkUrl);
+  if (remote && remote.apkUrlFallback) urls.push(remote.apkUrlFallback);
+  for (var i = 0; i < APK_DOWNLOAD_URLS.length; i++) {
+    if (urls.indexOf(APK_DOWNLOAD_URLS[i]) < 0) urls.push(APK_DOWNLOAD_URLS[i]);
+  }
+  return urls[0] || APK_DOWNLOAD_URL;
+}
+function allApkUrls(remote) {
+  var urls = [];
+  if (remote && remote.apkUrl) urls.push(remote.apkUrl);
+  if (remote && remote.apkUrlFallback) urls.push(remote.apkUrlFallback);
+  for (var i = 0; i < APK_DOWNLOAD_URLS.length; i++) {
+    if (urls.indexOf(APK_DOWNLOAD_URLS[i]) < 0) urls.push(APK_DOWNLOAD_URLS[i]);
+  }
+  return urls;
 }
 function isNewerVersion(remote) {
   if (!remote) return false;
@@ -1971,6 +2014,7 @@ function FriendStatsView({ friendId, name, username, onBack }) {
         style: { background: "var(--card)", border: "1px solid var(--line)" }
       }, React.createElement(Sparkline, { values: habitSparkValues(dots), height: open ? 52 : 36, pointWidth: open ? 10 : 6 }));
     }
+    if (mode === "bars") return habitDayCells(dots);
     if (mode === "calendar") return habitDayCells(dots);
     return habitHeatmap(dots);
   }
@@ -2495,7 +2539,7 @@ function SettingsScreen({ user, onLogout, onUpdate, onBack, online }) {
           updMsg ? React.createElement("p", { className: "text-xs mb-2", style: { color: "var(--muted)" } }, updMsg) : null,
           updInfo && updInfo.apkUrl ? React.createElement("button", {
             type: "button",
-            onClick: function () { openUpdateUrl(updInfo.apkUrl || APK_DOWNLOAD_URL); },
+            onClick: function () { openUpdateUrl(pickApkUrl(updInfo)); },
             className: "w-full py-2.5 rounded-2xl text-sm font-medium",
             style: { background: "var(--forest)", color: "var(--on-forest)" }
           }, "\u0421\u043A\u0430\u0447\u0430\u0442\u044C \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435") : null
@@ -2983,6 +3027,45 @@ function ProgressScreen({ user }) {
         })
       );
     }
+    if (mode === "bars") {
+      var slice = last28.slice(-14);
+      return React.createElement("div", {
+        className: "rounded-2xl p-3 overflow-x-auto no-scrollbar",
+        style: { background: "var(--input)", border: "1px solid var(--line)" }
+      },
+        React.createElement("div", {
+          className: "flex items-end gap-1.5",
+          style: { height: "88px", minWidth: Math.max(slice.length * 22, 200) + "px" }
+        },
+          slice.map(function (d, idx) {
+            var pct = typeof d.pct === "number" ? d.pct : 0;
+            var h = d.has ? Math.max(10, Math.round(pct / 100 * 72)) : 6;
+            return React.createElement("div", {
+              key: d.date || idx,
+              className: "flex flex-col items-center justify-end",
+              style: { width: "18px", height: "100%" },
+              title: (d.date || "") + " · " + pct + "%"
+            },
+              React.createElement("div", {
+                className: "rounded-t-md",
+                style: {
+                  width: "14px",
+                  height: h + "px",
+                  background: d.all_done ? "var(--forest)" : d.has ? "var(--mid)" : "var(--chip)",
+                  opacity: d.has ? 1 : 0.35
+                }
+              }),
+              React.createElement("span", {
+                className: "text-[9px] mt-1",
+                style: { color: "var(--muted)" }
+              }, d.date ? String(d.date).slice(8) : "")
+            );
+          })
+        ),
+        React.createElement("p", { className: "text-[10px] mt-2", style: { color: "var(--muted)" } },
+          "14 дней · высота = % выполнения")
+      );
+    }
     return React.createElement("div", { className: "grid grid-cols-7 gap-1.5" },
       last28.map(function (d) {
         var st = dayCellStyle(d);
@@ -3009,6 +3092,9 @@ function ProgressScreen({ user }) {
           pointWidth: open ? 10 : 6
         })
       );
+    }
+    if (mode === "bars") {
+      return habitDayCells(dots);
     }
     if (mode === "calendar") {
       return habitDayCells(dots);
