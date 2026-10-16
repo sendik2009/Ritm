@@ -1,8 +1,10 @@
 {
-  "version": "Ritm v7.4.1",
-  "versionCode": 87,
+  "version": "Ritm v7.4.2",
+  "versionCode": 88,
   "apkUrl": "https://cdn.jsdelivr.net/gh/sendik2009/Ritm@main/ritm.apk",
   "apkUrlFallback": "https://web-ritm.vercel.app/ritm.apk",
   "webUrl": "https://web-ritm.vercel.app/",
-  "changelog": "v7.4.1: зеркала обновлений (Vercel → jsDelivr → GitHub) без VPN"
+  "minAndroid": "8.0",
+  "minSdk": 26,
+  "changelog": "v7.4.2: столбики за месяц с прокруткой; фикс вылезания; иконка Samsung; Android 8.0+"
 }
