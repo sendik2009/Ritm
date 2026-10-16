@@ -355,13 +355,21 @@ function applyTheme(id, mode) {
       if (m === "dark") {
         iconKey = (id === "mono") ? "mono" : "dark";
       } else {
-        // light mode: light aliases for warm/pastel themes, default for forest-like
         if (id === "mono" || id === "sakura" || id === "blush" || id === "autumn" || id === "coffee" || id === "aurora" || id === "mist")
           iconKey = "light";
         else
           iconKey = "default";
       }
-      try { Android.setLauncherIcon(iconKey); } catch (eIcon) {}
+      try {
+        Android.setLauncherIcon(iconKey);
+        // Samsung / One UI often applies icon after a short delay
+        setTimeout(function () {
+          try { Android.setLauncherIcon(iconKey); } catch (e2) {}
+        }, 400);
+        setTimeout(function () {
+          try { Android.setLauncherIcon(iconKey); } catch (e3) {}
+        }, 1500);
+      } catch (eIcon) {}
     }
   } catch (e4) {}
   try {
@@ -384,8 +392,8 @@ try {
   applyTheme("ritm", "light");
 }
 
-const APP_VERSION = "Ritm v7.4.1";
-const APP_VERSION_CODE = 87;
+const APP_VERSION = "Ritm v7.4.2";
+const APP_VERSION_CODE = 88;
 
 const UPDATE_CHECK_URLS = [
   "https://web-ritm.vercel.app/version.json",
@@ -1964,7 +1972,7 @@ function FriendStatsView({ friendId, name, username, onBack }) {
   var mode = tracker === "progress" ? "spark" : tracker;
 
   function habitDayCells(dots) {
-    var list = (dots || []).filter(function (d) { return d.status !== "before"; }).slice(-28);
+    var list = (dots || []).filter(function (d) { return d.status !== "before"; }).slice(-30);
     return React.createElement("div", { className: "grid grid-cols-7 gap-1" },
       list.map(function (d, idx) {
         var done = d.status === "done";
@@ -1984,7 +1992,7 @@ function FriendStatsView({ friendId, name, username, onBack }) {
     );
   }
   function habitHeatmap(dots) {
-    var list = (dots || []).filter(function (d) { return d.status !== "before"; }).slice(-28);
+    var list = (dots || []).filter(function (d) { return d.status !== "before"; }).slice(-30);
     return React.createElement("div", { className: "grid grid-cols-7 gap-1" },
       list.map(function (d, idx) {
         var done = d.status === "done";
@@ -2867,7 +2875,7 @@ function ProgressScreen({ user }) {
     if (tt === "progress") tt = "spark";
     setTracker(tt);
     setStreak(recalcStreak(user.id));
-    setDayStats(buildLocalDayStats(user.id, 56));
+    setDayStats(buildLocalDayStats(user.id, 62));
     var hlist = Store.getHabits(user.id).filter(function (h) { return !h.is_paused; });
     setHabitStats(hlist.map(function (h) {
       var s = getHabitStats(user.id, h, 56);
@@ -2899,7 +2907,7 @@ function ProgressScreen({ user }) {
   var lastFiltered = earliestHabit
     ? last.filter(function (d) { return (d.date || "") >= earliestHabit; })
     : last;
-  var last28 = lastFiltered.slice(-28);
+  var last28 = lastFiltered.slice(-30);
   var doneDays = last28.filter(function (d) { return d.all_done; }).length;
   var activeDays = last28.filter(function (d) { return d.has; }).length;
   var sparkNums = lastFiltered.map(function (d) { return d.has ? (d.pct || 0) : 0; });
@@ -2912,29 +2920,34 @@ function ProgressScreen({ user }) {
   var mode = tracker === "progress" ? "spark" : tracker;
 
   function habitDayCells(dots) {
-    var list = (dots || []).filter(function (d) { return d.status !== "before"; }).slice(-28);
+    var list = (dots || []).filter(function (d) { return d.status !== "before"; }).slice(-30);
     if (mode === "bars") {
-      var slice = list.slice(-14);
+      var slice = list.slice(-30);
       return React.createElement("div", {
-        className: "flex items-end gap-1 overflow-x-auto no-scrollbar",
-        style: { height: "56px" }
+        className: "overflow-x-auto no-scrollbar",
+        style: { width: "100%", WebkitOverflowScrolling: "touch" }
       },
-        slice.map(function (d, idx) {
-          var done = d.status === "done";
-          var skip = d.status === "skip";
-          var h = done ? 48 : skip ? 12 : 28;
-          return React.createElement("div", {
-            key: idx,
-            title: (d.ds || "") + " · " + d.status,
-            className: "rounded-t-md flex-shrink-0",
-            style: {
-              width: "12px",
-              height: h + "px",
-              background: done ? "var(--forest)" : skip ? "var(--chip)" : "var(--mid)",
-              opacity: skip ? 0.4 : 1
-            }
-          });
-        })
+        React.createElement("div", {
+          className: "flex items-end gap-0.5",
+          style: { height: "52px", minWidth: Math.max(slice.length * 10, 80) + "px" }
+        },
+          slice.map(function (d, idx) {
+            var done = d.status === "done";
+            var skip = d.status === "skip";
+            var h = done ? 44 : skip ? 10 : 22;
+            return React.createElement("div", {
+              key: idx,
+              title: (d.ds || "") + " · " + d.status,
+              className: "rounded-t flex-shrink-0",
+              style: {
+                width: "8px",
+                height: h + "px",
+                background: done ? "var(--forest)" : skip ? "var(--chip)" : "var(--mid)",
+                opacity: skip ? 0.4 : 1
+              }
+            });
+          })
+        )
       );
     }
     if (mode === "spark") {
@@ -2966,7 +2979,7 @@ function ProgressScreen({ user }) {
   }
 
   function habitHeatmap(dots) {
-    var list = (dots || []).filter(function (d) { return d.status !== "before"; }).slice(-28);
+    var list = (dots || []).filter(function (d) { return d.status !== "before"; }).slice(-30);
     return React.createElement("div", { className: "grid grid-cols-7 gap-1" },
       list.map(function (d, idx) {
         var done = d.status === "done";
@@ -3028,42 +3041,48 @@ function ProgressScreen({ user }) {
       );
     }
     if (mode === "bars") {
-      var slice = last28.slice(-14);
+      var slice = (last || last28 || []).slice(-30);
       return React.createElement("div", {
-        className: "rounded-2xl p-3 overflow-x-auto no-scrollbar",
-        style: { background: "var(--input)", border: "1px solid var(--line)" }
+        className: "rounded-2xl p-3",
+        style: { background: "var(--input)", border: "1px solid var(--line)", overflow: "hidden" }
       },
         React.createElement("div", {
-          className: "flex items-end gap-1.5",
-          style: { height: "88px", minWidth: Math.max(slice.length * 22, 200) + "px" }
+          className: "overflow-x-auto no-scrollbar",
+          style: { width: "100%", WebkitOverflowScrolling: "touch" }
         },
-          slice.map(function (d, idx) {
-            var pct = typeof d.pct === "number" ? d.pct : 0;
-            var h = d.has ? Math.max(10, Math.round(pct / 100 * 72)) : 6;
-            return React.createElement("div", {
-              key: d.date || idx,
-              className: "flex flex-col items-center justify-end",
-              style: { width: "18px", height: "100%" },
-              title: (d.date || "") + " · " + pct + "%"
-            },
-              React.createElement("div", {
-                className: "rounded-t-md",
-                style: {
-                  width: "14px",
-                  height: h + "px",
-                  background: d.all_done ? "var(--forest)" : d.has ? "var(--mid)" : "var(--chip)",
-                  opacity: d.has ? 1 : 0.35
-                }
-              }),
-              React.createElement("span", {
-                className: "text-[9px] mt-1",
-                style: { color: "var(--muted)" }
-              }, d.date ? String(d.date).slice(8) : "")
-            );
-          })
+          React.createElement("div", {
+            className: "flex items-end gap-1",
+            style: { height: "96px", minWidth: Math.max(slice.length * 16, 100) + "px", paddingBottom: "2px" }
+          },
+            slice.map(function (d, idx) {
+              var pct = typeof d.pct === "number" ? d.pct : 0;
+              var h = d.has ? Math.max(8, Math.round(pct / 100 * 64)) : 4;
+              return React.createElement("div", {
+                key: d.date || idx,
+                className: "flex flex-col items-center justify-end flex-shrink-0",
+                style: { width: "14px", height: "96px" },
+                title: (d.date || "") + " · " + pct + "%"
+              },
+                React.createElement("div", {
+                  className: "rounded-t",
+                  style: {
+                    width: "10px",
+                    height: h + "px",
+                    marginBottom: "4px",
+                    background: d.all_done ? "var(--forest)" : d.has ? "var(--mid)" : "var(--chip)",
+                    opacity: d.has ? 1 : 0.35
+                  }
+                }),
+                React.createElement("span", {
+                  className: "text-[8px] leading-none",
+                  style: { color: "var(--muted)", height: "12px" }
+                }, d.date ? String(d.date).slice(8) : "")
+              );
+            })
+          )
         ),
         React.createElement("p", { className: "text-[10px] mt-2", style: { color: "var(--muted)" } },
-          "14 дней · высота = % выполнения")
+          "Месяц (30 дн.) · листай · высота = %")
       );
     }
     return React.createElement("div", { className: "grid grid-cols-7 gap-1.5" },
@@ -3145,7 +3164,7 @@ function ProgressScreen({ user }) {
     ),
     React.createElement("div", { className: "rounded-3xl p-4 mb-3 shadow-sm", style: { background: "var(--card)", border: "1px solid var(--line)" } },
       React.createElement("h2", { className: "font-semibold text-[15px] mb-1" }, "По привычкам"),
-      React.createElement("p", { className: "text-[11px] mb-3", style: { color: "var(--muted)" } }, "Тот же вид, что в обзоре · тап — подробнее"),
+      React.createElement("p", { className: "text-[11px] mb-3", style: { color: "var(--muted)" } }, "Месяц · тап — подробнее"),
       habitStats.length === 0 && React.createElement("p", { className: "text-sm text-center py-4", style: { color: "var(--muted)" } }, "Добавь привычки, чтобы видеть статистику по каждой"),
       React.createElement("div", { className: "space-y-3" },
         habitStats.map(function (item) {
