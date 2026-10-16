@@ -1,7 +1,7 @@
 {
-  "version": "Ritm v7.3.1",
-  "versionCode": 85,
+  "version": "Ritm v7.4",
+  "versionCode": 86,
   "apkUrl": "https://web-ritm.vercel.app/ritm.apk",
   "webUrl": "https://web-ritm.vercel.app/",
-  "changelog": "v7.3.1: фикс режима «Столбики» в статистике"
+  "changelog": "v7.4: столбики в своей статистике и по привычкам; иконка под тему"
 }
