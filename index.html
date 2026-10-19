@@ -392,8 +392,8 @@ try {
   applyTheme("ritm", "light");
 }
 
-const APP_VERSION = "Ritm v7.4.2";
-const APP_VERSION_CODE = 88;
+const APP_VERSION = "Ritm v7.4.3";
+const APP_VERSION_CODE = 89;
 
 const UPDATE_CHECK_URLS = [
   "https://web-ritm.vercel.app/version.json",
@@ -1973,21 +1973,52 @@ function FriendStatsView({ friendId, name, username, onBack }) {
 
   function habitDayCells(dots) {
     var list = (dots || []).filter(function (d) { return d.status !== "before"; }).slice(-30);
+    if (mode === "bars") {
+      var slice = list.slice(-30);
+      return React.createElement("div", {
+        className: "overflow-x-auto no-scrollbar",
+        style: { width: "100%", WebkitOverflowScrolling: "touch" }
+      },
+        React.createElement("div", {
+          className: "flex items-end gap-0.5",
+          style: { height: "52px", minWidth: Math.max(slice.length * 10, 80) + "px" }
+        },
+          slice.map(function (d, idx) {
+            var done = d.status === "done";
+            var skip = d.status === "skip";
+            var h = done ? 44 : skip ? 10 : 22;
+            return React.createElement("div", {
+              key: idx,
+              title: (d.ds || "") + " · " + d.status,
+              className: "rounded-t flex-shrink-0",
+              style: {
+                width: "8px",
+                height: h + "px",
+                background: done ? "var(--forest)" : skip ? "var(--chip)" : "var(--mid)",
+                opacity: skip ? 0.4 : 1
+              }
+            });
+          })
+        )
+      );
+    }
+    var showDay = mode === "calendar";
     return React.createElement("div", { className: "grid grid-cols-7 gap-1" },
       list.map(function (d, idx) {
         var done = d.status === "done";
         var skip = d.status === "skip";
+        var dayNum = d.ds ? String(d.ds).slice(8) : (d.date ? String(d.date).slice(8) : "");
         var st = done
           ? { background: "var(--forest)", color: "var(--on-forest)" }
           : skip
             ? { background: "var(--chip)", color: "var(--muted)", opacity: 0.45 }
-            : { background: "var(--chip)", color: "var(--text)", boxShadow: "inset 0 0 0 1px var(--forest)" };
+            : { background: "var(--chip)", color: "var(--text)", boxShadow: "inset 0 0 0 1.5px var(--forest)" };
         return React.createElement("div", {
           key: idx,
-          title: (d.ds || "") + " · " + d.status,
-          className: "aspect-square rounded-md flex items-center justify-center text-[9px] font-medium",
+          title: (d.ds || d.date || "") + " · " + d.status,
+          className: "aspect-square rounded-md flex items-center justify-center text-[10px] font-medium",
           style: st
-        }, d.ds ? String(d.ds).slice(8) : "");
+        }, showDay ? dayNum : null);
       })
     );
   }
@@ -2080,7 +2111,7 @@ function FriendStatsView({ friendId, name, username, onBack }) {
             });
           })
         ),
-        React.createElement("p", { className: "text-[10px] mt-2", style: { color: "var(--muted)" } }, "14 дней · высота = % выполнения")
+        React.createElement("p", { className: "text-[10px] mt-2", style: { color: "var(--muted)" } }, "Месяц (30 дн.) · листай · высота = %")
       );
     }
     return React.createElement("div", { className: "grid grid-cols-7 gap-1" },
@@ -2958,22 +2989,26 @@ function ProgressScreen({ user }) {
         React.createElement(Sparkline, { values: vals, height: 40, pointWidth: 8 })
       );
     }
-    // calendar / heatmap: square grid
+    // calendar: day numbers; heatmap: color only
+    var showDay = mode === "calendar";
     return React.createElement("div", { className: "grid grid-cols-7 gap-1" },
       list.map(function (d, idx) {
         var done = d.status === "done";
         var skip = d.status === "skip";
+        var dayNum = "";
+        if (d.ds) dayNum = String(d.ds).slice(8);
+        else if (d.date) dayNum = String(d.date).slice(8);
         var st = done
           ? { background: "var(--forest)", color: "var(--on-forest)" }
           : skip
             ? { background: "var(--chip)", color: "var(--muted)", opacity: 0.45 }
-            : { background: "var(--chip)", color: "var(--text)", boxShadow: "inset 0 0 0 1px var(--forest)" };
+            : { background: "var(--chip)", color: "var(--text)", boxShadow: "inset 0 0 0 1.5px var(--forest)" };
         return React.createElement("div", {
           key: idx,
-          title: (d.ds || "") + " · " + d.status,
-          className: "aspect-square rounded-md flex items-center justify-center",
+          title: (d.ds || d.date || "") + " · " + d.status,
+          className: "aspect-square rounded-md flex items-center justify-center text-[10px] font-medium",
           style: st
-        });
+        }, showDay ? dayNum : null);
       })
     );
   }
