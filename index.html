@@ -392,8 +392,8 @@ try {
   applyTheme("ritm", "light");
 }
 
-const APP_VERSION = "Ritm v7.4.3";
-const APP_VERSION_CODE = 89;
+const APP_VERSION = "Ritm v7.4.4";
+const APP_VERSION_CODE = 90;
 
 const UPDATE_CHECK_URLS = [
   "https://web-ritm.vercel.app/version.json",
@@ -1141,6 +1141,62 @@ function getHabitCreatedDate(habit) {
     return fmt(d, "iso");
   } catch (e) { return null; }
 }
+
+function getAccountStartDate(userId, user) {
+  var candidates = [];
+  function pushRaw(raw) {
+    if (!raw) return;
+    try {
+      var d = new Date(raw);
+      if (isNaN(d.getTime())) d = new Date(String(raw).slice(0, 10) + "T12:00:00");
+      if (!isNaN(d.getTime())) candidates.push(fmt(d, "iso"));
+    } catch (e) {}
+  }
+  if (user) {
+    pushRaw(user.created_at || user.createdAt);
+  }
+  try {
+    var stored = localStorage.getItem("ritm_account_start_" + userId);
+    if (stored) candidates.push(String(stored).slice(0, 10));
+  } catch (e) {}
+  try {
+    (Store.getHabits(userId) || []).forEach(function (h) {
+      var ds = getHabitCreatedDate(h);
+      if (ds) candidates.push(ds);
+    });
+  } catch (e) {}
+  if (!candidates.length) {
+    // first launch fallback — remember today
+    var today = fmt(new Date(), "iso");
+    try { localStorage.setItem("ritm_account_start_" + userId, today); } catch (e) {}
+    return today;
+  }
+  candidates.sort();
+  var start = candidates[0];
+  try {
+    var existing = localStorage.getItem("ritm_account_start_" + userId);
+    if (!existing || start < existing) localStorage.setItem("ritm_account_start_" + userId, start);
+  } catch (e) {}
+  return start;
+}
+function daysBetweenIso(startIso, endDate) {
+  try {
+    var a = new Date(startIso + "T12:00:00");
+    var b = endDate || new Date();
+    b = new Date(fmt(b, "iso") + "T12:00:00");
+    var diff = Math.round((b - a) / 86400000);
+    if (isNaN(diff) || diff < 0) return 7;
+    return Math.min(400, Math.max(1, diff + 1));
+  } catch (e) { return 30; }
+}
+function scrollChartToEnd(el) {
+  if (!el) return;
+  try {
+    el.scrollLeft = el.scrollWidth;
+    requestAnimationFrame(function () { el.scrollLeft = el.scrollWidth; });
+  } catch (e) {}
+}
+
 function getHabitStats(userId, habit, days) {
   days = days || 28;
   const comps = Store.getComps(userId);
@@ -1974,14 +2030,15 @@ function FriendStatsView({ friendId, name, username, onBack }) {
   function habitDayCells(dots) {
     var list = (dots || []).filter(function (d) { return d.status !== "before"; }).slice(-30);
     if (mode === "bars") {
-      var slice = list.slice(-30);
+      var slice = list; // already from habit creation (before filtered out)
       return React.createElement("div", {
         className: "overflow-x-auto no-scrollbar",
-        style: { width: "100%", WebkitOverflowScrolling: "touch" }
+        style: { width: "100%", WebkitOverflowScrolling: "touch" },
+        ref: function (el) { scrollChartToEnd(el); }
       },
         React.createElement("div", {
-          className: "flex items-end gap-0.5",
-          style: { height: "52px", minWidth: Math.max(slice.length * 10, 80) + "px" }
+          className: "flex items-end",
+          style: { height: "52px", minWidth: Math.max(slice.length * 12, 60) + "px", gap: "2px" }
         },
           slice.map(function (d, idx) {
             var done = d.status === "done";
@@ -1992,7 +2049,7 @@ function FriendStatsView({ friendId, name, username, onBack }) {
               title: (d.ds || "") + " · " + d.status,
               className: "rounded-t flex-shrink-0",
               style: {
-                width: "8px",
+                width: "10px",
                 height: h + "px",
                 background: done ? "var(--forest)" : skip ? "var(--chip)" : "var(--mid)",
                 opacity: skip ? 0.4 : 1
@@ -2906,10 +2963,12 @@ function ProgressScreen({ user }) {
     if (tt === "progress") tt = "spark";
     setTracker(tt);
     setStreak(recalcStreak(user.id));
-    setDayStats(buildLocalDayStats(user.id, 62));
+    var startDs = getAccountStartDate(user.id, user);
+    var nDays = daysBetweenIso(startDs, new Date());
+    setDayStats(buildLocalDayStats(user.id, nDays));
     var hlist = Store.getHabits(user.id).filter(function (h) { return !h.is_paused; });
     setHabitStats(hlist.map(function (h) {
-      var s = getHabitStats(user.id, h, 56);
+      var s = getHabitStats(user.id, h, nDays);
       return { habit: h, planned: s.planned, done: s.done, pct: s.pct, hstreak: s.streak, dots: s.dots };
     }));
   }, [user.id]);
@@ -2928,6 +2987,7 @@ function ProgressScreen({ user }) {
     Store.setSettings(user.id, Object.assign({}, local, { tracker_type: t }));
   }
   var last = dayStats.length ? dayStats : buildLocalDayStats(user.id, 56);
+  var accountStart = getAccountStartDate(user.id, user);
   var earliestHabit = null;
   try {
     Store.getHabits(user.id).forEach(function (h) {
@@ -2935,12 +2995,15 @@ function ProgressScreen({ user }) {
       if (c && (!earliestHabit || c < earliestHabit)) earliestHabit = c;
     });
   } catch (e) {}
-  var lastFiltered = earliestHabit
-    ? last.filter(function (d) { return (d.date || "") >= earliestHabit; })
+  var rangeStart = accountStart;
+  if (earliestHabit && earliestHabit < rangeStart) rangeStart = earliestHabit;
+  var lastFiltered = rangeStart
+    ? last.filter(function (d) { return (d.date || "") >= rangeStart; })
     : last;
-  var last28 = lastFiltered.slice(-30);
-  var doneDays = last28.filter(function (d) { return d.all_done; }).length;
-  var activeDays = last28.filter(function (d) { return d.has; }).length;
+  var last28 = lastFiltered; // full range from account/habit start
+  var calSlice = lastFiltered.slice(-42); // calendar grid ~6 weeks
+  var doneDays = lastFiltered.filter(function (d) { return d.all_done; }).length;
+  var activeDays = lastFiltered.filter(function (d) { return d.has; }).length;
   var sparkNums = lastFiltered.map(function (d) { return d.has ? (d.pct || 0) : 0; });
   var modes = [
     { id: "spark", label: "Спарклайн" },
@@ -2953,14 +3016,15 @@ function ProgressScreen({ user }) {
   function habitDayCells(dots) {
     var list = (dots || []).filter(function (d) { return d.status !== "before"; }).slice(-30);
     if (mode === "bars") {
-      var slice = list.slice(-30);
+      var slice = list; // already from habit creation (before filtered out)
       return React.createElement("div", {
         className: "overflow-x-auto no-scrollbar",
-        style: { width: "100%", WebkitOverflowScrolling: "touch" }
+        style: { width: "100%", WebkitOverflowScrolling: "touch" },
+        ref: function (el) { scrollChartToEnd(el); }
       },
         React.createElement("div", {
-          className: "flex items-end gap-0.5",
-          style: { height: "52px", minWidth: Math.max(slice.length * 10, 80) + "px" }
+          className: "flex items-end",
+          style: { height: "52px", minWidth: Math.max(slice.length * 12, 60) + "px", gap: "2px" }
         },
           slice.map(function (d, idx) {
             var done = d.status === "done";
@@ -2971,7 +3035,7 @@ function ProgressScreen({ user }) {
               title: (d.ds || "") + " · " + d.status,
               className: "rounded-t flex-shrink-0",
               style: {
-                width: "8px",
+                width: "10px",
                 height: h + "px",
                 background: done ? "var(--forest)" : skip ? "var(--chip)" : "var(--mid)",
                 opacity: skip ? 0.4 : 1
@@ -3060,68 +3124,78 @@ function ProgressScreen({ user }) {
       );
     }
     if (mode === "calendar") {
+      var cal = (typeof calSlice !== "undefined" ? calSlice : last28.slice(-42));
       return React.createElement("div", { className: "grid grid-cols-7 gap-1.5" },
         DAY_SHORT.map(function (l, i) {
           return React.createElement("div", { key: i, className: "text-center text-[10px]", style: { color: "var(--muted)" } }, l);
         }),
-        last28.map(function (d) {
+        cal.map(function (d) {
           var st = dayCellStyle(d);
           return React.createElement("div", {
             key: d.date,
             className: "aspect-square rounded-lg flex items-center justify-center text-[11px] font-medium",
-            title: d.date + " · " + (d.pct || 0) + "%",
-            style: st
+            style: st,
+            title: d.date + " · " + (d.pct || 0) + "%"
           }, fmt(new Date(d.date + "T12:00:00"), "d"));
         })
       );
     }
     if (mode === "bars") {
-      var slice = (last || last28 || []).slice(-30);
+      var slice = lastFiltered && lastFiltered.length ? lastFiltered : (last28 || []);
+      var colW = 22;
       return React.createElement("div", {
         className: "rounded-2xl p-3",
         style: { background: "var(--input)", border: "1px solid var(--line)", overflow: "hidden" }
       },
         React.createElement("div", {
           className: "overflow-x-auto no-scrollbar",
-          style: { width: "100%", WebkitOverflowScrolling: "touch" }
+          style: { width: "100%", WebkitOverflowScrolling: "touch" },
+          ref: function (el) { scrollChartToEnd(el); }
         },
           React.createElement("div", {
-            className: "flex items-end gap-1",
-            style: { height: "96px", minWidth: Math.max(slice.length * 16, 100) + "px", paddingBottom: "2px" }
+            className: "flex items-end",
+            style: { height: "100px", minWidth: Math.max(slice.length * colW, 120) + "px", gap: "2px", paddingBottom: "2px" }
           },
             slice.map(function (d, idx) {
               var pct = typeof d.pct === "number" ? d.pct : 0;
-              var h = d.has ? Math.max(8, Math.round(pct / 100 * 64)) : 4;
+              var h = d.has ? Math.max(8, Math.round(pct / 100 * 68)) : 4;
+              var dayLabel = d.date ? String(d.date).slice(8, 10) : "";
               return React.createElement("div", {
                 key: d.date || idx,
                 className: "flex flex-col items-center justify-end flex-shrink-0",
-                style: { width: "14px", height: "96px" },
+                style: { width: colW + "px", height: "100px" },
                 title: (d.date || "") + " · " + pct + "%"
               },
                 React.createElement("div", {
                   className: "rounded-t",
                   style: {
-                    width: "10px",
+                    width: "14px",
                     height: h + "px",
-                    marginBottom: "4px",
+                    marginBottom: "6px",
                     background: d.all_done ? "var(--forest)" : d.has ? "var(--mid)" : "var(--chip)",
                     opacity: d.has ? 1 : 0.35
                   }
                 }),
                 React.createElement("span", {
-                  className: "text-[8px] leading-none",
-                  style: { color: "var(--muted)", height: "12px" }
-                }, d.date ? String(d.date).slice(8) : "")
+                  className: "text-[9px] leading-none",
+                  style: {
+                    color: "var(--muted)",
+                    width: "100%",
+                    textAlign: "center",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap"
+                  }
+                }, dayLabel)
               );
             })
           )
         ),
         React.createElement("p", { className: "text-[10px] mt-2", style: { color: "var(--muted)" } },
-          "Месяц (30 дн.) · листай · высота = %")
+          "С начала · " + slice.length + " дн. · листай вбок · высота = %")
       );
     }
     return React.createElement("div", { className: "grid grid-cols-7 gap-1.5" },
-      last28.map(function (d) {
+      calSlice.map(function (d) {
         var st = dayCellStyle(d);
         return React.createElement("div", {
           key: d.date,
